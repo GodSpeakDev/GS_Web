@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace GodSpeak.Web.Models
@@ -13,7 +14,9 @@ namespace GodSpeak.Web.Models
 
         public static ApplicationDbContext Create()
         {
+            
             return new ApplicationDbContext();
         }
+        
     }
 }
