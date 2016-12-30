@@ -1,9 +1,10 @@
-﻿using GodSpeak.Web.Models;
+﻿using System.Threading.Tasks;
+using GodSpeak.Web.Models;
 
 namespace GodSpeak.Web.Repositories
 {
     public interface IApplicationUserInviteRepository:IModelRepository<ApplicationUserInvite>
     {
-        ApplicationUserInvite GetByCode(string id);
+        Task<ApplicationUserInvite> GetByCode(string id);
     }
 }

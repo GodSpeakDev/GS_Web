@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GodSpeak.Web.Repositories
 {
     public interface IModelRepository<T>
     {
-        T GetById(Guid id);
+        Task<T> GetById(Guid id);
 
-        List<T> All();
+        Task<List<T>> All();
 
         void Delete(T model);
 
-        void Update(T model);
+        Task Update(T model);
     }
 }
