@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GodSpeak.Web.Models
@@ -8,7 +9,7 @@ namespace GodSpeak.Web.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid ApplicationUserInviteId { get; set; }
-
+        [Required]
         public string Code { get; set; }
 
         public virtual ApplicationUser ApplicationUser { get; set; }
