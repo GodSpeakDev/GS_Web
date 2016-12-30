@@ -6,6 +6,9 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using GodSpeak.Web.Infrastructure;
+using Ninject;
+using Ninject.Modules;
 
 namespace GodSpeak.Web
 {
@@ -18,6 +21,15 @@ namespace GodSpeak.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+
+            NinjectModule registrations = new NinjectRegistrations();
+            var kernel = new StandardKernel(registrations);
+            var ninjectResolver = new NinjectDependencyResolver(kernel);
+
+            DependencyResolver.SetResolver(ninjectResolver); // MVC
+            GlobalConfiguration.Configuration.DependencyResolver = ninjectResolver; // Web API
+
         }
     }
 }
