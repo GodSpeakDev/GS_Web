@@ -8,17 +8,24 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using GodSpeak.Web.Models;
+using GodSpeak.Web.Repositories;
 
 namespace GodSpeak.Web.Controllers
 {
     public class ApplicationUserInvitesController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly IApplicationUserInviteRepository _inviteRepository;
+        
+
+        public ApplicationUserInvitesController(IApplicationUserInviteRepository inviteRepository)
+        {
+            _inviteRepository = inviteRepository;
+        }
 
         // GET: ApplicationUserInvites
         public async Task<ActionResult> Index()
         {
-            return View(await db.Invites.ToListAsync());
+            return View(await _inviteRepository.All());
         }
 
         // GET: ApplicationUserInvites/Details/5
@@ -28,7 +35,7 @@ namespace GodSpeak.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicationUserInvite applicationUserInvite = await db.Invites.FindAsync(id);
+            ApplicationUserInvite applicationUserInvite = await _inviteRepository.GetById(id);
             if (applicationUserInvite == null)
             {
                 return HttpNotFound();
@@ -52,8 +59,7 @@ namespace GodSpeak.Web.Controllers
             if (ModelState.IsValid)
             {
                 applicationUserInvite.ApplicationUserInviteId = Guid.NewGuid();
-                db.Invites.Add(applicationUserInvite);
-                await db.SaveChangesAsync();
+                await _inviteRepository.Insert(applicationUserInvite);
                 return RedirectToAction("Index");
             }
 
@@ -67,7 +73,7 @@ namespace GodSpeak.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicationUserInvite applicationUserInvite = await db.Invites.FindAsync(id);
+            ApplicationUserInvite applicationUserInvite = await _inviteRepository.GetById(id);
             if (applicationUserInvite == null)
             {
                 return HttpNotFound();
@@ -84,8 +90,8 @@ namespace GodSpeak.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(applicationUserInvite).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                
+                await _inviteRepository.Update(applicationUserInvite);
                 return RedirectToAction("Index");
             }
             return View(applicationUserInvite);
@@ -98,7 +104,7 @@ namespace GodSpeak.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicationUserInvite applicationUserInvite = await db.Invites.FindAsync(id);
+            ApplicationUserInvite applicationUserInvite = await _inviteRepository.GetById(id);
             if (applicationUserInvite == null)
             {
                 return HttpNotFound();
@@ -111,9 +117,8 @@ namespace GodSpeak.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(Guid id)
         {
-            ApplicationUserInvite applicationUserInvite = await db.Invites.FindAsync(id);
-            db.Invites.Remove(applicationUserInvite);
-            await db.SaveChangesAsync();
+            ApplicationUserInvite applicationUserInvite = await _inviteRepository.GetById(id);
+            await _inviteRepository.Delete(applicationUserInvite);
             return RedirectToAction("Index");
         }
 
@@ -121,7 +126,7 @@ namespace GodSpeak.Web.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _inviteRepository.Dispose();
             }
             base.Dispose(disposing);
         }

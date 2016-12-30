@@ -1,4 +1,5 @@
-﻿using Ninject.Modules;
+﻿using GodSpeak.Web.Repositories;
+using Ninject.Modules;
 
 namespace GodSpeak.Web.Infrastructure
 {
@@ -6,7 +7,7 @@ namespace GodSpeak.Web.Infrastructure
     {
         public override void Load()
         {
-            
+            Bind<IApplicationUserInviteRepository>().To<ApplicationUserInviteRepository>();
         }
     }
 }

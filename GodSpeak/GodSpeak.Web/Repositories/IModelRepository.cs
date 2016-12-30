@@ -4,14 +4,16 @@ using System.Threading.Tasks;
 
 namespace GodSpeak.Web.Repositories
 {
-    public interface IModelRepository<T>
+    public interface IModelRepository<T>:IDisposable
     {
-        Task<T> GetById(Guid id);
+        Task<T> GetById(Guid? id);
 
         Task<List<T>> All();
 
-        void Delete(T model);
+        Task Delete(T model);
 
         Task Update(T model);
+
+        Task Insert(T model);
     }
 }

@@ -15,7 +15,7 @@ namespace GodSpeak.Web.Repositories
             _context = context;
         }
 
-        public async Task<ApplicationUserInvite> GetById(Guid id)
+        public async Task<ApplicationUserInvite> GetById(Guid? id)
         {
             return await _context.Invites.FindAsync(id);
         }
@@ -25,9 +25,10 @@ namespace GodSpeak.Web.Repositories
             return await _context.Invites.ToListAsync();
         }
 
-        public void Delete(ApplicationUserInvite model)
+        public async Task Delete(ApplicationUserInvite model)
         {
             _context.Invites.Remove(model);
+            await _context.SaveChangesAsync();
         }
 
         public async Task Update(ApplicationUserInvite model)
@@ -39,6 +40,17 @@ namespace GodSpeak.Web.Repositories
         public async Task<ApplicationUserInvite> GetByCode(string id)
         {
             return await _context.Invites.FirstOrDefaultAsync(invite => invite.Code == id);
+        }
+
+        public async Task Insert(ApplicationUserInvite model)
+        {
+            _context.Invites.Add(model);
+            await _context.SaveChangesAsync();
+        }
+
+        public void Dispose()
+        {
+            _context?.Dispose();
         }
     }
 }
