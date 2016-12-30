@@ -195,6 +195,10 @@
     <Compile Include="Migrations\201612301818494_UserCanHaveInvite.Designer.cs">
       <DependentUpon>201612301818494_UserCanHaveInvite.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612302148595_InviteCodeIsRequired.cs" />
+    <Compile Include="Migrations\201612302148595_InviteCodeIsRequired.Designer.cs">
+      <DependentUpon>201612302148595_InviteCodeIsRequired.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -282,6 +286,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201612301818494_UserCanHaveInvite.resx">
       <DependentUpon>201612301818494_UserCanHaveInvite.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612302148595_InviteCodeIsRequired.resx">
+      <DependentUpon>201612302148595_InviteCodeIsRequired.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
