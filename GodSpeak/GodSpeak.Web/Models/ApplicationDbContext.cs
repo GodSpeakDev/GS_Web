@@ -17,6 +17,9 @@ namespace GodSpeak.Web.Models
             
             return new ApplicationDbContext();
         }
+
         
+        
+
     }
 }

@@ -1,4 +1,6 @@
 using GodSpeak.Web.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace GodSpeak.Web.Migrations
 {
@@ -28,7 +30,20 @@ namespace GodSpeak.Web.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
-           
-                    }
+
+            CreateUser(context, "ben@rendr.io", "J0hn_galt");
+        }
+
+        private static void CreateUser(ApplicationDbContext context, string email, string password)
+        {
+            if (!(context.Users.Any(u => u.UserName == email)))
+            {
+                var userStore = new UserStore<ApplicationUser>(context);
+                var userManager = new UserManager<ApplicationUser>(userStore);
+                var userToInsert = new ApplicationUser {UserName = email, Email = email};
+
+                userManager.Create(userToInsert, password);
+            }
+        }
     }
 }
