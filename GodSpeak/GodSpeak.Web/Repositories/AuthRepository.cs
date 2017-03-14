@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Data.Entity;
+using System.Threading.Tasks;
 using GodSpeak.Web.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -8,6 +9,8 @@ namespace GodSpeak.Web.Repositories
     public interface IAuthRepository
     {
         Task<IdentityUser> FindUser(string userName, string password);
+        
+
     }
 
     public class AuthRepository:IAuthRepository
@@ -36,5 +39,7 @@ namespace GodSpeak.Web.Repositories
             _userManager.Dispose();
 
         }
+
+       
     }
 }

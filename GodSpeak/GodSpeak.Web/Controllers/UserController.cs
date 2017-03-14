@@ -25,6 +25,8 @@ namespace GodSpeak.Web.Controllers
             _authRepository = authRepository;
         }
 
+      
+
         [HttpPost]
         public async Task<UserApiObject> Login(LoginApiObject loginApi)
         {
@@ -33,6 +35,8 @@ namespace GodSpeak.Web.Controllers
                 throw new InvalidCredentialException();
             return UserApiObject.FromModel((ApplicationUser)user);
         }
+
+        
     }
 
    

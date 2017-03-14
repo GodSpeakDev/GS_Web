@@ -17,6 +17,8 @@ namespace GodSpeak.Web.Models
 
         public int InviteBalance { get; set; }
 
+        public string InviteCode { get; set; }
+
         public string Token { get; set; }
 
         public string FirstName { get; set; }
@@ -38,6 +40,7 @@ namespace GodSpeak.Web.Models
                 CountryCode = user.Profile.CountryCode,
                 Email = user.Email,
                 InviteBalance = user.Profile.InviteBalance,
+                InviteCode = user.Profile.Code,
                 LastName = user.Profile.LastName,
                 PostalCode = user.Profile.PostalCode,
                 PhotoUrl = "",

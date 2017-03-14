@@ -16,6 +16,7 @@ namespace GodSpeak.Web.Infrastructure
             Bind<UserManager<ApplicationUser>>().ToSelf();
 
             Bind<IApplicationUserProfileRepository>().To<ApplicationUserProfileRepository>();
+            Bind<IInviteRepository>().To<InviteRepository>();
             Bind<IAuthRepository>().To<AuthRepository>();
         }
     }
