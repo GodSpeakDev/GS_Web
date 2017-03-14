@@ -26,12 +26,12 @@ namespace GodSpeak.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IdentityUser> Login(LoginRequestObject loginRequest)
+        public async Task<UserResponseObject> Login(LoginRequestObject loginRequest)
         {
             var user = await _authRepository.FindUser(loginRequest.Email, loginRequest.Password);
             if(user == null)
                 throw new InvalidCredentialException();
-            return user;
+            return UserResponseObject.FromModel((ApplicationUser)user);
         }
     }
 

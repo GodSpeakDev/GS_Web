@@ -191,22 +191,15 @@
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Infrastructure\NinjectDependencyScope.cs" />
     <Compile Include="Infrastructure\NinjectRegistrations.cs" />
-    <Compile Include="Migrations\201612301818494_UserCanHaveInvite.cs" />
-    <Compile Include="Migrations\201612301818494_UserCanHaveInvite.Designer.cs">
-      <DependentUpon>201612301818494_UserCanHaveInvite.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201612302148595_InviteCodeIsRequired.cs" />
-    <Compile Include="Migrations\201612302148595_InviteCodeIsRequired.Designer.cs">
-      <DependentUpon>201612302148595_InviteCodeIsRequired.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201703141454054_ApplicationUsersHaveProfiles.cs" />
-    <Compile Include="Migrations\201703141454054_ApplicationUsersHaveProfiles.Designer.cs">
-      <DependentUpon>201703141454054_ApplicationUsersHaveProfiles.cs</DependentUpon>
+    <Compile Include="Migrations\201703141704330_UsersHaveProfiles.cs" />
+    <Compile Include="Migrations\201703141704330_UsersHaveProfiles.Designer.cs">
+      <DependentUpon>201703141704330_UsersHaveProfiles.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\GodSpeakApiRequestObjects.cs" />
+    <Compile Include="Models\GodSpeakApiResponseObjects.cs" />
     <Compile Include="Models\GodSpeakModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -292,14 +285,8 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201612301818494_UserCanHaveInvite.resx">
-      <DependentUpon>201612301818494_UserCanHaveInvite.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201612302148595_InviteCodeIsRequired.resx">
-      <DependentUpon>201612302148595_InviteCodeIsRequired.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703141454054_ApplicationUsersHaveProfiles.resx">
-      <DependentUpon>201703141454054_ApplicationUsersHaveProfiles.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201703141704330_UsersHaveProfiles.resx">
+      <DependentUpon>201703141704330_UsersHaveProfiles.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

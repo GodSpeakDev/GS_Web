@@ -6,8 +6,8 @@ namespace GodSpeak.Web.Models
 {
     public class ApplicationUserProfile
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid ApplicationUserProfileId { get; set; }
+        [ForeignKey("ApplicationUser")]
+        public string ApplicationUserProfileId { get; set; }
         [Required]
         public string Code { get; set; }
 
