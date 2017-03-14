@@ -27,4 +27,17 @@ namespace GodSpeak.Web.Models
 
         public virtual ApplicationUser ApplicationUser { get; set; }
     }
+
+    public class InviteBundle
+    {
+        public Guid InviteBundleId { get; set; }
+        [Required]
+        public string AppStoreSku { get; set; }
+        [Required]
+        public string PlayStoreSku { get; set; }
+        
+        public int NumberOfInvites { get; set; }
+
+        public decimal Cost { get; set; }
+    }
 }
