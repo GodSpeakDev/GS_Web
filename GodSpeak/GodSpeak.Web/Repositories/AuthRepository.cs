@@ -9,9 +9,7 @@ namespace GodSpeak.Web.Repositories
     public interface IAuthRepository
     {
         Task<IdentityUser> FindUser(string userName, string password);
-        Task<bool> InviteCodeIsValid(string inviteCode);
-
-        Task<bool> InviteCodeHasBalance(string inviteCode);
+        
 
     }
 
@@ -42,15 +40,6 @@ namespace GodSpeak.Web.Repositories
 
         }
 
-        public async Task<bool> InviteCodeIsValid(string inviteCode)
-        {
-            return await _userManager.Users.AnyAsync(u => u.Profile.Code == inviteCode);
-            
-        }
-
-        public async Task<bool> InviteCodeHasBalance(string inviteCode)
-        {
-            return (await _userManager.Users.FirstAsync(u => u.Profile.Code == inviteCode)).Profile.InviteBalance > 0;
-        }
+       
     }
 }
