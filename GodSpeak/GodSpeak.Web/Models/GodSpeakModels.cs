@@ -25,6 +25,7 @@ namespace GodSpeak.Web.Models
         [Required]
         public string PostalCode { get; set; }
 
+        public string Token { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
     }
 

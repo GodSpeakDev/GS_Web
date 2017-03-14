@@ -1,4 +1,5 @@
 using GodSpeak.Web.Models;
+using GodSpeak.Web.Repositories;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -32,6 +33,9 @@ namespace GodSpeak.Web.Migrations
             //
 
             CreateUser(context, "ben@rendr.io", "J0hn_galt");
+
+            
+
             AddOrUpdateProfileToUser(context, "ben@rendr.io", new ApplicationUserProfile()
             {
                 FirstName = "Ben",
@@ -39,8 +43,9 @@ namespace GodSpeak.Web.Migrations
                 PostalCode = "63017",
                 Code = "YgtFijl",
                 CountryCode = "USA",
-                InviteBalance = 3
-
+                InviteBalance = 3,
+                
+                
 
             });
 
@@ -86,7 +91,15 @@ namespace GodSpeak.Web.Migrations
                 user.Profile.CountryCode = profile.CountryCode;
                 user.Profile.InviteBalance = profile.InviteBalance;
                 user.Profile.PostalCode = profile.PostalCode;
+                user.Profile.Token = profile.Token;
             }
+
+            var userStore = new UserStore<ApplicationUser>(context);
+            var userManager = new UserManager<ApplicationUser>(userStore);
+            var authRepo = new AuthRepository(userManager);
+
+            user.Profile.Token = authRepo.CalculateMd5Hash(user.Id + user.Email);
+
             context.Entry(user).State = EntityState.Modified;
 
             
