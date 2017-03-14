@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Data.Entity;
+using System.Threading.Tasks;
 using GodSpeak.Web.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -8,6 +9,10 @@ namespace GodSpeak.Web.Repositories
     public interface IAuthRepository
     {
         Task<IdentityUser> FindUser(string userName, string password);
+        Task<bool> InviteCodeIsValid(string inviteCode);
+
+        Task<bool> InviteCodeHasBalance(string inviteCode);
+
     }
 
     public class AuthRepository:IAuthRepository
@@ -35,6 +40,17 @@ namespace GodSpeak.Web.Repositories
             
             _userManager.Dispose();
 
+        }
+
+        public async Task<bool> InviteCodeIsValid(string inviteCode)
+        {
+            return await _userManager.Users.AnyAsync(u => u.Profile.Code == inviteCode);
+            
+        }
+
+        public async Task<bool> InviteCodeHasBalance(string inviteCode)
+        {
+            return (await _userManager.Users.FirstAsync(u => u.Profile.Code == inviteCode)).Profile.InviteBalance > 0;
         }
     }
 }
