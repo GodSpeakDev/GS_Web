@@ -13,6 +13,11 @@ namespace GodSpeak.Web.Models
         public string EmailAddress { get; set; }
     }
 
+    public class GuidRequestApiObject
+    {
+        public Guid Guid { get; set; }
+    }
+
     public class LoginApiObject
     {
         public string Email { get; set; }

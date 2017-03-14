@@ -11,6 +11,8 @@ using GodSpeak.Web.Repositories;
 
 namespace GodSpeak.Web.Controllers
 {
+
+    [Route("api/invite/{action}")]
     public class InviteController : ApiControllerBase
     {
         private readonly IInviteRepository _inviteRepository;
@@ -25,7 +27,8 @@ namespace GodSpeak.Web.Controllers
         public async Task<HttpResponseMessage> Validate(string inviteCode)
         {
             if (!await _inviteRepository.InviteCodeIsValid(inviteCode))
-                return CreateResponse(HttpStatusCode.NotFound, "Invalid Invite Code", "The submitted invite code is invalid");
+                return CreateResponse(HttpStatusCode.NotFound, "Invalid Invite Code",
+                    "The submitted invite code is invalid");
 
             if (!await _inviteRepository.InviteCodeHasBalance(inviteCode))
                 return CreateResponse(HttpStatusCode.PaymentRequired, "Invite Code No Balance",
@@ -37,13 +40,15 @@ namespace GodSpeak.Web.Controllers
         }
 
         [HttpGet]
-        [ResponseType(typeof(ApiResponse<List<InviteBundle>> ))]
+        [ResponseType(typeof(ApiResponse<List<InviteBundle>>))]
         public async Task<HttpResponseMessage> Bundles()
         {
-            return CreateResponse(HttpStatusCode.OK, "Invite Bundles", "Request for Invite Bundles succeeded", await _inviteRepository.Bundles());
+            return CreateResponse(HttpStatusCode.OK, "Invite Bundles", "Request for Invite Bundles succeeded",
+                await _inviteRepository.Bundles());
         }
 
         [HttpPost]
+        [ActionName("Request")]
         [ResponseType(typeof(ApiResponse))]
         public async Task<HttpResponseMessage> Request(EmailRequestApiObject emailRequest)
         {
@@ -54,6 +59,29 @@ namespace GodSpeak.Web.Controllers
             //TODO: Actually email the user an invite code.
             return CreateResponse(HttpStatusCode.OK, "Invite Request",
                 "Congratulations, we had an extra invite. Please check your email.");
+        }
+
+        [HttpPost]
+        [ResponseType(typeof(ApiResponse))]
+        public async Task<HttpResponseMessage> Purchase(HttpRequestMessage requestMessage, GuidRequestApiObject guidRequest)
+        {
+            if (!await RequestHasValidToken(requestMessage))
+                return CreateMissingTokenResponse();
+
+            return CreateResponse(HttpStatusCode.OK, "Invite Purchased",
+                "Congratulations, you successfully purchased more invites.");
+        }
+
+        private HttpResponseMessage CreateMissingTokenResponse()
+        {
+            return CreateResponse(HttpStatusCode.Forbidden, "Request Failed", "Request is missing require header");
+        }
+
+        private async Task<bool> RequestHasValidToken(HttpRequestMessage request)
+        {
+            if (!request.Headers.Contains("token"))
+                return false;
+            return true;
         }
     }
 }
