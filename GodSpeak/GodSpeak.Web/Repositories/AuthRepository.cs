@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Security;
 using GodSpeak.Web.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -39,9 +40,11 @@ namespace GodSpeak.Web.Repositories
         public string CalculateMd5Hash(string input)
 
         {
+            
+
             var md5 = MD5.Create();
 
-            var inputBytes = Encoding.ASCII.GetBytes(input);
+            var inputBytes = Encoding.UTF8.GetBytes(input);
 
             var hash = md5.ComputeHash(inputBytes);
 
@@ -49,7 +52,7 @@ namespace GodSpeak.Web.Repositories
 
             for (var i = 0; i < hash.Length; i++)
             {
-                sb.Append(i.ToString("X2"));
+                sb.Append(i.ToString("x2"));
             }
 
             return sb.ToString();
