@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using GodSpeak.Web.Models;
 using GodSpeak.Web.Repositories;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using Microsoft.AspNet.Identity.Owin;
 
@@ -24,13 +26,12 @@ namespace GodSpeak.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<string> Login(LoginRequestObject loginRequest)
+        public async Task<IdentityUser> Login(LoginRequestObject loginRequest)
         {
             var user = await _authRepository.FindUser(loginRequest.Email, loginRequest.Password);
-            if (user != null)
-                return $"user logged in with {loginRequest.Email} and {loginRequest.Password}";
-            else
-                return "No luck";
+            if(user == null)
+                throw new InvalidCredentialException();
+            return user;
         }
     }
 
