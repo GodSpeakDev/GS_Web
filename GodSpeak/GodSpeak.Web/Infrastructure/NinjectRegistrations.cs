@@ -7,7 +7,7 @@ namespace GodSpeak.Web.Infrastructure
     {
         public override void Load()
         {
-            Bind<IApplicationUserInviteRepository>().To<ApplicationUserInviteRepository>();
+            Bind<IApplicationUserProfileRepository>().To<ApplicationUserProfileRepository>();
         }
     }
 }

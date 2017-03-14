@@ -182,7 +182,6 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\ApplicationUserInvitesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
@@ -199,6 +198,10 @@
     <Compile Include="Migrations\201612302148595_InviteCodeIsRequired.Designer.cs">
       <DependentUpon>201612302148595_InviteCodeIsRequired.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703141454054_ApplicationUsersHaveProfiles.cs" />
+    <Compile Include="Migrations\201703141454054_ApplicationUsersHaveProfiles.Designer.cs">
+      <DependentUpon>201703141454054_ApplicationUsersHaveProfiles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -206,8 +209,8 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\ApplicationUserInviteRepository.cs" />
-    <Compile Include="Repositories\IApplicationUserInviteRepository.cs" />
+    <Compile Include="Repositories\ApplicationUserProfileRepository.cs" />
+    <Compile Include="Repositories\IApplicationUserProfileRepository.cs" />
     <Compile Include="Repositories\IModelRepository.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -291,6 +294,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612302148595_InviteCodeIsRequired.resx">
       <DependentUpon>201612302148595_InviteCodeIsRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703141454054_ApplicationUsersHaveProfiles.resx">
+      <DependentUpon>201703141454054_ApplicationUsersHaveProfiles.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
