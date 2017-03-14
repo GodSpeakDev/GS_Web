@@ -1,10 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 
 namespace GodSpeak.Web.Models
 {
-    public class UserResponseObject
+    public class LoginApiObject
     {
-        public Guid UserId { get; set; }   
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+
+    public class UserApiObject
+    {
+        public Guid UserId { get; set; }
 
         public int InviteBalance { get; set; }
 
@@ -21,9 +30,9 @@ namespace GodSpeak.Web.Models
 
         public string PhotoUrl { get; set; }
 
-        public static UserResponseObject FromModel(ApplicationUser user)
+        public static UserApiObject FromModel(ApplicationUser user)
         {
-            return new UserResponseObject()
+            return new UserApiObject()
             {
                 FirstName = user.Profile.FirstName,
                 CountryCode = user.Profile.CountryCode,

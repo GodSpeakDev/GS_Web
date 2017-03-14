@@ -198,8 +198,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
-    <Compile Include="Models\GodSpeakApiRequestObjects.cs" />
-    <Compile Include="Models\GodSpeakApiResponseObjects.cs" />
+    <Compile Include="Models\GodSpeakApiObjects.cs" />
     <Compile Include="Models\GodSpeakModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
