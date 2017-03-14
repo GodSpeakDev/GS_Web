@@ -43,6 +43,18 @@ namespace GodSpeak.Web.Migrations
 
 
             });
+
+            CreateInvite(context, "AS5Invites", "PS5Invites", 2.99m, 5);
+            CreateInvite(context, "AS15Invites", "PS15Invites", 3.99m, 15);
+            CreateInvite(context, "AS25Invites", "PS25Invites", 4.99m, 25);
+            CreateInvite(context, "AS50Invites", "PS50Invites", 6.99m, 50);
+            CreateInvite(context, "AS100Invites", "PS100Invites", 10.99m, 100);
+        }
+
+        private void CreateInvite(ApplicationDbContext context, string appstoreSku, string playstoreSku, decimal cost, int count)
+        {
+            if (!context.InviteBundles.Any(b => b.AppStoreSku == appstoreSku))
+                context.InviteBundles.Add(new InviteBundle() {AppStoreSku = appstoreSku, PlayStoreSku = playstoreSku, Cost = cost, NumberOfInvites = count});
         }
 
         private static void CreateUser(ApplicationDbContext context, string email, string password)

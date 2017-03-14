@@ -30,6 +30,8 @@ namespace GodSpeak.Web.Models
 
     public class InviteBundle
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public Guid InviteBundleId { get; set; }
         [Required]
         public string AppStoreSku { get; set; }

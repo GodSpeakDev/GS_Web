@@ -197,6 +197,10 @@
     <Compile Include="Migrations\201703141704330_UsersHaveProfiles.Designer.cs">
       <DependentUpon>201703141704330_UsersHaveProfiles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703141943533_SystemHasInviteBundles.cs" />
+    <Compile Include="Migrations\201703141943533_SystemHasInviteBundles.Designer.cs">
+      <DependentUpon>201703141943533_SystemHasInviteBundles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -289,6 +293,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201703141704330_UsersHaveProfiles.resx">
       <DependentUpon>201703141704330_UsersHaveProfiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703141943533_SystemHasInviteBundles.resx">
+      <DependentUpon>201703141943533_SystemHasInviteBundles.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
