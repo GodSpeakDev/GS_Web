@@ -1,4 +1,6 @@
 ﻿using System.Data.Entity;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using GodSpeak.Web.Models;
 using Microsoft.AspNet.Identity;
@@ -9,7 +11,8 @@ namespace GodSpeak.Web.Repositories
     public interface IAuthRepository
     {
         Task<IdentityUser> FindUser(string userName, string password);
-        
+
+        string CalculateMd5Hash(string input);
 
     }
 
@@ -31,6 +34,25 @@ namespace GodSpeak.Web.Repositories
             IdentityUser user = await _userManager.FindAsync(userName, password);
 
             return user;
+        }
+
+        public string CalculateMd5Hash(string input)
+
+        {
+            var md5 = MD5.Create();
+
+            var inputBytes = Encoding.ASCII.GetBytes(input);
+
+            var hash = md5.ComputeHash(inputBytes);
+
+            var sb = new StringBuilder();
+
+            for (var i = 0; i < hash.Length; i++)
+            {
+                sb.Append(i.ToString("X2"));
+            }
+
+            return sb.ToString();
         }
 
         public void Dispose()
