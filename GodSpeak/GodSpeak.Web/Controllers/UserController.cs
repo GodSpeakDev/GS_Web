@@ -25,13 +25,7 @@ namespace GodSpeak.Web.Controllers
             _authRepository = authRepository;
         }
 
-        [HttpGet]
-        public async Task<bool> ValidateInviteCode([FromUri] string inviteCode)
-        {
-            
-            return await _authRepository.InviteCodeIsValid(inviteCode) &&
-                   await _authRepository.InviteCodeHasBalance(inviteCode);
-        }
+      
 
         [HttpPost]
         public async Task<UserApiObject> Login(LoginApiObject loginApi)
