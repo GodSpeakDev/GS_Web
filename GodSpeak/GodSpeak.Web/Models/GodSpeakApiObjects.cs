@@ -48,5 +48,20 @@ namespace GodSpeak.Web.Models
                 UserId = new Guid(user.Id)
             };
         }
+
+        
+    }
+
+    public class ApiResponse
+    {
+        private string Title { get; set; }
+        public string Message { get; set; }
+
+    }
+
+    public class ApiResponse<T>:ApiResponse where T : class
+    {
+        public T Payload { get; set; }
+
     }
 }
