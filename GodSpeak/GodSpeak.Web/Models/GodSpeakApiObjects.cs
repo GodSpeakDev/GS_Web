@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
 namespace GodSpeak.Web.Models
 {
+    public class EmailRequestApiObject
+    {
+        [EmailAddress]
+        [Required]
+        public string EmailAddress { get; set; }
+    }
+
     public class LoginApiObject
     {
         public string Email { get; set; }

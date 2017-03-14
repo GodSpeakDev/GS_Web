@@ -42,5 +42,18 @@ namespace GodSpeak.Web.Controllers
         {
             return CreateResponse(HttpStatusCode.OK, "Invite Bundles", "Request for Invite Bundles succeeded", await _inviteRepository.Bundles());
         }
+
+        [HttpPost]
+        [ResponseType(typeof(ApiResponse))]
+        public async Task<HttpResponseMessage> Request(EmailRequestApiObject emailRequest)
+        {
+            if (emailRequest == null || !ModelState.IsValid)
+                return CreateResponse(HttpStatusCode.BadRequest, "Invite Request Failed",
+                    "Please submit a valid email address");
+
+            //TODO: Actually email the user an invite code.
+            return CreateResponse(HttpStatusCode.OK, "Invite Request",
+                "Congratulations, we had an extra invite. Please check your email.");
+        }
     }
 }
