@@ -11,7 +11,7 @@ using GodSpeak.Web.Repositories;
 
 namespace GodSpeak.Web.Controllers
 {
-    public class InviteController : ApiController
+    public class InviteController : ApiControllerBase
     {
         private readonly IInviteRepository _inviteRepository;
 
@@ -34,15 +34,6 @@ namespace GodSpeak.Web.Controllers
             return CreateResponse(HttpStatusCode.OK, "Invite Code Valid",
                 "Congratulations, the submitted invite code is valid");
 
-        }
-
-        private HttpResponseMessage CreateResponse(HttpStatusCode responseStatusCode, string responseTitle, string responseMessage)
-        {
-            return Request.CreateResponse(responseStatusCode, new ApiResponse()
-            {
-                Title = responseTitle,
-                Message = responseMessage
-            });
         }
     }
 }
