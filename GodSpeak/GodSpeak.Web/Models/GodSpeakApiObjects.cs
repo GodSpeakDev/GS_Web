@@ -21,7 +21,7 @@ namespace GodSpeak.Web.Models
 
     public class UserApiObject
     {
-        public Guid UserId { get; set; }
+       
 
         public int InviteBalance { get; set; }
 
@@ -52,8 +52,8 @@ namespace GodSpeak.Web.Models
                 LastName = user.Profile.LastName,
                 PostalCode = user.Profile.PostalCode,
                 PhotoUrl = "",
-                Token = user.Id,
-                UserId = new Guid(user.Id)
+                Token = user.Profile.Token,
+                
             };
         }
 
