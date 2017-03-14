@@ -15,5 +15,16 @@ namespace GodSpeak.Web.Controllers
                 Message = responseMessage
             });
         }
+
+        protected HttpResponseMessage CreateResponse<T>(HttpStatusCode responseStatusCode, string responseTitle, string responseMessage, T payload) where T:class
+        {
+            return Request.CreateResponse(responseStatusCode, new ApiResponse<T>()
+            {
+                Title = responseTitle,
+                Message = responseMessage,
+                Payload = payload
+            });
+        }
+
     }
 }

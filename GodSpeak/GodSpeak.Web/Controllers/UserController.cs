@@ -7,6 +7,7 @@ using System.Security.Authentication;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Description;
 using GodSpeak.Web.Models;
 using GodSpeak.Web.Repositories;
 using Microsoft.AspNet.Identity;
@@ -16,7 +17,7 @@ using Microsoft.AspNet.Identity.Owin;
 
 namespace GodSpeak.Web.Controllers
 {
-    public class UserController : ApiController
+    public class UserController : ApiControllerBase
     {
         private readonly IAuthRepository _authRepository;
 
@@ -28,12 +29,13 @@ namespace GodSpeak.Web.Controllers
       
 
         [HttpPost]
-        public async Task<UserApiObject> Login(LoginApiObject loginApi)
+        [ResponseType(typeof(ApiResponse<UserApiObject>))]
+        public async Task<HttpResponseMessage> Login(LoginApiObject loginApi)
         {
             var user = await _authRepository.FindUser(loginApi.Email, loginApi.Password);
-            if(user == null)
-                throw new InvalidCredentialException();
-            return UserApiObject.FromModel((ApplicationUser)user);
+            if (user == null)
+                return CreateResponse(HttpStatusCode.Forbidden, "Login Invalid", "Submitted credentials are invalid");
+            return CreateResponse(HttpStatusCode.OK, "Login Valid", "Submitted credentials were valid", UserApiObject.FromModel((ApplicationUser)user));
         }
 
         
