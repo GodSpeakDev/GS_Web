@@ -35,5 +35,12 @@ namespace GodSpeak.Web.Controllers
                 "Congratulations, the submitted invite code is valid");
 
         }
+
+        [HttpGet]
+        [ResponseType(typeof(ApiResponse<List<InviteBundle>> ))]
+        public async Task<HttpResponseMessage> Bundles()
+        {
+            return CreateResponse(HttpStatusCode.OK, "Invite Bundles", "Request for Invite Bundles succeeded", await _inviteRepository.Bundles());
+        }
     }
 }
