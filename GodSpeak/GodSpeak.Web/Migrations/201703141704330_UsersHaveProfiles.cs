@@ -3,21 +3,25 @@ namespace GodSpeak.Web.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class UserCanHaveInvite : DbMigration
+    public partial class UsersHaveProfiles : DbMigration
     {
         public override void Up()
         {
             CreateTable(
-                "dbo.ApplicationUserInvites",
+                "dbo.ApplicationUserProfiles",
                 c => new
                     {
-                        ApplicationUserInviteId = c.Guid(nullable: false, identity: true),
-                        Code = c.String(),
-                        ApplicationUser_Id = c.String(maxLength: 128),
+                        ApplicationUserProfileId = c.String(nullable: false, maxLength: 128),
+                        Code = c.String(nullable: false),
+                        InviteBalance = c.Int(nullable: false),
+                        FirstName = c.String(nullable: false),
+                        LastName = c.String(nullable: false),
+                        CountryCode = c.String(nullable: false),
+                        PostalCode = c.String(nullable: false),
                     })
-                .PrimaryKey(t => t.ApplicationUserInviteId)
-                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUser_Id)
-                .Index(t => t.ApplicationUser_Id);
+                .PrimaryKey(t => t.ApplicationUserProfileId)
+                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserProfileId)
+                .Index(t => t.ApplicationUserProfileId);
             
             CreateTable(
                 "dbo.AspNetUsers",
@@ -92,7 +96,7 @@ namespace GodSpeak.Web.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.ApplicationUserInvites", "ApplicationUser_Id", "dbo.AspNetUsers");
+            DropForeignKey("dbo.ApplicationUserProfiles", "ApplicationUserProfileId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
@@ -102,13 +106,13 @@ namespace GodSpeak.Web.Migrations
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
-            DropIndex("dbo.ApplicationUserInvites", new[] { "ApplicationUser_Id" });
+            DropIndex("dbo.ApplicationUserProfiles", new[] { "ApplicationUserProfileId" });
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
-            DropTable("dbo.ApplicationUserInvites");
+            DropTable("dbo.ApplicationUserProfiles");
         }
     }
 }
