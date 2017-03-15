@@ -15,6 +15,8 @@ namespace GodSpeak.Web.Repositories
 
         string CalculateMd5Hash(string input);
 
+        Task<bool> UserWithTokenExists(string token);
+
     }
 
     public class AuthRepository:IAuthRepository
@@ -65,6 +67,11 @@ namespace GodSpeak.Web.Repositories
 
         }
 
-       
+        
+
+        public async Task<bool> UserWithTokenExists(string token)
+        {
+            return await _userManager.Users.AnyAsync(u => u.Profile.Token == token);
+        }
     }
 }

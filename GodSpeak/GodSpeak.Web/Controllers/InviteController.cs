@@ -16,10 +16,12 @@ namespace GodSpeak.Web.Controllers
     public class InviteController : ApiControllerBase
     {
         private readonly IInviteRepository _inviteRepository;
+        private readonly IAuthRepository _authRepository;
 
-        public InviteController(IInviteRepository inviteRepository)
+        public InviteController(IInviteRepository inviteRepository, IAuthRepository authRepository)
         {
             _inviteRepository = inviteRepository;
+            _authRepository = authRepository;
         }
 
         [HttpGet]
@@ -81,7 +83,9 @@ namespace GodSpeak.Web.Controllers
         {
             if (!request.Headers.Contains("token"))
                 return false;
-            return true;
+
+
+            return await _authRepository.UserWithTokenExists(request.Headers.GetValues("token").First());
         }
     }
 }
