@@ -96,7 +96,7 @@ namespace GodSpeak.Web.Migrations
 
             var userStore = new UserStore<ApplicationUser>(context);
             var userManager = new UserManager<ApplicationUser>(userStore);
-            var authRepo = new AuthRepository(userManager);
+            var authRepo = new AuthRepository(userManager, context);
 
             user.Profile.Token = authRepo.CalculateMd5Hash(user.Id + user.Email);
 
