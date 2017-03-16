@@ -13,9 +13,13 @@ namespace GodSpeak.Web.Repositories
     {
         Task<IdentityUser> FindUser(string userName, string password);
 
+        Task<ApplicationUser> FindUserByAuthToken(string token);
+
         string CalculateMd5Hash(string input);
 
         Task<bool> UserWithTokenExists(string token);
+
+        Task<string> GetUserIdForToken(string token);
 
     }
 
@@ -72,6 +76,16 @@ namespace GodSpeak.Web.Repositories
         public async Task<bool> UserWithTokenExists(string token)
         {
             return await _userManager.Users.AnyAsync(u => u.Profile.Token == token);
+        }
+
+        public async Task<string> GetUserIdForToken(string token)
+        {
+            return (await _userManager.Users.FirstAsync(u => u.Profile.Token == token)).Id;
+        }
+
+        public async Task<ApplicationUser> FindUserByAuthToken(string token)
+        {
+            return await _userManager.Users.FirstAsync(u => u.Profile.Token == token);
         }
     }
 }

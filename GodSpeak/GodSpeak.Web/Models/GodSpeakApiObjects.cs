@@ -15,6 +15,7 @@ namespace GodSpeak.Web.Models
 
     public class GuidRequestApiObject
     {
+        [Required]
         public Guid Guid { get; set; }
     }
 

@@ -6,5 +6,7 @@ namespace GodSpeak.Web.Repositories
     public interface IApplicationUserProfileRepository:IModelRepository<ApplicationUserProfile>
     {
         Task<ApplicationUserProfile> GetByCode(string id);
+
+        Task<bool> ApplyInviteCredit(string userId, int numOfInvites);
     }
 }

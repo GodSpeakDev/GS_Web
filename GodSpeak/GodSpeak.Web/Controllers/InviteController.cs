@@ -17,11 +17,13 @@ namespace GodSpeak.Web.Controllers
     {
         private readonly IInviteRepository _inviteRepository;
         private readonly IAuthRepository _authRepository;
+        private readonly IApplicationUserProfileRepository _profileRepository;
 
-        public InviteController(IInviteRepository inviteRepository, IAuthRepository authRepository)
+        public InviteController(IInviteRepository inviteRepository, IAuthRepository authRepository, IApplicationUserProfileRepository profileRepository)
         {
             _inviteRepository = inviteRepository;
             _authRepository = authRepository;
+            _profileRepository = profileRepository;
         }
 
         [HttpGet]
@@ -52,7 +54,7 @@ namespace GodSpeak.Web.Controllers
         [HttpPost]
         [ActionName("Request")]
         [ResponseType(typeof(ApiResponse))]
-        public async Task<HttpResponseMessage> Request(EmailRequestApiObject emailRequest)
+        public async Task<HttpResponseMessage> RequestInvite(EmailRequestApiObject emailRequest)
         {
             if (emailRequest == null || !ModelState.IsValid)
                 return CreateResponse(HttpStatusCode.BadRequest, "Invite Request Failed",
@@ -65,27 +67,50 @@ namespace GodSpeak.Web.Controllers
 
         [HttpPost]
         [ResponseType(typeof(ApiResponse))]
-        public async Task<HttpResponseMessage> Purchase(HttpRequestMessage requestMessage, GuidRequestApiObject guidRequest)
+        public async Task<HttpResponseMessage> Purchase(GuidRequestApiObject guidRequest)
         {
-            if (!await RequestHasValidToken(requestMessage))
+            
+
+            if (!await RequestHasValidAuthToken(Request))
                 return CreateMissingTokenResponse();
 
-            return CreateResponse(HttpStatusCode.OK, "Invite Purchased",
+            if (!ModelState.IsValid)
+                return CreateResponse(HttpStatusCode.BadRequest, "Invite Purchase Failed",
+                    "Request is missing invite bundle guid");
+
+            if (!await _inviteRepository.BundleExists(guidRequest.Guid))
+                return CreateResponse(HttpStatusCode.NotFound, "Invite Purchase Failed",
+                    "No invite bundle was found with submitted guid");
+
+            var bundle = await _inviteRepository.BundleByGuid(guidRequest.Guid);
+            var userId = await _authRepository.GetUserIdForToken(GetAuthToken(Request));
+
+            if(!await _profileRepository.ApplyInviteCredit(userId, bundle.NumberOfInvites))
+                return CreateResponse(HttpStatusCode.NotFound, "Invite Purchase Failed",
+                    "Something went wrong applying credit");
+
+            return CreateResponse(HttpStatusCode.OK, "Invite Purchase Succeeded",
                 "Congratulations, you successfully purchased more invites.");
         }
 
         private HttpResponseMessage CreateMissingTokenResponse()
         {
-            return CreateResponse(HttpStatusCode.Forbidden, "Request Failed", "Request is missing require header");
+            return CreateResponse(HttpStatusCode.Forbidden, "Request Failed", "Request is missing required header");
         }
 
-        private async Task<bool> RequestHasValidToken(HttpRequestMessage request)
+        private async Task<bool> RequestHasValidAuthToken(HttpRequestMessage request)
         {
-            if (!request.Headers.Contains("token"))
+            const string tokenKey = "token";
+            if (!request.Headers.Contains(tokenKey))
                 return false;
 
 
-            return await _authRepository.UserWithTokenExists(request.Headers.GetValues("token").First());
+            return await _authRepository.UserWithTokenExists(GetAuthToken(request));
+        }
+
+        private static string GetAuthToken(HttpRequestMessage request)
+        {
+            return request.Headers.GetValues("token").First();
         }
     }
 }

@@ -52,5 +52,14 @@ namespace GodSpeak.Web.Repositories
         {
             _context?.Dispose();
         }
+
+        public async Task<bool> ApplyInviteCredit(string userId, int numOfInvites)
+        {
+                var profile = await _context.Profiles.FirstAsync(p => p.ApplicationUser.Id == userId);
+                profile.InviteBalance += numOfInvites;
+                await Update(profile);
+                return true;
+          
+        }
     }
 }

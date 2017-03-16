@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using GodSpeak.Web.Models;
 using Microsoft.AspNet.Identity;
@@ -13,6 +16,11 @@ namespace GodSpeak.Web.Repositories
         Task<bool> InviteCodeHasBalance(string inviteCode);
 
         Task<List<InviteBundle>> Bundles();
+
+        Task<bool> BundleExists(Guid guid);
+
+        Task<InviteBundle> BundleByGuid(Guid guid);
+
     }
 
     public class InviteRepository:IInviteRepository
@@ -41,5 +49,18 @@ namespace GodSpeak.Web.Repositories
         {
             return await _dbContext.InviteBundles.ToListAsync();
         }
+
+        public async Task<InviteBundle> BundleByGuid(Guid guid)
+        {
+            return await _dbContext.InviteBundles.FindAsync(guid);
+        }
+        
+        public async Task<bool> BundleExists(Guid guid)
+        {
+
+            return await BundleByGuid(guid) != null;
+        }
+
+       
     }
 }
