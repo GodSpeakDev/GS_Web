@@ -55,6 +55,59 @@ namespace GodSpeak.Web.Migrations
                     {
                         Title = "Love"
                     }
+                },
+                MessageDayOfWeekSettings = new List<MessageDayOfWeekSetting>()
+                {
+                    new MessageDayOfWeekSetting()
+                    {
+                        Title = "Sunday",
+                        NumOfMessages = 3,
+                        StartTime = TimeSpan.FromHours(8),
+                        EndTime = TimeSpan.FromHours(17)
+                    },
+                    new MessageDayOfWeekSetting()
+                    {
+                        Title = "Monday",
+                        NumOfMessages = 3,
+                        StartTime = TimeSpan.FromHours(8),
+                        EndTime = TimeSpan.FromHours(17)
+                    },
+                    new MessageDayOfWeekSetting()
+                    {
+                        Title = "Tuesday",
+                        NumOfMessages = 3,
+                        StartTime = TimeSpan.FromHours(8),
+                        EndTime = TimeSpan.FromHours(17)
+                    },
+                    new MessageDayOfWeekSetting()
+                    {
+                        Title = "Wednesday",
+                        NumOfMessages = 3,
+                        StartTime = TimeSpan.FromHours(8),
+                        EndTime = TimeSpan.FromHours(17)
+                    },
+                    new MessageDayOfWeekSetting()
+                    {
+                        Title = "Thursday",
+                        NumOfMessages = 3,
+                        StartTime = TimeSpan.FromHours(8),
+                        EndTime = TimeSpan.FromHours(17)
+                    },
+                    new MessageDayOfWeekSetting()
+                    {
+                        Title = "Friday",
+                        NumOfMessages = 3,
+                        StartTime = TimeSpan.FromHours(8),
+                        EndTime = TimeSpan.FromHours(17)
+                    },
+                    new MessageDayOfWeekSetting()
+                    {
+                        Title = "Saturday",
+                        NumOfMessages = 3,
+                        StartTime = TimeSpan.FromHours(8),
+                        EndTime = TimeSpan.FromHours(17)
+                    }
+
                 }
                 
                 
@@ -105,6 +158,7 @@ namespace GodSpeak.Web.Migrations
                 user.Profile.PostalCode = profile.PostalCode;
                 user.Profile.Token = profile.Token;
                 user.Profile.MessageCategorySettings = profile.MessageCategorySettings;
+                user.Profile.MessageDayOfWeekSettings = profile.MessageDayOfWeekSettings;
             }
 
             var userStore = new UserStore<ApplicationUser>(context);

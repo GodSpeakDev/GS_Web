@@ -31,6 +31,9 @@ namespace GodSpeak.Web.Models
         public virtual ApplicationUser ApplicationUser { get; set; }
 
         public virtual ICollection<MessageCategorySetting> MessageCategorySettings { get; set; }
+
+       
+        public virtual ICollection<MessageDayOfWeekSetting> MessageDayOfWeekSettings { get; set; }
     }
 
     public class MessageCategorySetting
@@ -44,6 +47,29 @@ namespace GodSpeak.Web.Models
 
         [Required]
         public string Title { get; set; }
+
+        public string ApplicationUserProfileRefId { get; set; }
+
+        [ForeignKey("ApplicationUserProfileRefId")]
+        public virtual ApplicationUserProfile ApplicationUserProfile { get; set; }
+    }
+
+    public class MessageDayOfWeekSetting
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public Guid MessageDayOfWeekSettingId { get; set; }
+
+        public bool Enabled { get; set; }
+
+        [Required]
+        public string Title { get; set; }
+
+        public TimeSpan StartTime { get; set; }
+
+        public TimeSpan EndTime { get; set; }
+
+        public int NumOfMessages { get; set; }
 
         public string ApplicationUserProfileRefId { get; set; }
 

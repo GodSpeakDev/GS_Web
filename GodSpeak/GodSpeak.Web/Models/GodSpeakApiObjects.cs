@@ -48,6 +48,8 @@ namespace GodSpeak.Web.Models
 
         public List<MessageCategorySettingApiObject> MessageCategorySettings {get; set; }
 
+        public List<MessageDayOfWeekSettingApiObject> MessageDayOfWeekSettings { get; set; }
+
         public static UserApiObject FromModel(ApplicationUser user)
         {
             return new UserApiObject()
@@ -61,7 +63,8 @@ namespace GodSpeak.Web.Models
                 PostalCode = user.Profile.PostalCode,
                 PhotoUrl = "",
                 Token = user.Profile.Token,
-                MessageCategorySettings = user.Profile.MessageCategorySettings.Select(MessageCategorySettingApiObject.FromModel).ToList()
+                MessageCategorySettings = user.Profile.MessageCategorySettings.Select(MessageCategorySettingApiObject.FromModel).ToList(),
+                MessageDayOfWeekSettings = user.Profile.MessageDayOfWeekSettings.Select(MessageDayOfWeekSettingApiObject.FromModel).ToList()
                 
             };
         }
@@ -69,8 +72,36 @@ namespace GodSpeak.Web.Models
         
     }
 
+    public class MessageDayOfWeekSettingApiObject
+    {
+        public Guid Id { get; set; }
+        public bool Enabled { get; set; }
+
+        public string Title { get; set; }
+
+        public TimeSpan StartTime { get; set; }
+
+        public TimeSpan EndTime { get; set; }
+
+        public int NumOfMessages { get; set; }
+
+        public static MessageDayOfWeekSettingApiObject FromModel(MessageDayOfWeekSetting model)
+        {
+            return new MessageDayOfWeekSettingApiObject()
+            {
+                Id = model.MessageDayOfWeekSettingId,
+                Enabled = model.Enabled,
+                Title = model.Title,
+                StartTime = model.StartTime,
+                EndTime = model.EndTime,
+                NumOfMessages = model.NumOfMessages
+            };
+        }
+    }
+
     public class MessageCategorySettingApiObject
     {
+        public Guid Id { get; set; }
         public bool Enabled { get; set; }
         
         public string Title { get; set; }
@@ -79,6 +110,7 @@ namespace GodSpeak.Web.Models
         {
             return new MessageCategorySettingApiObject()
             {
+                Id = setting.MessageCategorySettingId,
                 Title = setting.Title,
                 Enabled =  setting.Enabled
             };
