@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using GodSpeak.Web.Models;
 using GodSpeak.Web.Repositories;
 using Microsoft.AspNet.Identity;
@@ -38,12 +39,23 @@ namespace GodSpeak.Web.Migrations
 
             AddOrUpdateProfileToUser(context, "ben@rendr.io", new ApplicationUserProfile()
             {
-                FirstName = "Ben",
+                FirstName = "Benjamin",
                 LastName = "Bishop",
                 PostalCode = "63017",
                 Code = "YgtFijl",
                 CountryCode = "USA",
                 InviteBalance = 3,
+                MessageCategorySettings = new List<MessageCategorySetting>()
+                {
+                    new MessageCategorySetting()
+                    {
+                        Title = "Grief"
+                    },
+                    new MessageCategorySetting()
+                    {
+                        Title = "Love"
+                    }
+                }
                 
                 
 
@@ -92,6 +104,7 @@ namespace GodSpeak.Web.Migrations
                 user.Profile.InviteBalance = profile.InviteBalance;
                 user.Profile.PostalCode = profile.PostalCode;
                 user.Profile.Token = profile.Token;
+                user.Profile.MessageCategorySettings = profile.MessageCategorySettings;
             }
 
             var userStore = new UserStore<ApplicationUser>(context);

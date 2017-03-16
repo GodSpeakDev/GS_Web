@@ -46,6 +46,8 @@ namespace GodSpeak.Web.Models
 
         public string PhotoUrl { get; set; }
 
+        public List<MessageCategorySettingApiObject> MessageCategorySettings {get; set; }
+
         public static UserApiObject FromModel(ApplicationUser user)
         {
             return new UserApiObject()
@@ -59,11 +61,28 @@ namespace GodSpeak.Web.Models
                 PostalCode = user.Profile.PostalCode,
                 PhotoUrl = "",
                 Token = user.Profile.Token,
+                MessageCategorySettings = user.Profile.MessageCategorySettings.Select(MessageCategorySettingApiObject.FromModel).ToList()
                 
             };
         }
 
         
+    }
+
+    public class MessageCategorySettingApiObject
+    {
+        public bool Enabled { get; set; }
+        
+        public string Title { get; set; }
+
+        public static MessageCategorySettingApiObject FromModel(MessageCategorySetting setting)
+        {
+            return new MessageCategorySettingApiObject()
+            {
+                Title = setting.Title,
+                Enabled =  setting.Enabled
+            };
+        }
     }
 
     public class ApiResponse
