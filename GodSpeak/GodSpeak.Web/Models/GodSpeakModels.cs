@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 
 namespace GodSpeak.Web.Models
 {
@@ -90,5 +91,27 @@ namespace GodSpeak.Web.Models
         public int NumberOfInvites { get; set; }
 
         public decimal Cost { get; set; }
+    }
+
+    public class BibleVerse
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public Guid BibleVerseId { get; set; }
+
+        [Required]
+        public string ShortCode { get; set; }
+
+        [Required]
+        public string Book { get; set; }
+
+        [Required]
+        public int Chapter { get; set; }
+
+        [Required]
+        public int Verse { get; set; }
+
+        [Required]
+        public string Text { get; set; }
     }
 }

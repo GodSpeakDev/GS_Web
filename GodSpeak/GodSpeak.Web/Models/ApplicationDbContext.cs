@@ -10,6 +10,8 @@ namespace GodSpeak.Web.Models
 
         public DbSet<InviteBundle> InviteBundles { get; set; }
 
+        public DbSet<BibleVerse> BibleVerses { get; set; }
+
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
