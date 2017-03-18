@@ -213,6 +213,10 @@
     <Compile Include="Migrations\201703161627196_ApplicationUserProfileHasMessageDayOfWeekSetting.Designer.cs">
       <DependentUpon>201703161627196_ApplicationUserProfileHasMessageDayOfWeekSetting.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703181407355_AppHasBibleVerses.cs" />
+    <Compile Include="Migrations\201703181407355_AppHasBibleVerses.Designer.cs">
+      <DependentUpon>201703181407355_AppHasBibleVerses.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -321,6 +325,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703161627196_ApplicationUserProfileHasMessageDayOfWeekSetting.resx">
       <DependentUpon>201703161627196_ApplicationUserProfileHasMessageDayOfWeekSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703181407355_AppHasBibleVerses.resx">
+      <DependentUpon>201703181407355_AppHasBibleVerses.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

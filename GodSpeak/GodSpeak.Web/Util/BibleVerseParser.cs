@@ -7,14 +7,16 @@ namespace GodSpeak.Web.Util
     {
         public BibleVerse ParseLine(string line)
         {
-            var parts = line.Split(' ');
-            var locationParts = parts[1].Split(':');
+            var parts = line.Split(' ').ToList();
+            var locationParts = parts.First(s => s.Contains(":")).Split(':');
+            var locationIndex = parts.FindIndex(s => s.Contains(":"));
             return new BibleVerse()
             {
-                Book = parts[0],
+                Book = string.Join(" ", parts.GetRange(0, locationIndex)),
                 Chapter = int.Parse(locationParts[0]),
                 Verse = int.Parse(locationParts[1]),
-                Text = string.Join(" ", parts.ToList().GetRange(2, parts.Length - 2))
+                Text = string.Join(" ", parts.GetRange(locationIndex + 1, parts.Count - locationIndex - 1)),
+                ShortCode = string.Join(" ", parts.GetRange(0, locationIndex + 1))
             };
         }
 

@@ -1,6 +1,9 @@
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using GodSpeak.Web.Models;
 using GodSpeak.Web.Repositories;
+using GodSpeak.Web.Util;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -20,18 +23,9 @@ namespace GodSpeak.Web.Migrations
         
         protected override void Seed(GodSpeak.Web.Models.ApplicationDbContext context)
         {
-            //  This method will be called after migrating to the latest version.
-
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
+         
+            if(!context.BibleVerses.Any())
+                LoadBibleVerses(context);
 
             CreateUser(context, "ben@rendr.io", "J0hn_galt");
 
@@ -119,6 +113,29 @@ namespace GodSpeak.Web.Migrations
             CreateInvite(context, "AS25Invites", "PS25Invites", 4.99m, 25);
             CreateInvite(context, "AS50Invites", "PS50Invites", 6.99m, 50);
             CreateInvite(context, "AS100Invites", "PS100Invites", 10.99m, 100);
+        }
+
+        private void LoadBibleVerses(ApplicationDbContext context)
+        {
+            var parser = new BibleVerseParser();
+            var binFolderPath= System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, System.AppDomain.CurrentDomain.RelativeSearchPath ?? "");
+
+            foreach (var line in File.ReadLines(binFolderPath +"NASBNAME.TXT"))
+            {
+                if(string.IsNullOrEmpty(line))
+                    continue;
+
+                try
+                {
+                    var verse = parser.ParseLine(line);
+                    if (!context.BibleVerses.Any(v => v.ShortCode == verse.ShortCode))
+                        context.BibleVerses.Add(verse);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error debugging line:\r" + line);
+                }
+            }
         }
 
         private void CreateInvite(ApplicationDbContext context, string appstoreSku, string playstoreSku, decimal cost, int count)
