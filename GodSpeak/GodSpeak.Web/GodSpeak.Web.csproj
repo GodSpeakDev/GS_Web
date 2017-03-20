@@ -210,12 +210,15 @@
     <Compile Include="Repositories\IApplicationUserProfileRepository.cs" />
     <Compile Include="Repositories\IModelRepository.cs" />
     <Compile Include="Repositories\InviteRepository.cs" />
+    <Compile Include="Repositories\InMemoryDataRepository.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Util\SeedTextFileParser.cs" />
     <Compile Include="Util\UserRegistrationUtil.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\allCountries.txt" />
+    <Content Include="App_Data\allCountries.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />

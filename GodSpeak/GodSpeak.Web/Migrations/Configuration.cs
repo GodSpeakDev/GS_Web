@@ -25,9 +25,6 @@ namespace GodSpeak.Web.Migrations
         protected override void Seed(GodSpeak.Web.Models.ApplicationDbContext context)
         {
          
-//            if(!context.BibleVerses.Any())
-//                LoadBibleVerses(context);
-
             if (!context.MessageCategories.Any())
                 LoadMessageCategories(context);
 
@@ -92,36 +89,7 @@ namespace GodSpeak.Web.Migrations
             }
         }
 
-        private void LoadBibleVerses(ApplicationDbContext context)
-        {
-            var parser = new SeedTextFileParser();
-            var binFolderPath= System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, System.AppDomain.CurrentDomain.RelativeSearchPath ?? "");
-            binFolderPath += "App_Data/";
-
-            
-            string path = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/");
-
-            foreach (var line in File.ReadLines(path + "NASBNAME.TXT"))
-            {
-                if(string.IsNullOrEmpty(line))
-                    continue;
-
-                try
-                {
-                    var verse = parser.ParseBibleVerse(line);
-                    if (!context.BibleVerses.Any(v => v.ShortCode == verse.ShortCode))
-                    {
-                        context.BibleVerses.Add(verse);
-                        System.Diagnostics.Trace.WriteLine($"Added verse {verse.ShortCode}");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Error debugging line:\r" + line);
-                }
-            }
-        }
-
+        
         private void CreateInvite(ApplicationDbContext context, string appstoreSku, string playstoreSku, decimal cost, int count)
         {
             if (!context.InviteBundles.Any(b => b.AppStoreSku == appstoreSku))
