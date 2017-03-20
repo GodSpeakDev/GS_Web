@@ -18,9 +18,9 @@ namespace GodSpeak.Web.Repositories
 
     public class InMemoryDataRepository : IInMemoryDataRepository
     {
-        private readonly Dictionary<string,BibleVerse> _verseCache = new Dictionary<string, BibleVerse>();
+        private static readonly Dictionary<string,BibleVerse> _verseCache = new Dictionary<string, BibleVerse>();
 
-        private readonly Dictionary<string, PostalCodeGeoLocation> _postalCodeGeoCache = new Dictionary<string, PostalCodeGeoLocation>();
+        private static readonly Dictionary<string, PostalCodeGeoLocation> _postalCodeGeoCache = new Dictionary<string, PostalCodeGeoLocation>();
 
 
         public Dictionary<string, BibleVerse> VerseCache
