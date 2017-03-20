@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web.Caching;
 using System.Web.Http;
 using System.Web.Http.Description;
 using GodSpeak.Web.Models;
@@ -16,6 +17,8 @@ namespace GodSpeak.Web.Controllers
     {
         private readonly IInMemoryDataRepository _inMemoryDataRepository;
 
+        private static List<CountryCodeApiObject> _countryCodes;
+
         public GeoController(IInMemoryDataRepository inMemoryDataRepository)
         {
             _inMemoryDataRepository = inMemoryDataRepository;
@@ -25,11 +28,18 @@ namespace GodSpeak.Web.Controllers
         [ResponseType(typeof(ApiResponse<List<CountryCodeApiObject>>))]
         public HttpResponseMessage Countries()
         {
-            return CreateResponse(HttpStatusCode.OK, "Success", "Country Codes Retrieved", _inMemoryDataRepository.PostalCodeGeoCache.Values.Select(pc => pc.CountryCode).Distinct().Select(c => new CountryCodeApiObject()
-            {
-                Code = c,
-                Title = _inMemoryDataRepository.CountryCodeNameMap[c]
-            }).ToList());
+            if (_countryCodes == null)
+                _countryCodes =
+                    _inMemoryDataRepository.PostalCodeGeoCache.Values.Select(pc => pc.CountryCode)
+                        .Distinct()
+                        .Select(c => new CountryCodeApiObject()
+                        {
+                            Code = c,
+                            Title = _inMemoryDataRepository.CountryCodeNameMap[c]
+                        }).ToList();
+
+
+            return CreateResponse(HttpStatusCode.OK, "Success", "Country Codes Retrieved", _countryCodes);
         }
     }
 
