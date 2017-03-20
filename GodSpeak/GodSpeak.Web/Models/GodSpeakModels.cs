@@ -110,6 +110,41 @@ namespace GodSpeak.Web.Models
         public decimal Cost { get; set; }
     }
 
+    public class PostalCodeGeoLocation
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public Guid PostalCodeGeoLocationId { get; set; }
+
+        [Required]
+        public string CountryCode { get; set; }
+
+        [Required]
+        public string PostalCode { get; set; }
+
+        public string PlaceName { get; set; }
+
+        public string AdminName1 { get; set; }
+
+        public string AdminCode1 { get; set; }
+
+        public string AdminName2 { get; set; }
+
+        public string AdminCode2 { get; set; }
+
+        public string AdminName3 { get; set; }
+
+        public string AdminCode3 { get; set; }
+
+        [Required]
+        public double Latitude { get; set; }
+
+        [Required]
+        public double Longitude { get; set; }
+
+
+    }
+
     public class BibleVerse
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
