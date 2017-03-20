@@ -26,6 +26,12 @@ namespace GodSpeak.Web.Util
                 EndTime = TimeSpan.FromHours(17)
             }).ToList();
         }
-
+        private readonly Random _random = new Random();
+        public string GenerateInviteCode()
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            return new string(Enumerable.Repeat(chars, 8)
+              .Select(s => s[_random.Next(s.Length)]).ToArray());
+        }
     }
 }

@@ -212,7 +212,7 @@
     <Compile Include="Repositories\InviteRepository.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Util\BibleVerseParser.cs" />
-    <Compile Include="Util\UserRegisterationUtil.cs" />
+    <Compile Include="Util\UserRegistrationUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />

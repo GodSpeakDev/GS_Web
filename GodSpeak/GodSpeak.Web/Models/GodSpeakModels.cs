@@ -14,6 +14,9 @@ namespace GodSpeak.Web.Models
         [Required]
         public string Code { get; set; }
 
+        
+        public string ReferringCode { get; set; }
+
         public int InviteBalance { get; set; }
 
         [Required]

@@ -47,6 +47,7 @@ namespace GodSpeak.Web.Migrations
                     {
                         ApplicationUserProfileId = c.String(nullable: false, maxLength: 128),
                         Code = c.String(nullable: false),
+                        ReferringCode = c.String(),
                         InviteBalance = c.Int(nullable: false),
                         FirstName = c.String(nullable: false),
                         LastName = c.String(nullable: false),

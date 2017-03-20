@@ -33,14 +33,15 @@ namespace GodSpeak.Web.Migrations
 
             CreateUser(context, "ben@rendr.io", "J0hn_galt");
 
-            var registerUtil = new UserRegisterationUtil();
+            var registerUtil = new UserRegistrationUtil();
 
             AddOrUpdateProfileToUser(context, "ben@rendr.io", new ApplicationUserProfile()
             {
                 FirstName = "Benjamin",
                 LastName = "Bishop",
                 PostalCode = "63017",
-                Code = "YgtFijl",
+                Code = registerUtil.GenerateInviteCode(),
+                ReferringCode = registerUtil.GenerateInviteCode(),
                 CountryCode = "USA",
                 InviteBalance = 3,
                 MessageCategorySettings = registerUtil.GenerateDefaultMessageCategorySettings(context),
