@@ -42,6 +42,25 @@ namespace GodSpeak.Web.Migrations
                 .PrimaryKey(t => t.MessageCategoryId);
             
             CreateTable(
+                "dbo.PostalCodeGeoLocations",
+                c => new
+                    {
+                        PostalCodeGeoLocationId = c.Guid(nullable: false, identity: true),
+                        CountryCode = c.String(nullable: false),
+                        PostalCode = c.String(nullable: false),
+                        PlaceName = c.String(),
+                        AdminName1 = c.String(),
+                        AdminCode1 = c.String(),
+                        AdminName2 = c.String(),
+                        AdminCode2 = c.String(),
+                        AdminName3 = c.String(),
+                        AdminCode3 = c.String(),
+                        Latitude = c.Double(nullable: false),
+                        Longitude = c.Double(nullable: false),
+                    })
+                .PrimaryKey(t => t.PostalCodeGeoLocationId);
+            
+            CreateTable(
                 "dbo.ApplicationUserProfiles",
                 c => new
                     {
@@ -188,6 +207,7 @@ namespace GodSpeak.Web.Migrations
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
             DropTable("dbo.ApplicationUserProfiles");
+            DropTable("dbo.PostalCodeGeoLocations");
             DropTable("dbo.MessageCategories");
             DropTable("dbo.InviteBundles");
             DropTable("dbo.BibleVerses");

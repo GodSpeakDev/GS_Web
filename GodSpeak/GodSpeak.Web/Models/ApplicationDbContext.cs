@@ -14,6 +14,8 @@ namespace GodSpeak.Web.Models
 
         public DbSet<MessageCategory> MessageCategories { get; set; }
 
+        public DbSet<PostalCodeGeoLocation> PostalCodeGeoLocations { get; set; }
+
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
