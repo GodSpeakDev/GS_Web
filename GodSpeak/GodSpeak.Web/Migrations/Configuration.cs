@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Web;
 using GodSpeak.Web.Models;
 using GodSpeak.Web.Repositories;
 using GodSpeak.Web.Util;
@@ -120,7 +121,11 @@ namespace GodSpeak.Web.Migrations
             var parser = new BibleVerseParser();
             var binFolderPath= System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, System.AppDomain.CurrentDomain.RelativeSearchPath ?? "");
 
-            foreach (var line in File.ReadLines(binFolderPath +"NASBNAME.TXT"))
+
+            
+            string path = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/");
+
+            foreach (var line in File.ReadLines(path + "NASBNAME.TXT"))
             {
                 if(string.IsNullOrEmpty(line))
                     continue;
@@ -129,7 +134,10 @@ namespace GodSpeak.Web.Migrations
                 {
                     var verse = parser.ParseLine(line);
                     if (!context.BibleVerses.Any(v => v.ShortCode == verse.ShortCode))
+                    {
                         context.BibleVerses.Add(verse);
+                        System.Diagnostics.Trace.WriteLine($"Added verse {verse.ShortCode}");
+                    }
                 }
                 catch (Exception ex)
                 {
