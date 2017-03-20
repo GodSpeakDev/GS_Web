@@ -3,10 +3,44 @@ namespace GodSpeak.Web.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class UsersHaveProfiles : DbMigration
+    public partial class AppV1 : DbMigration
     {
         public override void Up()
         {
+            CreateTable(
+                "dbo.BibleVerses",
+                c => new
+                    {
+                        BibleVerseId = c.Guid(nullable: false, identity: true),
+                        ShortCode = c.String(nullable: false),
+                        Book = c.String(nullable: false),
+                        Chapter = c.Int(nullable: false),
+                        Verse = c.Int(nullable: false),
+                        Text = c.String(nullable: false),
+                    })
+                .PrimaryKey(t => t.BibleVerseId);
+            
+            CreateTable(
+                "dbo.InviteBundles",
+                c => new
+                    {
+                        InviteBundleId = c.Guid(nullable: false, identity: true),
+                        AppStoreSku = c.String(nullable: false),
+                        PlayStoreSku = c.String(nullable: false),
+                        NumberOfInvites = c.Int(nullable: false),
+                        Cost = c.Decimal(nullable: false, precision: 18, scale: 2),
+                    })
+                .PrimaryKey(t => t.InviteBundleId);
+            
+            CreateTable(
+                "dbo.MessageCategories",
+                c => new
+                    {
+                        MessageCategoryId = c.Guid(nullable: false, identity: true),
+                        Title = c.String(nullable: false),
+                    })
+                .PrimaryKey(t => t.MessageCategoryId);
+            
             CreateTable(
                 "dbo.ApplicationUserProfiles",
                 c => new
@@ -18,6 +52,7 @@ namespace GodSpeak.Web.Migrations
                         LastName = c.String(nullable: false),
                         CountryCode = c.String(nullable: false),
                         PostalCode = c.String(nullable: false),
+                        Token = c.String(),
                     })
                 .PrimaryKey(t => t.ApplicationUserProfileId)
                 .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserProfileId)
@@ -82,6 +117,37 @@ namespace GodSpeak.Web.Migrations
                 .Index(t => t.RoleId);
             
             CreateTable(
+                "dbo.MessageCategorySettings",
+                c => new
+                    {
+                        MessageCategorySettingId = c.Guid(nullable: false, identity: true),
+                        Enabled = c.Boolean(nullable: false),
+                        ApplicationUserProfileRefId = c.String(maxLength: 128),
+                        MessageCategoryRefId = c.Guid(nullable: false),
+                    })
+                .PrimaryKey(t => t.MessageCategorySettingId)
+                .ForeignKey("dbo.ApplicationUserProfiles", t => t.ApplicationUserProfileRefId)
+                .ForeignKey("dbo.MessageCategories", t => t.MessageCategoryRefId, cascadeDelete: true)
+                .Index(t => t.ApplicationUserProfileRefId)
+                .Index(t => t.MessageCategoryRefId);
+            
+            CreateTable(
+                "dbo.MessageDayOfWeekSettings",
+                c => new
+                    {
+                        MessageDayOfWeekSettingId = c.Guid(nullable: false, identity: true),
+                        Enabled = c.Boolean(nullable: false),
+                        Title = c.String(nullable: false),
+                        StartTime = c.Time(nullable: false, precision: 7),
+                        EndTime = c.Time(nullable: false, precision: 7),
+                        NumOfMessages = c.Int(nullable: false),
+                        ApplicationUserProfileRefId = c.String(maxLength: 128),
+                    })
+                .PrimaryKey(t => t.MessageDayOfWeekSettingId)
+                .ForeignKey("dbo.ApplicationUserProfiles", t => t.ApplicationUserProfileRefId)
+                .Index(t => t.ApplicationUserProfileRefId);
+            
+            CreateTable(
                 "dbo.AspNetRoles",
                 c => new
                     {
@@ -96,11 +162,17 @@ namespace GodSpeak.Web.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
+            DropForeignKey("dbo.MessageDayOfWeekSettings", "ApplicationUserProfileRefId", "dbo.ApplicationUserProfiles");
+            DropForeignKey("dbo.MessageCategorySettings", "MessageCategoryRefId", "dbo.MessageCategories");
+            DropForeignKey("dbo.MessageCategorySettings", "ApplicationUserProfileRefId", "dbo.ApplicationUserProfiles");
             DropForeignKey("dbo.ApplicationUserProfiles", "ApplicationUserProfileId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
+            DropIndex("dbo.MessageDayOfWeekSettings", new[] { "ApplicationUserProfileRefId" });
+            DropIndex("dbo.MessageCategorySettings", new[] { "MessageCategoryRefId" });
+            DropIndex("dbo.MessageCategorySettings", new[] { "ApplicationUserProfileRefId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
@@ -108,11 +180,16 @@ namespace GodSpeak.Web.Migrations
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.ApplicationUserProfiles", new[] { "ApplicationUserProfileId" });
             DropTable("dbo.AspNetRoles");
+            DropTable("dbo.MessageDayOfWeekSettings");
+            DropTable("dbo.MessageCategorySettings");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
             DropTable("dbo.ApplicationUserProfiles");
+            DropTable("dbo.MessageCategories");
+            DropTable("dbo.InviteBundles");
+            DropTable("dbo.BibleVerses");
         }
     }
 }

@@ -43,7 +43,7 @@ namespace GodSpeak.Web.Migrations
                 Code = "YgtFijl",
                 CountryCode = "USA",
                 InviteBalance = 3,
-                MessageCategorySettings = new List<MessageCategorySetting>(),
+                MessageCategorySettings = CreateMessageCategorySettingsForUser(context),
                 MessageDayOfWeekSettings = new List<MessageDayOfWeekSetting>()
                 {
                     new MessageDayOfWeekSetting()
@@ -107,6 +107,13 @@ namespace GodSpeak.Web.Migrations
             CreateInvite(context, "AS25Invites", "PS25Invites", 4.99m, 25);
             CreateInvite(context, "AS50Invites", "PS50Invites", 6.99m, 50);
             CreateInvite(context, "AS100Invites", "PS100Invites", 10.99m, 100);
+        }
+
+        private ICollection<MessageCategorySetting> CreateMessageCategorySettingsForUser(ApplicationDbContext context)
+        {
+            return
+                context.MessageCategories.ToList().Select(category => new MessageCategorySetting() {Category = category})
+                    .ToList();
         }
 
         private void LoadMessageCategories(ApplicationDbContext context)

@@ -7,13 +7,13 @@ namespace GodSpeak.Web.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class MessageCategorySettingHasMessageCategory1 : IMigrationMetadata
+    public sealed partial class AppV1 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(MessageCategorySettingHasMessageCategory1));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AppV1));
         
         string IMigrationMetadata.Id
         {
-            get { return "201703201413184_MessageCategorySettingHasMessageCategory1"; }
+            get { return "201703201433160_AppV1"; }
         }
         
         string IMigrationMetadata.Source

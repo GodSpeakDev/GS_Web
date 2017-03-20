@@ -193,37 +193,9 @@
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Infrastructure\NinjectDependencyScope.cs" />
     <Compile Include="Infrastructure\NinjectRegistrations.cs" />
-    <Compile Include="Migrations\201703141704330_UsersHaveProfiles.cs" />
-    <Compile Include="Migrations\201703141704330_UsersHaveProfiles.Designer.cs">
-      <DependentUpon>201703141704330_UsersHaveProfiles.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201703141943533_SystemHasInviteBundles.cs" />
-    <Compile Include="Migrations\201703141943533_SystemHasInviteBundles.Designer.cs">
-      <DependentUpon>201703141943533_SystemHasInviteBundles.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201703142044103_UserProfileHasToken.cs" />
-    <Compile Include="Migrations\201703142044103_UserProfileHasToken.Designer.cs">
-      <DependentUpon>201703142044103_UserProfileHasToken.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201703161606084_ApplicationUserProfileHasMessageCategorySettings.cs" />
-    <Compile Include="Migrations\201703161606084_ApplicationUserProfileHasMessageCategorySettings.Designer.cs">
-      <DependentUpon>201703161606084_ApplicationUserProfileHasMessageCategorySettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201703161627196_ApplicationUserProfileHasMessageDayOfWeekSetting.cs" />
-    <Compile Include="Migrations\201703161627196_ApplicationUserProfileHasMessageDayOfWeekSetting.Designer.cs">
-      <DependentUpon>201703161627196_ApplicationUserProfileHasMessageDayOfWeekSetting.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201703181407355_AppHasBibleVerses.cs" />
-    <Compile Include="Migrations\201703181407355_AppHasBibleVerses.Designer.cs">
-      <DependentUpon>201703181407355_AppHasBibleVerses.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201703201327215_MessageCategorySettingHasMessageCategory.cs" />
-    <Compile Include="Migrations\201703201327215_MessageCategorySettingHasMessageCategory.Designer.cs">
-      <DependentUpon>201703201327215_MessageCategorySettingHasMessageCategory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201703201413184_MessageCategorySettingHasMessageCategory1.cs" />
-    <Compile Include="Migrations\201703201413184_MessageCategorySettingHasMessageCategory1.Designer.cs">
-      <DependentUpon>201703201413184_MessageCategorySettingHasMessageCategory1.cs</DependentUpon>
+    <Compile Include="Migrations\201703201433160_AppV1.cs" />
+    <Compile Include="Migrations\201703201433160_AppV1.Designer.cs">
+      <DependentUpon>201703201433160_AppV1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -307,7 +279,11 @@
     <Content Include="Views\ApplicationUserInvites\Edit.cshtml" />
     <Content Include="Views\ApplicationUserInvites\Index.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201703201433160_AppV1.resx">
+      <DependentUpon>201703201433160_AppV1.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -315,32 +291,6 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201703141704330_UsersHaveProfiles.resx">
-      <DependentUpon>201703141704330_UsersHaveProfiles.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703141943533_SystemHasInviteBundles.resx">
-      <DependentUpon>201703141943533_SystemHasInviteBundles.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703142044103_UserProfileHasToken.resx">
-      <DependentUpon>201703142044103_UserProfileHasToken.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703161606084_ApplicationUserProfileHasMessageCategorySettings.resx">
-      <DependentUpon>201703161606084_ApplicationUserProfileHasMessageCategorySettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703161627196_ApplicationUserProfileHasMessageDayOfWeekSetting.resx">
-      <DependentUpon>201703161627196_ApplicationUserProfileHasMessageDayOfWeekSetting.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703181407355_AppHasBibleVerses.resx">
-      <DependentUpon>201703181407355_AppHasBibleVerses.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703201327215_MessageCategorySettingHasMessageCategory.resx">
-      <DependentUpon>201703201327215_MessageCategorySettingHasMessageCategory.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703201413184_MessageCategorySettingHasMessageCategory1.resx">
-      <DependentUpon>201703201413184_MessageCategorySettingHasMessageCategory1.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
