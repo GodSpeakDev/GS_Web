@@ -25,8 +25,11 @@ namespace GodSpeak.Web.Migrations
         protected override void Seed(GodSpeak.Web.Models.ApplicationDbContext context)
         {
          
-            if(!context.BibleVerses.Any())
-                LoadBibleVerses(context);
+//            if(!context.BibleVerses.Any())
+//                LoadBibleVerses(context);
+
+            if (!context.MessageCategories.Any())
+                LoadMessageCategories(context);
 
             CreateUser(context, "ben@rendr.io", "J0hn_galt");
 
@@ -106,6 +109,35 @@ namespace GodSpeak.Web.Migrations
             CreateInvite(context, "AS100Invites", "PS100Invites", 10.99m, 100);
         }
 
+        private void LoadMessageCategories(ApplicationDbContext context)
+        {
+             var titles = new List<string>()
+             {
+                 "Love",
+                 "Faith",
+                 "Peace",
+                 "Hope",
+                 "Marriage",
+                 "Joy",
+                 "Prayer",
+                 "Strength",
+                 "Grace",
+                 "Children",
+                 "Forgiveness",
+                 "Healing",
+                 "Holy Spirit",
+                 "Salvation",
+                 "Fear",
+                 "Top 100 Most Searched/Read Bible Verses [2016]",
+                 "Wisdom from Proverbs",
+                 "What Jesus Said"
+             };
+            foreach (var title in titles)
+            {
+                context.MessageCategories.Add(new MessageCategory() {Title = title});
+            }
+        }
+
         private void LoadBibleVerses(ApplicationDbContext context)
         {
             var parser = new BibleVerseParser();
@@ -115,7 +147,7 @@ namespace GodSpeak.Web.Migrations
             
             string path = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/");
 
-            foreach (var line in File.ReadLines(binFolderPath + "NASBNAME.TXT"))
+            foreach (var line in File.ReadLines(path + "NASBNAME.TXT"))
             {
                 if(string.IsNullOrEmpty(line))
                     continue;

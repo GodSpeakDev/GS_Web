@@ -12,6 +12,8 @@ namespace GodSpeak.Web.Models
 
         public DbSet<BibleVerse> BibleVerses { get; set; }
 
+        public DbSet<MessageCategory> MessageCategories { get; set; }
+
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

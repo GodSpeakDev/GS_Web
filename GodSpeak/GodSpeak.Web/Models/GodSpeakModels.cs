@@ -41,7 +41,7 @@ namespace GodSpeak.Web.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public string MessageCategoryId { get; set; }
+        public Guid MessageCategoryId { get; set; }
 
         [Required]
         public string Title { get; set; }
@@ -63,7 +63,7 @@ namespace GodSpeak.Web.Models
         [ForeignKey("ApplicationUserProfileRefId")]
         public virtual ApplicationUserProfile ApplicationUserProfile { get; set; }
 
-        public string MessageCategoryRefId { get; set; }
+        public Guid MessageCategoryRefId { get; set; }
         
         [ForeignKey("MessageCategoryRefId")]
         public virtual MessageCategory Category { get; set; }
