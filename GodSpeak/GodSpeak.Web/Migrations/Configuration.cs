@@ -94,7 +94,7 @@ namespace GodSpeak.Web.Migrations
 
         private void LoadBibleVerses(ApplicationDbContext context)
         {
-            var parser = new BibleVerseParser();
+            var parser = new SeedTextFileParser();
             var binFolderPath= System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, System.AppDomain.CurrentDomain.RelativeSearchPath ?? "");
             binFolderPath += "App_Data/";
 
@@ -108,7 +108,7 @@ namespace GodSpeak.Web.Migrations
 
                 try
                 {
-                    var verse = parser.ParseLine(line);
+                    var verse = parser.ParseBibleVerse(line);
                     if (!context.BibleVerses.Any(v => v.ShortCode == verse.ShortCode))
                     {
                         context.BibleVerses.Add(verse);

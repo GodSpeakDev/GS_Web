@@ -1,15 +1,36 @@
-﻿using GodSpeak.Web.Util;
+﻿using GodSpeak.Web.Models;
+using GodSpeak.Web.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Should;
 
 namespace GodSpeak.Web.Tests.Util
 {
     [TestClass]
-    public class BibleVerseParserTest
+    public class SeedTextFileParserTest
     {
         [TestMethod]
+        public void TestParsePostalCodeGeoLocation()
+        {
+            var parser = new SeedTextFileParser();
 
-        public void TestParseLine()
+            PostalCodeGeoLocation loc = parser.ParsePostalCodeGeoLocation("US	17748	Mc Elhattan	Pennsylvania	PA	Clinton	035			41.1355	-77.37	1");
+
+            loc.CountryCode.ShouldEqual("US");
+            loc.PostalCode.ShouldEqual("17748");
+            loc.AdminName1.ShouldEqual("Mc Elhattan");
+            loc.AdminCode1.ShouldEqual("Pennsylvania");
+            loc.AdminName2.ShouldEqual("PA");
+            loc.AdminCode2.ShouldEqual("Clinton");
+            loc.AdminName3.ShouldEqual("035");
+            loc.AdminCode3.ShouldBeEmpty();
+            loc.Latitude.ShouldEqual(41.1355);
+            loc.Longitude.ShouldEqual(-77.37);
+        }
+
+
+        [TestMethod]
+
+        public void TestParseBibleVerse()
         {
             AssertLineParsed("Genesis 1:3 Then God said, \"Let there be light\"; and there was light.", 
                 "Genesis", 1, 3, "Then God said, \"Let there be light\"; and there was light.", "Genesis 1:3");
@@ -20,8 +41,8 @@ namespace GodSpeak.Web.Tests.Util
 
         private static void AssertLineParsed(string line, string expectedBook, int expectedChapter, int expectedVerse, string expectedText, string expectedShortCode)
         {
-            var parser = new BibleVerseParser();
-            var verse = parser.ParseLine(line);
+            var parser = new SeedTextFileParser();
+            var verse = parser.ParseBibleVerse(line);
 
             verse.Book.ShouldEqual(expectedBook);
 
