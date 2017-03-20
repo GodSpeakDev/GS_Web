@@ -5,7 +5,7 @@ using GodSpeak.Web.Models;
 
 namespace GodSpeak.Web.Util
 {
-    public class UserRegisterationUtil
+    public class UserRegistrationUtil
     {
         public List<MessageCategorySetting> GenerateDefaultMessageCategorySettings(ApplicationDbContext context)
         {
@@ -14,7 +14,7 @@ namespace GodSpeak.Web.Util
                     .ToList();
         }
 
-        public ICollection<MessageDayOfWeekSetting> CreateDayOfWeekSettingsForUser(ApplicationDbContext context)
+        public ICollection<MessageDayOfWeekSetting> GenerateDefaultDayOfWeekSettingsForUser(ApplicationDbContext context)
         {
             var daysOfWeek = new List<string>() { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
             return daysOfWeek.Select(d => new MessageDayOfWeekSetting()
