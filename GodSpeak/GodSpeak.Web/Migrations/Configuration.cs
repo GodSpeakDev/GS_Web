@@ -33,7 +33,7 @@ namespace GodSpeak.Web.Migrations
 
             CreateUser(context, "ben@rendr.io", "J0hn_galt");
 
-
+            var registerUtil = new UserRegisterationUtil();
 
             AddOrUpdateProfileToUser(context, "ben@rendr.io", new ApplicationUserProfile()
             {
@@ -43,8 +43,8 @@ namespace GodSpeak.Web.Migrations
                 Code = "YgtFijl",
                 CountryCode = "USA",
                 InviteBalance = 3,
-                MessageCategorySettings = CreateMessageCategorySettingsForUser(context),
-                MessageDayOfWeekSettings = CreateDayOfWeekSettingsForUser(context)
+                MessageCategorySettings = registerUtil.GenerateDefaultMessageCategorySettings(context),
+                MessageDayOfWeekSettings = registerUtil.GenerateDefaultDayOfWeekSettingsForUser(context)
 
             });
 
@@ -58,26 +58,9 @@ namespace GodSpeak.Web.Migrations
             CreateInvite(context, "AS100Invites", "PS100Invites", 10.99m, 100);
         }
 
-        private ICollection<MessageDayOfWeekSetting> CreateDayOfWeekSettingsForUser(ApplicationDbContext context)
-        {
-            var daysOfWeek = new List<string>() { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
-            return daysOfWeek.Select(d => new MessageDayOfWeekSetting()
-            {
-                Title = d,
-                Enabled = true,
-                NumOfMessages = 3,
-                StartTime = TimeSpan.FromHours(8),
-                EndTime = TimeSpan.FromHours(17)
-            }).ToList();
-        }
+        
 
-
-        private ICollection<MessageCategorySetting> CreateMessageCategorySettingsForUser(ApplicationDbContext context)
-        {
-            return
-                context.MessageCategories.ToList().Select(category => new MessageCategorySetting() {Category = category, Enabled = true})
-                    .ToList();
-        }
+       
 
         private void LoadMessageCategories(ApplicationDbContext context)
         {
