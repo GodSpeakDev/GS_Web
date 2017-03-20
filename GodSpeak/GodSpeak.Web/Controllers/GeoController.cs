@@ -41,7 +41,19 @@ namespace GodSpeak.Web.Controllers
 
             return CreateResponse(HttpStatusCode.OK, "Success", "Country Codes Retrieved", _countryCodes);
         }
+
+        [HttpGet]
+        [ResponseType(typeof(ApiResponse))]
+        public HttpResponseMessage PostalCodeExists(string countryCode, string postalCode)
+        {
+            var key = $"{countryCode}-{postalCode}";
+            if (!_inMemoryDataRepository.PostalCodeGeoCache.ContainsKey(key))
+                return CreateResponse(HttpStatusCode.NotFound, "Postal Code Not Found",
+                    $"Postal code {postalCode} does not exist in country {countryCode}");
+            var location = _inMemoryDataRepository.PostalCodeGeoCache[key];
+            return CreateResponse(HttpStatusCode.OK, "Postal Code Exists",
+                $"{location.AdminName1}, {location.AdminName2}");
+        }
     }
 
-    
 }
