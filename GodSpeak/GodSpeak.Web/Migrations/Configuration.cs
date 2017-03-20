@@ -40,17 +40,7 @@ namespace GodSpeak.Web.Migrations
                 Code = "YgtFijl",
                 CountryCode = "USA",
                 InviteBalance = 3,
-                MessageCategorySettings = new List<MessageCategorySetting>()
-                {
-                    new MessageCategorySetting()
-                    {
-                        Title = "Grief"
-                    },
-                    new MessageCategorySetting()
-                    {
-                        Title = "Love"
-                    }
-                },
+                MessageCategorySettings = new List<MessageCategorySetting>(),
                 MessageDayOfWeekSettings = new List<MessageDayOfWeekSetting>()
                 {
                     new MessageDayOfWeekSetting()
@@ -120,12 +110,12 @@ namespace GodSpeak.Web.Migrations
         {
             var parser = new BibleVerseParser();
             var binFolderPath= System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, System.AppDomain.CurrentDomain.RelativeSearchPath ?? "");
-
+            binFolderPath += "App_Data/";
 
             
             string path = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/");
 
-            foreach (var line in File.ReadLines(path + "NASBNAME.TXT"))
+            foreach (var line in File.ReadLines(binFolderPath + "NASBNAME.TXT"))
             {
                 if(string.IsNullOrEmpty(line))
                     continue;

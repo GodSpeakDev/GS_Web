@@ -111,7 +111,7 @@ namespace GodSpeak.Web.Models
             return new MessageCategorySettingApiObject()
             {
                 Id = setting.MessageCategorySettingId,
-                Title = setting.Title,
+                Title = setting.Category.Title,
                 Enabled =  setting.Enabled
             };
         }

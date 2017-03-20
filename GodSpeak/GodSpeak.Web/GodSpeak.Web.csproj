@@ -217,6 +217,10 @@
     <Compile Include="Migrations\201703181407355_AppHasBibleVerses.Designer.cs">
       <DependentUpon>201703181407355_AppHasBibleVerses.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703201327215_MessageCategorySettingHasMessageCategory.cs" />
+    <Compile Include="Migrations\201703201327215_MessageCategorySettingHasMessageCategory.Designer.cs">
+      <DependentUpon>201703201327215_MessageCategorySettingHasMessageCategory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -326,6 +330,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703181407355_AppHasBibleVerses.resx">
       <DependentUpon>201703181407355_AppHasBibleVerses.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703201327215_MessageCategorySettingHasMessageCategory.resx">
+      <DependentUpon>201703201327215_MessageCategorySettingHasMessageCategory.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
