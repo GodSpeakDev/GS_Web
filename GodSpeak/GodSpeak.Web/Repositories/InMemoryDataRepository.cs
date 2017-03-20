@@ -12,6 +12,8 @@ namespace GodSpeak.Web.Repositories
     {
         Dictionary<string, BibleVerse> VerseCache { get; }
         Dictionary<string, PostalCodeGeoLocation> PostalCodeGeoCache { get; }
+
+        Dictionary<string, string> CountryCodeNameMap { get; }
     }
 
     public class InMemoryDataRepository : IInMemoryDataRepository
@@ -40,6 +42,19 @@ namespace GodSpeak.Web.Repositories
                 return _postalCodeGeoCache;   
             }
         }
+        private readonly Dictionary<string, string> _countryCodeNameMap = new Dictionary<string, string>();
+        public Dictionary<string, string> CountryCodeNameMap
+        {
+            get
+            {
+                if (!_countryCodeNameMap.Any())
+                    LoadCountryCodeNames();
+                return _countryCodeNameMap;
+                
+            }
+        }
+
+       
 
         protected string AppDataPath
         {
@@ -74,6 +89,22 @@ namespace GodSpeak.Web.Repositories
                 catch (Exception ex)
                 {
                     throw new Exception("Error debugging line:\r" + line);
+                }
+            }
+        }
+
+        private void LoadCountryCodeNames()
+        {
+            foreach (var line in File.ReadLines(AppDataPath + "country-codes.csv"))
+            {
+                var parts = line.Split(',');
+                try
+                {
+                    _countryCodeNameMap[parts[3]] = parts[1];
+                }
+                catch
+                {
+                    throw new Exception($"Error parsing code/name line: {line}");
                 }
             }
         }

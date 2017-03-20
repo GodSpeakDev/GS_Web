@@ -25,6 +25,13 @@ namespace GodSpeak.Web.Models
         public string Password { get; set; }
     }
 
+    public class CountryCodeApiObject
+    {
+        public string Title { get; set; }
+
+        public string Code { get; set; }
+    }
+
     public class UserApiObject
     {
        
