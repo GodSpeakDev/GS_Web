@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -24,6 +26,11 @@ namespace GodSpeak.Web.Controllers
                 Message = responseMessage,
                 Payload = payload
             });
+        }
+
+        protected List<string> GetModelErrors()
+        {
+            return (from state in ModelState from error in state.Value.Errors select error.ErrorMessage).ToList();
         }
 
     }
