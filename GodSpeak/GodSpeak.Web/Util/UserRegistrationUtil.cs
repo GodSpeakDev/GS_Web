@@ -9,29 +9,35 @@ namespace GodSpeak.Web.Util
 {
     public class UserRegistrationUtil
     {
-        public async Task<List<string>> GetParentInviteCodes(string invite, ApplicationDbContext context)
+        private readonly ApplicationDbContext _dbContext;
+
+        public UserRegistrationUtil(ApplicationDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+        public async Task<List<string>> GetParentInviteCodes(string invite)
         {
             var codes = new List<string>();
-            var profile = await context.Profiles.FirstAsync(p => p.Code == invite);
+            var profile = await _dbContext.Profiles.FirstAsync(p => p.Code == invite);
 
             while (!string.IsNullOrEmpty(profile.ReferringCode))
             {
                 var referringCode = profile.ReferringCode;
                 codes.Add(referringCode);
-                profile = await context.Profiles.FirstAsync(p => p.Code == referringCode);
+                profile = await _dbContext.Profiles.FirstAsync(p => p.Code == referringCode);
             }
 
             return codes;
         }
 
-        public List<MessageCategorySetting> GenerateDefaultMessageCategorySettings(ApplicationDbContext context)
+        public List<MessageCategorySetting> GenerateDefaultMessageCategorySettings()
         {
             return
-                context.MessageCategories.ToList().Select(category => new MessageCategorySetting() { Category = category, Enabled = true })
+                _dbContext.MessageCategories.ToList().Select(category => new MessageCategorySetting() { Category = category, Enabled = true })
                     .ToList();
         }
 
-        public ICollection<MessageDayOfWeekSetting> GenerateDefaultDayOfWeekSettingsForUser(ApplicationDbContext context)
+        public ICollection<MessageDayOfWeekSetting> GenerateDefaultDayOfWeekSettingsForUser()
         {
             var daysOfWeek = new List<string>() { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
             return daysOfWeek.Select(d => new MessageDayOfWeekSetting()

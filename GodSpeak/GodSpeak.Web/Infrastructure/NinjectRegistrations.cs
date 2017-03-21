@@ -1,5 +1,6 @@
 ﻿using GodSpeak.Web.Models;
 using GodSpeak.Web.Repositories;
+using GodSpeak.Web.Util;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Ninject;
@@ -15,6 +16,7 @@ namespace GodSpeak.Web.Infrastructure
             Bind<IUserStore<ApplicationUser>>().To<UserStore<ApplicationUser>>().WithConstructorArgument("context", Kernel.Get<ApplicationDbContext>()); ;
             Bind<UserManager<ApplicationUser>>().ToSelf();
 
+            Bind<UserRegistrationUtil>().ToSelf();
             Bind<IApplicationUserProfileRepository>().To<ApplicationUserProfileRepository>();
             Bind<IInviteRepository>().To<InviteRepository>();
             Bind<IAuthRepository>().To<AuthRepository>();

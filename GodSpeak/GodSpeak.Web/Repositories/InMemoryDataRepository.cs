@@ -86,7 +86,7 @@ namespace GodSpeak.Web.Repositories
                     if (!_verseCache.ContainsKey(verse.ShortCode))
                         _verseCache[verse.ShortCode] = verse;
                 }
-                catch (Exception ex)
+                catch
                 {
                     throw new Exception("Error debugging line:\r" + line);
                 }
@@ -126,9 +126,10 @@ namespace GodSpeak.Web.Repositories
                     if (!_postalCodeGeoCache.ContainsKey(key))
                         _postalCodeGeoCache[key] = location;
                 }
-                catch (Exception ex)
+                catch 
                 {
-                    throw new Exception("Error debugging line:\r" + line);
+                    throw new Exception("Error parsing line:\r" + line);
+
                 }
             }
         }

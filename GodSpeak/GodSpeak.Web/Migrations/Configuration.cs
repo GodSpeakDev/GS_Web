@@ -30,7 +30,7 @@ namespace GodSpeak.Web.Migrations
 
             CreateUser(context, "ben@rendr.io", "J0hn_galt");
 
-            var registerUtil = new UserRegistrationUtil();
+            var registerUtil = new UserRegistrationUtil(context);
 
             AddOrUpdateProfileToUser(context, "ben@rendr.io", new ApplicationUserProfile()
             {
@@ -41,8 +41,8 @@ namespace GodSpeak.Web.Migrations
                 ReferringCode = registerUtil.GenerateInviteCode(),
                 CountryCode = "USA",
                 InviteBalance = 3,
-                MessageCategorySettings = registerUtil.GenerateDefaultMessageCategorySettings(context),
-                MessageDayOfWeekSettings = registerUtil.GenerateDefaultDayOfWeekSettingsForUser(context)
+                MessageCategorySettings = registerUtil.GenerateDefaultMessageCategorySettings(),
+                MessageDayOfWeekSettings = registerUtil.GenerateDefaultDayOfWeekSettingsForUser()
 
             });
 
