@@ -26,16 +26,18 @@ namespace GodSpeak.Web.Controllers
         private readonly IAuthRepository _authRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IInviteRepository _inviteRepository;
-        private readonly IApplicationUserProfileRepository _profileRepository;
+        
         private readonly UserRegistrationUtil _regUtil;
+        private readonly IInMemoryDataRepository _inMemoryDataRepo;
 
-        public UserController(IAuthRepository authRepository, UserManager<ApplicationUser> userManager, IInviteRepository inviteRepository, IApplicationUserProfileRepository profileRepository, UserRegistrationUtil regUtil)
+        public UserController(IAuthRepository authRepository, UserManager<ApplicationUser> userManager, IInviteRepository inviteRepository,  UserRegistrationUtil regUtil, IInMemoryDataRepository inMemoryDataRepo)
         {
             _authRepository = authRepository;
             _userManager = userManager;
             _inviteRepository = inviteRepository;
-            _profileRepository = profileRepository;
+            
             _regUtil = regUtil;
+            _inMemoryDataRepo = inMemoryDataRepo;
         }
 
       
@@ -76,6 +78,11 @@ namespace GodSpeak.Web.Controllers
             if (await _userManager.Users.AnyAsync(u => u.Email == registerUserObject.EmailAddress))
                 return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
                     "User with submitted email already exists");
+
+            if (
+                !_inMemoryDataRepo.PostalCodeGeoCache.ContainsKey(
+                    $"{registerUserObject.CountryCode}-{registerUserObject.PostalCode}"))
+                return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure", "Country and/or Postal code is invalid.");
 
             try
             {
