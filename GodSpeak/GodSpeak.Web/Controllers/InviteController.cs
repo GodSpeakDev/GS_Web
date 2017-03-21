@@ -19,7 +19,7 @@ namespace GodSpeak.Web.Controllers
         private readonly IAuthRepository _authRepository;
         private readonly IApplicationUserProfileRepository _profileRepository;
 
-        public InviteController(IInviteRepository inviteRepository, IAuthRepository authRepository, IApplicationUserProfileRepository profileRepository)
+        public InviteController(IInviteRepository inviteRepository, IAuthRepository authRepository, IApplicationUserProfileRepository profileRepository):base(authRepository)
         {
             _inviteRepository = inviteRepository;
             _authRepository = authRepository;
@@ -93,24 +93,6 @@ namespace GodSpeak.Web.Controllers
                 "Congratulations, you successfully purchased more invites.");
         }
 
-        private HttpResponseMessage CreateMissingTokenResponse()
-        {
-            return CreateResponse(HttpStatusCode.Forbidden, "Request Failed", "Request is missing required header");
-        }
-
-        private async Task<bool> RequestHasValidAuthToken(HttpRequestMessage request)
-        {
-            const string tokenKey = "token";
-            if (!request.Headers.Contains(tokenKey))
-                return false;
-
-
-            return await _authRepository.UserWithTokenExists(GetAuthToken(request));
-        }
-
-        private static string GetAuthToken(HttpRequestMessage request)
-        {
-            return request.Headers.GetValues("token").First();
-        }
+       
     }
 }

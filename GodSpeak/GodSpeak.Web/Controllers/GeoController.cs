@@ -19,7 +19,7 @@ namespace GodSpeak.Web.Controllers
 
         private static List<CountryCodeApiObject> _countryCodes;
 
-        public GeoController(IInMemoryDataRepository inMemoryDataRepository)
+        public GeoController(IInMemoryDataRepository inMemoryDataRepository, IAuthRepository authRepository):base(authRepository)
         {
             _inMemoryDataRepository = inMemoryDataRepository;
         }

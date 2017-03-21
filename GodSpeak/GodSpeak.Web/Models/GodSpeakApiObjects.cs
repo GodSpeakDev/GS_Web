@@ -32,6 +32,38 @@ namespace GodSpeak.Web.Models
         public string Code { get; set; }
     }
 
+    public class UpdateUserObject
+    {
+        [Required]
+        public string FirstName { get; set; }
+
+        [Required]
+        public string LastName { get; set; }
+
+        public string CurrentPassword { get; set; }
+
+        public string NewPassword { get; set; }
+
+        public string PasswordConfirm { get; set; }
+        
+
+        [Required]
+        public string CountryCode { get; set; }
+
+        [Required]
+        public string PostalCode { get; set; }
+
+        [Required]
+        public List<MessageCategorySettingApiObject> MessageCategorySettings { get; set; }
+
+        [Required]
+        public List<MessageDayOfWeekSettingApiObject> MessageDayOfWeekSettings { get; set; }
+
+
+    }
+
+    
+
     public class RegisterUserObject
     {
         [Required]
