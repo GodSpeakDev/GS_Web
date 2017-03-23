@@ -40,8 +40,8 @@ namespace GodSpeak.Web.Repositories
         public async Task<IdentityUser> FindUser(string userName, string password)
         {
             IdentityUser user = await _userManager.FindAsync(userName, password);
+            return user == null ? null : (await _dbContext.Profiles.FirstAsync(p => p.ApplicationUser.Id == user.Id)).ApplicationUser;
             //HACK: for some reason _userManager isn't returning updated user
-            return (await _dbContext.Profiles.FirstAsync(p => p.ApplicationUser.Id == user.Id)).ApplicationUser;
         }
 
         public string CalculateMd5Hash(string input)

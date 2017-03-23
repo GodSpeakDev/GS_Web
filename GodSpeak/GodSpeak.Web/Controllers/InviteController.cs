@@ -31,6 +31,7 @@ namespace GodSpeak.Web.Controllers
 
         [HttpGet]
         [ResponseType(typeof(ApiResponse))]
+        [ActionName("validate")]
         public async Task<HttpResponseMessage> Validate(string inviteCode)
         {
             if (!await _inviteRepository.InviteCodeIsValid(inviteCode))
@@ -48,6 +49,7 @@ namespace GodSpeak.Web.Controllers
 
         [HttpGet]
         [ResponseType(typeof(ApiResponse))]
+        [ActionName("parents")]
         public async Task<HttpResponseMessage> ParentInviteCodes(string inviteCode)
         {
             return CreateResponse(HttpStatusCode.OK, "Parent Invite Codes", "Here are the codes",

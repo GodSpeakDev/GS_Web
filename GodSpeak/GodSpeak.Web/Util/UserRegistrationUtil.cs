@@ -28,10 +28,12 @@ namespace GodSpeak.Web.Util
             {
                 var referringCode = profile.ReferringCode;
                 codes.Add(referringCode);
+                if (string.IsNullOrEmpty(referringCode) || referringCode == "godspeak")
+                    break;
                 profile = await _dbContext.Profiles.FirstAsync(p => p.Code == referringCode);
             }
 
-            return codes;
+            return codes.Distinct().ToList();
         }
 
         public List<MessageCategorySetting> GenerateDefaultMessageCategorySettings()
