@@ -14,6 +14,7 @@ namespace GodSpeak.Web.Migrations
                         ImpactDayId = c.Guid(nullable: false, identity: true),
                         InviteCode = c.String(nullable: false),
                         Day = c.DateTime(nullable: false),
+                        DayTitle = c.String(nullable: false),
                     })
                 .PrimaryKey(t => t.ImpactDayId);
             

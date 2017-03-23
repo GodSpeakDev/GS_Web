@@ -122,6 +122,9 @@ namespace GodSpeak.Web.Models
         [Required]
         public DateTime Day { get; set; }
 
+        [Required]
+        public string DayTitle { get; set; }
+
         public virtual ICollection<ImpactDayGeoPoint> Points { get; set; }
 
 

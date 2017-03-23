@@ -47,26 +47,26 @@ namespace GodSpeak.Web.Migrations
             };
             AddOrUpdateProfileToUser(context, "ben@rendr.io", ben);
 
-//            CreateUser(context, "brett@venadotech.com", "v3nad0");
-//            var brett = new ApplicationUserProfile()
-//            {
-//                FirstName = "Brett",
-//                LastName = "Williams",
-//                PostalCode = "74055",
-//                Code = registerUtil.GenerateInviteCode(),
-//                ReferringCode = ben.Code,
-//                CountryCode = "US",
-//                InviteBalance = 3,
-//                MessageCategorySettings = registerUtil.GenerateDefaultMessageCategorySettings(),
-//                MessageDayOfWeekSettings = registerUtil.GenerateDefaultDayOfWeekSettingsForUser()
-//
-//            };
-//            AddOrUpdateProfileToUser(context, "brett@venadotech.com", brett);
-//
-//            var impactRepo = new ImpactRepository(context, new UserRegistrationUtil(context), new InMemoryDataRepository());
-//            impactRepo.RecordImpact(DateTime.Now, ben.PostalCode, ben.CountryCode, ben.ReferringCode).Wait();
-//
-//            impactRepo.RecordImpact(DateTime.Now, brett.PostalCode, brett.CountryCode, brett.ReferringCode).Wait();
+            CreateUser(context, "brett@venadotech.com", "v3nad0");
+            var brett = new ApplicationUserProfile()
+            {
+                FirstName = "Brett",
+                LastName = "Williams",
+                PostalCode = "74055",
+                Code = registerUtil.GenerateInviteCode(),
+                ReferringCode = ben.Code,
+                CountryCode = "US",
+                InviteBalance = 3,
+                MessageCategorySettings = registerUtil.GenerateDefaultMessageCategorySettings(),
+                MessageDayOfWeekSettings = registerUtil.GenerateDefaultDayOfWeekSettingsForUser()
+
+            };
+            AddOrUpdateProfileToUser(context, "brett@venadotech.com", brett);
+
+            var impactRepo = new ImpactRepository(context, new UserRegistrationUtil(context), new InMemoryDataRepository());
+            impactRepo.RecordImpact(DateTime.Now, ben.PostalCode, ben.CountryCode, ben.Code).Wait();
+
+            impactRepo.RecordImpact(DateTime.Now, brett.PostalCode, brett.CountryCode, brett.Code).Wait();
 
             CreateInvite(context, "AS5Invites", "PS5Invites", 2.99m, 5);
             CreateInvite(context, "AS15Invites", "PS15Invites", 3.99m, 15);

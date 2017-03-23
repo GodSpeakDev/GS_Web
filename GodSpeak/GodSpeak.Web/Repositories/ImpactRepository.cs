@@ -63,16 +63,22 @@ namespace GodSpeak.Web.Repositories
 
         private async Task<ImpactDay> GetImpactDay(DateTime date, string code)
         {
-            var dateKey = date.Date.ToUniversalTime();
+            var dateKey = GetDateKey(date);
             var impactDay =
-                await _context.ImpactDays.FirstOrDefaultAsync(d => d.Day == dateKey && d.InviteCode == code);
+                await _context.ImpactDays.FirstOrDefaultAsync(d => d.DayTitle == dateKey && d.InviteCode == code);
 
             if (impactDay != null) return impactDay;
 
-            impactDay = new ImpactDay() {InviteCode = code, Day = dateKey};
+            impactDay = new ImpactDay() {InviteCode = code, Day = date.Date, DayTitle = dateKey};
             _context.ImpactDays.Add(impactDay);
+            await _context.SaveChangesAsync();
 
             return impactDay;
+        }
+
+        protected string GetDateKey(DateTime date)
+        {
+            return date.ToString("MMMM dd yyyy");
         }
 
         public async Task<List<ImpactDay>> GetImpactForInviteCode(string inviteCode)
