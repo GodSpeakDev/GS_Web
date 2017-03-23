@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using GodSpeak.Web.Models;
 using GodSpeak.Web.Repositories;
+using GodSpeak.Web.Util;
 
 namespace GodSpeak.Web.Controllers
 {
@@ -18,12 +19,14 @@ namespace GodSpeak.Web.Controllers
         private readonly IInviteRepository _inviteRepository;
         private readonly IAuthRepository _authRepository;
         private readonly IApplicationUserProfileRepository _profileRepository;
+        private readonly UserRegistrationUtil _regUtil;
 
-        public InviteController(IInviteRepository inviteRepository, IAuthRepository authRepository, IApplicationUserProfileRepository profileRepository):base(authRepository)
+        public InviteController(IInviteRepository inviteRepository, IAuthRepository authRepository, IApplicationUserProfileRepository profileRepository, UserRegistrationUtil regUtil):base(authRepository)
         {
             _inviteRepository = inviteRepository;
             _authRepository = authRepository;
             _profileRepository = profileRepository;
+            _regUtil = regUtil;
         }
 
         [HttpGet]
@@ -41,6 +44,14 @@ namespace GodSpeak.Web.Controllers
             return CreateResponse(HttpStatusCode.OK, "Invite Code Valid",
                 "Congratulations, the submitted invite code is valid");
 
+        }
+
+        [HttpGet]
+        [ResponseType(typeof(ApiResponse))]
+        public async Task<HttpResponseMessage> ParentInviteCodes(string inviteCode)
+        {
+            return CreateResponse(HttpStatusCode.OK, "Parent Invite Codes", "Here are the codes",
+                await _regUtil.GetParentInviteCodes(inviteCode));
         }
 
         [HttpGet]
