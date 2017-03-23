@@ -47,20 +47,20 @@ namespace GodSpeak.Web.Migrations
             };
             AddOrUpdateProfileToUser(context, "ben@rendr.io", ben);
 
-            CreateUser(context, "brett@venadotech.com", "v3nad0");
-            var brett = new ApplicationUserProfile()
-            {
-                FirstName = "Brett",
-                LastName = "Williams",
-                PostalCode = "74055",
-                Code = registerUtil.GenerateInviteCode(),
-                ReferringCode = ben.Code,
-                CountryCode = "US",
-                InviteBalance = 3,
-                MessageCategorySettings = registerUtil.GenerateDefaultMessageCategorySettings(),
-                MessageDayOfWeekSettings = registerUtil.GenerateDefaultDayOfWeekSettingsForUser()
-
-            };
+//            CreateUser(context, "brett@venadotech.com", "v3nad0");
+//            var brett = new ApplicationUserProfile()
+//            {
+//                FirstName = "Brett",
+//                LastName = "Williams",
+//                PostalCode = "74055",
+//                Code = registerUtil.GenerateInviteCode(),
+//                ReferringCode = ben.Code,
+//                CountryCode = "US",
+//                InviteBalance = 3,
+//                MessageCategorySettings = registerUtil.GenerateDefaultMessageCategorySettings(),
+//                MessageDayOfWeekSettings = registerUtil.GenerateDefaultDayOfWeekSettingsForUser()
+//
+//            };
 //            AddOrUpdateProfileToUser(context, "brett@venadotech.com", brett);
 //
 //            var impactRepo = new ImpactRepository(context, new UserRegistrationUtil(context), new InMemoryDataRepository());
