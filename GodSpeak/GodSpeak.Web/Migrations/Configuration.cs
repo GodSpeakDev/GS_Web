@@ -32,23 +32,24 @@ namespace GodSpeak.Web.Migrations
 
             var registerUtil = new UserRegistrationUtil(context);
 
-            AddOrUpdateProfileToUser(context, "ben@rendr.io", new ApplicationUserProfile()
+            var ben = new ApplicationUserProfile()
             {
                 FirstName = "Benjamin",
                 LastName = "Bishop",
                 PostalCode = "63017",
                 Code = registerUtil.GenerateInviteCode(),
-                ReferringCode = registerUtil.GenerateInviteCode(),
-                CountryCode = "USA",
+                CountryCode = "US",
                 InviteBalance = 3,
                 MessageCategorySettings = registerUtil.GenerateDefaultMessageCategorySettings(),
                 MessageDayOfWeekSettings = registerUtil.GenerateDefaultDayOfWeekSettingsForUser()
 
-            });
+            };
+            AddOrUpdateProfileToUser(context, "ben@rendr.io", ben);
 
 
+            var impactRepo = new ImpactRepository(context, new UserRegistrationUtil(context), new InMemoryDataRepository());
+            impactRepo.RecordImpact(DateTime.Now, ben.PostalCode, ben.CountryCode, ben.ReferringCode).Wait();
 
-        
             CreateInvite(context, "AS5Invites", "PS5Invites", 2.99m, 5);
             CreateInvite(context, "AS15Invites", "PS15Invites", 3.99m, 15);
             CreateInvite(context, "AS25Invites", "PS25Invites", 4.99m, 25);
@@ -116,6 +117,7 @@ namespace GodSpeak.Web.Migrations
             {
                 user.Profile = profile;
                 context.Profiles.Add(profile);
+             
             }
             else
             {

@@ -9,12 +9,11 @@ namespace GodSpeak.Web.Models
         public DbSet<ApplicationUserProfile> Profiles { get; set; }
 
         public DbSet<InviteBundle> InviteBundles { get; set; }
-
-        public DbSet<BibleVerse> BibleVerses { get; set; }
+        
 
         public DbSet<MessageCategory> MessageCategories { get; set; }
 
-        public DbSet<PostalCodeGeoLocation> PostalCodeGeoLocations { get; set; }
+        public DbSet<ImpactDay> ImpactDays { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)

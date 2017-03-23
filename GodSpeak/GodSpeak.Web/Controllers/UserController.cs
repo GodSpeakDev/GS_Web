@@ -139,7 +139,7 @@ namespace GodSpeak.Web.Controllers
         [HttpPut]
         [ResponseType(typeof(ApiResponse<UserApiObject>))]
         [Route("User")]
-        public async Task<HttpResponseMessage> Update(UpdateUserObject updateUserObject)
+        public async Task<HttpResponseMessage> Update(UpdateUserObject updateRequestObj)
         {
             if (!await this.RequestHasValidAuthToken(this.Request))
                 return CreateMissingTokenResponse();
@@ -148,11 +148,11 @@ namespace GodSpeak.Web.Controllers
                 return CreateResponse(HttpStatusCode.BadRequest, "User Update Failure",
                     $"The request was missing valid data:\n {string.Join("\n", GetModelErrors())}");
 
-            if (!string.IsNullOrEmpty(updateUserObject.NewPassword) && updateUserObject.NewPassword != updateUserObject.PasswordConfirm)
+            if (!string.IsNullOrEmpty(updateRequestObj.NewPassword) && updateRequestObj.NewPassword != updateRequestObj.PasswordConfirm)
                 return CreateResponse(HttpStatusCode.BadRequest, "User Update Failure",
                     "The submitted new passwords do not match");
 
-            if(string.IsNullOrEmpty(updateUserObject.CurrentPassword) && !string.IsNullOrEmpty(updateUserObject.NewPassword))
+            if(string.IsNullOrEmpty(updateRequestObj.CurrentPassword) && !string.IsNullOrEmpty(updateRequestObj.NewPassword))
                 return CreateResponse(HttpStatusCode.BadRequest, "User Update Failure",
                                    "Request is missing current password for changing password");
 
@@ -160,44 +160,30 @@ namespace GodSpeak.Web.Controllers
             var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
             
             //update password if needed
-            if(!string.IsNullOrEmpty(updateUserObject.CurrentPassword) && await _authRepository.FindUser(user.UserName, updateUserObject.CurrentPassword) == null)
+            if(!string.IsNullOrEmpty(updateRequestObj.CurrentPassword) && await _authRepository.FindUser(user.UserName, updateRequestObj.CurrentPassword) == null)
                 return CreateResponse(HttpStatusCode.BadRequest, "User Update Failure",
                                    "Submitted current password was incorrect");
 
-            if (!string.IsNullOrEmpty(updateUserObject.NewPassword))
-               await _userManager.ChangePasswordAsync(userId, updateUserObject.CurrentPassword, updateUserObject.NewPassword);
+            if (!string.IsNullOrEmpty(updateRequestObj.NewPassword))
+               await _userManager.ChangePasswordAsync(userId, updateRequestObj.CurrentPassword, updateRequestObj.NewPassword);
 
-            //update profile props
-            user.Profile.FirstName = updateUserObject.FirstName;
-            user.Profile.LastName = updateUserObject.LastName;
-            user.Profile.CountryCode = updateUserObject.CountryCode;
-            user.Profile.PostalCode = updateUserObject.PostalCode;
+            
+            UpdateProfileProps(updateRequestObj, user);
 
-            //update message category settings
+            
             try
             {
-                foreach (var setting in updateUserObject.MessageCategorySettings)
-                    user.Profile.MessageCategorySettings.First(s => s.MessageCategorySettingId == setting.Id).Enabled =
-                        setting.Enabled;
+                UpdateMessageCategorySettings(updateRequestObj, user);
             }
             catch (Exception ex)
             {
                 return CreateResponse(HttpStatusCode.InternalServerError, "User Update Failure",
                     "Something went wrong updating message category settings", ex);
             }
-            //update day of week message settings
+            
             try
             {
-                foreach (var setting in updateUserObject.MessageDayOfWeekSettings)
-                {
-                    var existingSetting =
-                        user.Profile.MessageDayOfWeekSettings.First(s => s.MessageDayOfWeekSettingId == setting.Id);
-                    existingSetting.Enabled = setting.Enabled;
-                    existingSetting.StartTime = setting.StartTime;
-                    existingSetting.EndTime = setting.EndTime;
-                    existingSetting.NumOfMessages = setting.NumOfMessages;
-
-                }
+                UpdateMessageDayOfWeekSettings(updateRequestObj, user);
             }
             catch (Exception ex)
             {
@@ -218,6 +204,34 @@ namespace GodSpeak.Web.Controllers
 
             return CreateResponse(HttpStatusCode.OK, "User Update Success", "User was successfully updated",
                 UserApiObject.FromModel((ApplicationUser) user));
+        }
+
+        private static void UpdateMessageDayOfWeekSettings(UpdateUserObject updateRequestObj, ApplicationUser user)
+        {
+            foreach (var setting in updateRequestObj.MessageDayOfWeekSettings)
+            {
+                var existingSetting =
+                    user.Profile.MessageDayOfWeekSettings.First(s => s.MessageDayOfWeekSettingId == setting.Id);
+                existingSetting.Enabled = setting.Enabled;
+                existingSetting.StartTime = setting.StartTime;
+                existingSetting.EndTime = setting.EndTime;
+                existingSetting.NumOfMessages = setting.NumOfMessages;
+            }
+        }
+
+        private static void UpdateMessageCategorySettings(UpdateUserObject updateRequestObj, ApplicationUser user)
+        {
+            foreach (var setting in updateRequestObj.MessageCategorySettings)
+                user.Profile.MessageCategorySettings.First(s => s.MessageCategorySettingId == setting.Id).Enabled =
+                    setting.Enabled;
+        }
+
+        private static void UpdateProfileProps(UpdateUserObject updateUserObject, ApplicationUser user)
+        {
+            user.Profile.FirstName = updateUserObject.FirstName;
+            user.Profile.LastName = updateUserObject.LastName;
+            user.Profile.CountryCode = updateUserObject.CountryCode;
+            user.Profile.PostalCode = updateUserObject.PostalCode;
         }
     }
 

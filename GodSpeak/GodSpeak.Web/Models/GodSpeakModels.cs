@@ -110,6 +110,43 @@ namespace GodSpeak.Web.Models
         public decimal Cost { get; set; }
     }
 
+    public class ImpactDay
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public Guid ImpactDayId { get; set; }
+
+        [Required]
+        public string InviteCode { get; set; }
+
+        [Required]
+        public DateTime Day { get; set; }
+
+        public virtual ICollection<ImpactDayGeoPoint> Points { get; set; }
+
+
+    }
+
+    public class ImpactDayGeoPoint
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public Guid ImpactDayGeoPointId { get; set; }
+        
+        public Guid ImpactDayRefId { get; set; }
+
+        [ForeignKey("ImpactDayRefId")]
+        public virtual ImpactDay ImpactDay { get; set; }
+
+        public int Count { get; set; }
+
+        [Required]
+        public double Latitude { get; set; }
+
+        [Required]
+        public double Longitude { get; set; }
+    }
+
     public class PostalCodeGeoLocation
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

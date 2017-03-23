@@ -17,7 +17,11 @@ namespace GodSpeak.Web.Util
         }
         public async Task<List<string>> GetParentInviteCodes(string invite)
         {
-            var codes = new List<string>();
+            var codes = new List<string>() {"godspeak"};
+
+            if (string.IsNullOrEmpty(invite))
+                return codes;
+
             var profile = await _dbContext.Profiles.FirstAsync(p => p.Code == invite);
 
             while (!string.IsNullOrEmpty(profile.ReferringCode))

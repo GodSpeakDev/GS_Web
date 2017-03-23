@@ -8,17 +8,28 @@ namespace GodSpeak.Web.Migrations
         public override void Up()
         {
             CreateTable(
-                "dbo.BibleVerses",
+                "dbo.ImpactDays",
                 c => new
                     {
-                        BibleVerseId = c.Guid(nullable: false, identity: true),
-                        ShortCode = c.String(nullable: false),
-                        Book = c.String(nullable: false),
-                        Chapter = c.Int(nullable: false),
-                        Verse = c.Int(nullable: false),
-                        Text = c.String(nullable: false),
+                        ImpactDayId = c.Guid(nullable: false, identity: true),
+                        InviteCode = c.String(nullable: false),
+                        Day = c.DateTime(nullable: false),
                     })
-                .PrimaryKey(t => t.BibleVerseId);
+                .PrimaryKey(t => t.ImpactDayId);
+            
+            CreateTable(
+                "dbo.ImpactDayGeoPoints",
+                c => new
+                    {
+                        ImpactDayGeoPointId = c.Guid(nullable: false, identity: true),
+                        ImpactDayRefId = c.Guid(nullable: false),
+                        Count = c.Int(nullable: false),
+                        Latitude = c.Double(nullable: false),
+                        Longitude = c.Double(nullable: false),
+                    })
+                .PrimaryKey(t => t.ImpactDayGeoPointId)
+                .ForeignKey("dbo.ImpactDays", t => t.ImpactDayRefId, cascadeDelete: true)
+                .Index(t => t.ImpactDayRefId);
             
             CreateTable(
                 "dbo.InviteBundles",
@@ -40,25 +51,6 @@ namespace GodSpeak.Web.Migrations
                         Title = c.String(nullable: false),
                     })
                 .PrimaryKey(t => t.MessageCategoryId);
-            
-            CreateTable(
-                "dbo.PostalCodeGeoLocations",
-                c => new
-                    {
-                        PostalCodeGeoLocationId = c.Guid(nullable: false, identity: true),
-                        CountryCode = c.String(nullable: false),
-                        PostalCode = c.String(nullable: false),
-                        PlaceName = c.String(),
-                        AdminName1 = c.String(),
-                        AdminCode1 = c.String(),
-                        AdminName2 = c.String(),
-                        AdminCode2 = c.String(),
-                        AdminName3 = c.String(),
-                        AdminCode3 = c.String(),
-                        Latitude = c.Double(nullable: false),
-                        Longitude = c.Double(nullable: false),
-                    })
-                .PrimaryKey(t => t.PostalCodeGeoLocationId);
             
             CreateTable(
                 "dbo.ApplicationUserProfiles",
@@ -189,6 +181,7 @@ namespace GodSpeak.Web.Migrations
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.ImpactDayGeoPoints", "ImpactDayRefId", "dbo.ImpactDays");
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.MessageDayOfWeekSettings", new[] { "ApplicationUserProfileRefId" });
             DropIndex("dbo.MessageCategorySettings", new[] { "MessageCategoryRefId" });
@@ -199,6 +192,7 @@ namespace GodSpeak.Web.Migrations
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.ApplicationUserProfiles", new[] { "ApplicationUserProfileId" });
+            DropIndex("dbo.ImpactDayGeoPoints", new[] { "ImpactDayRefId" });
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.MessageDayOfWeekSettings");
             DropTable("dbo.MessageCategorySettings");
@@ -207,10 +201,10 @@ namespace GodSpeak.Web.Migrations
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
             DropTable("dbo.ApplicationUserProfiles");
-            DropTable("dbo.PostalCodeGeoLocations");
             DropTable("dbo.MessageCategories");
             DropTable("dbo.InviteBundles");
-            DropTable("dbo.BibleVerses");
+            DropTable("dbo.ImpactDayGeoPoints");
+            DropTable("dbo.ImpactDays");
         }
     }
 }
