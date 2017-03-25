@@ -64,7 +64,7 @@ namespace GodSpeak.Web.Migrations
             AddOrUpdateProfileToUser(context, "brett@venadotech.com", brett);
 
             var impactRepo = new ImpactRepository(context, new UserRegistrationUtil(context), new InMemoryDataRepository());
-            impactRepo.RecordImpact(DateTime.Now, ben.PostalCode, ben.CountryCode, ben.Code).Wait();
+            impactRepo.RecordImpact(DateTime.Now.AddDays(-1), ben.PostalCode, ben.CountryCode, ben.Code).Wait();
 
             impactRepo.RecordImpact(DateTime.Now, brett.PostalCode, brett.CountryCode, brett.Code).Wait();
 

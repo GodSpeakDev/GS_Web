@@ -103,6 +103,10 @@ namespace GodSpeak.Web.Controllers
 
             var user = await _userManager.Users.FirstAsync(u => u.Email == registerUserObject.EmailAddress);
 
+            var userCode = _regUtil.GenerateInviteCode();
+            while (await _userManager.Users.AnyAsync(u => u.Profile.Code == userCode))
+                userCode = _regUtil.GenerateInviteCode();
+
             var profile = new ApplicationUserProfile
             {
                 MessageCategorySettings = _regUtil.GenerateDefaultMessageCategorySettings(),
