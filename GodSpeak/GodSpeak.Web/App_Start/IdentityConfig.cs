@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -18,6 +20,18 @@ namespace GodSpeak.Web
     {
         public Task SendAsync(IdentityMessage message)
         {
+            
+            SmtpClient client = new SmtpClient("smtp.gmail.com");
+            //If you need to authenticate
+            client.Credentials = new NetworkCredential("bbishop@venadotech.com", "krZE=WU?+K_rsZeM");
+
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress("bbishop@venadotech.com");
+            mailMessage.To.Add(message.Destination);
+            mailMessage.Subject = message.Subject;
+            mailMessage.Body = message.Body;
+
+            client.Send(mailMessage);
             // Plug in your email service here to send an email.
             return Task.FromResult(0);
         }

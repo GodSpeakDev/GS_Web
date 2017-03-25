@@ -13,7 +13,7 @@ using Microsoft.AspNet.Identity;
 
 namespace GodSpeak.Web.Controllers
 {
-    [RoutePrefix("api")]
+    [Route("api/user/{action}")]
     public class UserController : ApiControllerBase
     {
         private readonly IAuthRepository _authRepository;
@@ -22,9 +22,10 @@ namespace GodSpeak.Web.Controllers
 
         private readonly UserRegistrationUtil _regUtil;
         private readonly IInMemoryDataRepository _inMemoryDataRepo;
+        private readonly IIdentityMessageService _messageService;
 
         public UserController(IAuthRepository authRepository, UserManager<ApplicationUser> userManager,
-            IInviteRepository inviteRepository, UserRegistrationUtil regUtil, IInMemoryDataRepository inMemoryDataRepo):base(authRepository)
+            IInviteRepository inviteRepository, UserRegistrationUtil regUtil, IInMemoryDataRepository inMemoryDataRepo, IIdentityMessageService messageService) :base(authRepository)
         {
             _authRepository = authRepository;
             _userManager = userManager;
@@ -32,13 +33,14 @@ namespace GodSpeak.Web.Controllers
 
             _regUtil = regUtil;
             _inMemoryDataRepo = inMemoryDataRepo;
+            _messageService = messageService;
         }
 
 
 
         [HttpPost]
         [ResponseType(typeof(ApiResponse<UserApiObject>))]
-        [Route("User/Login")]
+        [ActionName("Login")]
         public async Task<HttpResponseMessage> Login(LoginApiObject loginApi)
         {
             var user = await _authRepository.FindUser(loginApi.Email, loginApi.Password);
@@ -48,9 +50,28 @@ namespace GodSpeak.Web.Controllers
                 UserApiObject.FromModel((ApplicationUser) user));
         }
 
+        [HttpGet]
+        [ResponseType(typeof(ApiResponse<UserApiObject>))]
+        [ActionName("RecoverPassword")]
+        public async Task<HttpResponseMessage> RecoverPassword(string emailAddress)
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(emailAddress);
+            var newPassword = _regUtil.GenerateInviteCode();
+            await _userManager.ResetPasswordAsync(emailAddress, token, newPassword);
+            await _messageService.SendAsync(new IdentityMessage()
+            {
+                Destination = emailAddress,
+                Subject = "Your New GodSpeak Password",
+                Body = $"Your password has been reset to {newPassword}"
+            });
+
+            return CreateResponse(HttpStatusCode.OK, "Recover Password Success",
+                "An email has been sent to your address with instructions on how to recover your password");
+        }
+
         [HttpPost]
         [ResponseType(typeof(ApiResponse<UserApiObject>))]
-        [Route("User")]
+        [Route("api/User")]
         public async Task<HttpResponseMessage> Register(RegisterUserObject registerUserObject)
         {
 
@@ -139,7 +160,7 @@ namespace GodSpeak.Web.Controllers
 
         [HttpPut]
         [ResponseType(typeof(ApiResponse<UserApiObject>))]
-        [Route("User")]
+        [Route("api/User")]
         public async Task<HttpResponseMessage> Update(UpdateUserObject updateRequestObj)
         {
             if (!await RequestHasValidAuthToken(Request))
