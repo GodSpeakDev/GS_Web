@@ -10,6 +10,8 @@ using GodSpeak.Web.Models;
 using GodSpeak.Web.Repositories;
 using GodSpeak.Web.Util;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security.DataProtection;
 
 namespace GodSpeak.Web.Controllers
 {
@@ -27,8 +29,11 @@ namespace GodSpeak.Web.Controllers
         public UserController(IAuthRepository authRepository, UserManager<ApplicationUser> userManager,
             IInviteRepository inviteRepository, UserRegistrationUtil regUtil, IInMemoryDataRepository inMemoryDataRepo, IIdentityMessageService messageService) :base(authRepository)
         {
+            var provider = new DpapiDataProtectionProvider("Sample");
+
             _authRepository = authRepository;
             _userManager = userManager;
+            _userManager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(provider.Create("EmailConfirmation"));
             _inviteRepository = inviteRepository;
 
             _regUtil = regUtil;
@@ -55,9 +60,10 @@ namespace GodSpeak.Web.Controllers
         [ActionName("RecoverPassword")]
         public async Task<HttpResponseMessage> RecoverPassword(string emailAddress)
         {
-            var token = await _userManager.GeneratePasswordResetTokenAsync(emailAddress);
+            var id = (await _userManager.Users.FirstAsync(u => u.Email == emailAddress)).Id;
+            var token = await _userManager.GeneratePasswordResetTokenAsync(id);
             var newPassword = _regUtil.GenerateInviteCode();
-            await _userManager.ResetPasswordAsync(emailAddress, token, newPassword);
+            await _userManager.ResetPasswordAsync(id, token, newPassword);
             await _messageService.SendAsync(new IdentityMessage()
             {
                 Destination = emailAddress,

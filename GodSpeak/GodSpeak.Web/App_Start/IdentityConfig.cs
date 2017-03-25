@@ -21,12 +21,16 @@ namespace GodSpeak.Web
         public Task SendAsync(IdentityMessage message)
         {
             
-            SmtpClient client = new SmtpClient("smtp.gmail.com");
+            var client = new SmtpClient("smtp.gmail.com");
             //If you need to authenticate
-            client.Credentials = new NetworkCredential("bbishop@venadotech.com", "krZE=WU?+K_rsZeM");
+            client.EnableSsl = true;
+            client.Port = 587;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.UseDefaultCredentials = false;
+            client.Credentials = new NetworkCredential("ben@rendr.io", "h0llyh3yd3");
 
-            MailMessage mailMessage = new MailMessage();
-            mailMessage.From = new MailAddress("bbishop@venadotech.com");
+            var mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress("ben@rendr.io");
             mailMessage.To.Add(message.Destination);
             mailMessage.Subject = message.Subject;
             mailMessage.Body = message.Body;
