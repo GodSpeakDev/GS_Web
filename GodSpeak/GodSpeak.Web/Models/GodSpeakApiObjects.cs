@@ -92,6 +92,39 @@ namespace GodSpeak.Web.Models
         public string InviteCode { get; set; }
     }
 
+    public class ImpactApiObject
+    {
+
+        public static ImpactApiObject FromModel(ImpactDay model)
+        {
+            return new ImpactApiObject()
+            {
+                Date = model.Day,
+                Points = model.Points.Select(ImpactPointApiObject.FromModel).ToList()
+            };
+        }
+
+        public ICollection<ImpactPointApiObject> Points { get; set; }
+
+        public DateTime Date { get; set; }
+    }
+
+    public class ImpactPointApiObject
+    {
+        public static ImpactPointApiObject FromModel(ImpactDayGeoPoint model)
+        {
+            return new ImpactPointApiObject()
+            {
+                Latitude = model.Latitude,
+                Longitude = model.Longitude
+            };
+        }
+
+        public double Longitude { get; set; }
+
+        public double Latitude { get; set; }
+    }
+
     public class UserApiObject
     {
        
