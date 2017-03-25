@@ -1,22 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Security.Authentication;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using GodSpeak.Web.Models;
 using GodSpeak.Web.Repositories;
 using GodSpeak.Web.Util;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Owin.Security;
-using Microsoft.AspNet.Identity.Owin;
 
 namespace GodSpeak.Web.Controllers
 {
@@ -103,10 +96,6 @@ namespace GodSpeak.Web.Controllers
 
             var user = await _userManager.Users.FirstAsync(u => u.Email == registerUserObject.EmailAddress);
 
-            var userCode = _regUtil.GenerateInviteCode();
-            while (await _userManager.Users.AnyAsync(u => u.Profile.Code == userCode))
-                userCode = _regUtil.GenerateInviteCode();
-
             var profile = new ApplicationUserProfile
             {
                 MessageCategorySettings = _regUtil.GenerateDefaultMessageCategorySettings(),
@@ -116,14 +105,14 @@ namespace GodSpeak.Web.Controllers
                 CountryCode = registerUserObject.CountryCode,
                 PostalCode = registerUserObject.PostalCode,
                 ReferringCode = registerUserObject.InviteCode,
-                Code = _regUtil.GenerateInviteCode(),
-                ApplicationUser = (ApplicationUser) user,
+                Code = await GenerateUniqueInviteCode(),
+                ApplicationUser = user,
                 Token = _authRepository.CalculateMd5Hash(user.Id + user.Email),
                 InviteBalance = 0
             };
-            ((ApplicationUser) user).Profile = profile;
+            user.Profile = profile;
 
-            profile.ApplicationUser = (ApplicationUser) user;
+            profile.ApplicationUser = user;
             try
             {
                 await _userManager.UpdateAsync(user);
@@ -136,7 +125,15 @@ namespace GodSpeak.Web.Controllers
             }
 
             return CreateResponse(HttpStatusCode.OK, "Registration Success", "User was successfully registered",
-                UserApiObject.FromModel((ApplicationUser) user));
+                UserApiObject.FromModel(user));
+        }
+
+        private async Task<string> GenerateUniqueInviteCode()
+        {
+            var userCode = _regUtil.GenerateInviteCode();
+            while (await _userManager.Users.AnyAsync(u => u.Profile.Code == userCode))
+                userCode = _regUtil.GenerateInviteCode();
+            return userCode;
         }
 
 
@@ -145,7 +142,7 @@ namespace GodSpeak.Web.Controllers
         [Route("User")]
         public async Task<HttpResponseMessage> Update(UpdateUserObject updateRequestObj)
         {
-            if (!await this.RequestHasValidAuthToken(this.Request))
+            if (!await RequestHasValidAuthToken(Request))
                 return CreateMissingTokenResponse();
 
             if (!ModelState.IsValid)
@@ -160,7 +157,7 @@ namespace GodSpeak.Web.Controllers
                 return CreateResponse(HttpStatusCode.BadRequest, "User Update Failure",
                                    "Request is missing current password for changing password");
 
-            var userId = await _authRepository.GetUserIdForToken(GetAuthToken(this.Request));
+            var userId = await _authRepository.GetUserIdForToken(GetAuthToken(Request));
             var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
             
             //update password if needed
@@ -207,7 +204,7 @@ namespace GodSpeak.Web.Controllers
             }
 
             return CreateResponse(HttpStatusCode.OK, "User Update Success", "User was successfully updated",
-                UserApiObject.FromModel((ApplicationUser) user));
+                UserApiObject.FromModel(user));
         }
 
         private static void UpdateMessageDayOfWeekSettings(UpdateUserObject updateRequestObj, ApplicationUser user)
