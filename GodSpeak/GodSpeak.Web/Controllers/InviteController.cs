@@ -75,26 +75,33 @@ namespace GodSpeak.Web.Controllers
             var user = await _authRepository.FindUserByAuthToken(GetAuthToken(Request));
             var profiles = (await _profileRepository.All()).Where(p => p.ReferringCode == user.Profile.Code);
 
-            var acceptedInvites = profiles.Select(async p => await CreateAcceptedInvite(p)).ToList();
+            var acceptedInvites = new List<AcceptedInviteObject>();
+            foreach (var profile in profiles)
+                acceptedInvites.Add(await CreateAcceptedInvite(profile));
+
 
             return CreateResponse(HttpStatusCode.OK, "Accepted Invites", "Request for accepted invites succeeded", acceptedInvites);
         }
 
         private async Task<AcceptedInviteObject> CreateAcceptedInvite(ApplicationUserProfile profile)
         {
-            var invite = new AcceptedInviteObject();
-            invite.Title = $"{profile.FirstName} {profile.LastName}";
             var acceptedInviteCount = (await _profileRepository.All()).Count(p => p.ReferringCode == profile.Code);
-            invite.SubTitle = (acceptedInviteCount > 0)
-                ? $"{acceptedInviteCount} gifts given"
-                : "Has not given any gifts";
-            invite.ButtonTitle = acceptedInviteCount > 0
-                ? $"Congratulate {profile.FirstName}"
-                : $"Encourage {profile.FirstName}";
-            invite.Message = acceptedInviteCount > 0
-                ? "Congrats on spreading the good word of Christ!"
-                : "Don't forget to pay it forward!";
-            return invite;
+            var hasGifted = acceptedInviteCount > 0;
+
+            return new AcceptedInviteObject
+            {
+                Title = $"{profile.FirstName} {profile.LastName}",
+                EmailAddress = profile.ApplicationUser.Email,
+                SubTitle = hasGifted
+                    ? $"{acceptedInviteCount} gifts given"
+                    : "Has not given any gifts",
+                ButtonTitle = hasGifted
+                    ? $"Congratulate {profile.FirstName}"
+                    : $"Encourage {profile.FirstName}",
+                Message = hasGifted
+                    ? "Congrats on spreading the good word of Christ!"
+                    : "Don't forget to pay it forward!"
+            };
         }
 
         [HttpPost]
