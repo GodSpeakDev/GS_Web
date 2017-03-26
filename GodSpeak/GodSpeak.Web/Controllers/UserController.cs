@@ -25,9 +25,10 @@ namespace GodSpeak.Web.Controllers
         private readonly UserRegistrationUtil _regUtil;
         private readonly IInMemoryDataRepository _inMemoryDataRepo;
         private readonly IIdentityMessageService _messageService;
+        private readonly IImpactRepository _impactRepository;
 
         public UserController(IAuthRepository authRepository, UserManager<ApplicationUser> userManager,
-            IInviteRepository inviteRepository, UserRegistrationUtil regUtil, IInMemoryDataRepository inMemoryDataRepo, IIdentityMessageService messageService) :base(authRepository)
+            IInviteRepository inviteRepository, UserRegistrationUtil regUtil, IInMemoryDataRepository inMemoryDataRepo, IIdentityMessageService messageService, IImpactRepository impactRepository) :base(authRepository)
         {
             var provider = new DpapiDataProtectionProvider("Sample");
 
@@ -39,6 +40,7 @@ namespace GodSpeak.Web.Controllers
             _regUtil = regUtil;
             _inMemoryDataRepo = inMemoryDataRepo;
             _messageService = messageService;
+            _impactRepository = impactRepository;
         }
 
 
@@ -149,6 +151,18 @@ namespace GodSpeak.Web.Controllers
                 await _userManager.DeleteAsync(user);
                 return CreateResponse(HttpStatusCode.InternalServerError, "Registration Failure",
                     "Something went wrong trying create user profile.", profileException);
+            }
+
+            try
+            {
+                await _impactRepository.RecordImpact(DateTime.Today, profile.PostalCode, profile.CountryCode,
+                    profile.ReferringCode);
+            }
+            catch (Exception impactException)
+            {
+                await _userManager.DeleteAsync(user);
+                return CreateResponse(HttpStatusCode.InternalServerError, "Registration Failure",
+                    "Something went wrong recording impact.", impactException);
             }
 
             return CreateResponse(HttpStatusCode.OK, "Registration Success", "User was successfully registered",
