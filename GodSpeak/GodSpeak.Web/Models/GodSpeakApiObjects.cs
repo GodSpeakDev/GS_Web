@@ -13,6 +13,7 @@ namespace GodSpeak.Web.Models
         public string EmailAddress { get; set; }
     }
 
+
     public class GuidRequestApiObject
     {
         [Required]
@@ -90,6 +91,19 @@ namespace GodSpeak.Web.Models
 
         [Required]
         public string InviteCode { get; set; }
+    }
+
+    public class AcceptedInviteObject
+    {
+        public string ImageUrl { get; set; }
+
+        public string Title { get; set; }
+
+        public string SubTitle { get; set; }
+
+        public string ButtonTitle { get; set; }
+
+        public string Message { get; set; }
     }
 
     public class ImpactApiObject

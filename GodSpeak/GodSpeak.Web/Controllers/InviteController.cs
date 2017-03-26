@@ -64,6 +64,39 @@ namespace GodSpeak.Web.Controllers
                 await _inviteRepository.Bundles());
         }
 
+        [HttpGet]
+        [ResponseType(typeof(ApiResponse<AcceptedInviteObject>))]
+        [ActionName("accepted")]
+        public async Task<HttpResponseMessage> Accepted()
+        {
+            if (!await RequestHasValidAuthToken(Request))
+                return CreateMissingTokenResponse();
+
+            var user = await _authRepository.FindUserByAuthToken(GetAuthToken(Request));
+            var profiles = (await _profileRepository.All()).Where(p => p.ReferringCode == user.Profile.Code);
+
+            var acceptedInvites = profiles.Select(async p => await CreateAcceptedInvite(p)).ToList();
+
+            return CreateResponse(HttpStatusCode.OK, "Accepted Invites", "Request for accepted invites succeeded", acceptedInvites);
+        }
+
+        private async Task<AcceptedInviteObject> CreateAcceptedInvite(ApplicationUserProfile profile)
+        {
+            var invite = new AcceptedInviteObject();
+            invite.Title = $"{profile.FirstName} {profile.LastName}";
+            var acceptedInviteCount = (await _profileRepository.All()).Count(p => p.ReferringCode == profile.Code);
+            invite.SubTitle = (acceptedInviteCount > 0)
+                ? $"{acceptedInviteCount} gifts given"
+                : "Has not given any gifts";
+            invite.ButtonTitle = acceptedInviteCount > 0
+                ? $"Congratulate {profile.FirstName}"
+                : $"Encourage {profile.FirstName}";
+            invite.Message = acceptedInviteCount > 0
+                ? "Congrats on spreading the good word of Christ!"
+                : "Don't forget to pay it forward!";
+            return invite;
+        }
+
         [HttpPost]
         [ActionName("Request")]
         [ResponseType(typeof(ApiResponse))]
