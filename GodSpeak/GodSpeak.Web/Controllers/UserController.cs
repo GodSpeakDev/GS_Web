@@ -165,6 +165,19 @@ namespace GodSpeak.Web.Controllers
                     "Something went wrong recording impact.", impactException);
             }
 
+            try
+            {
+                var referringUser = await _userManager.Users.FirstAsync(u => u.Profile.Code == profile.ReferringCode);
+                referringUser.Profile.InviteBalance = referringUser.Profile.InviteBalance - 1;
+                await _userManager.UpdateAsync(referringUser);
+            }
+            catch (Exception regException)
+            {
+                await _userManager.DeleteAsync(user);
+                return CreateResponse(HttpStatusCode.InternalServerError, "Registration Failure",
+                    "Something went wrong reducing referrer's invite balance", regException);
+            }
+
             return CreateResponse(HttpStatusCode.OK, "Registration Success", "User was successfully registered",
                 UserApiObject.FromModel(user));
         }
