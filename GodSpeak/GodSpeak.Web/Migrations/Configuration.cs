@@ -7,6 +7,7 @@ using GodSpeak.Web.Repositories;
 using GodSpeak.Web.Util;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using WebGrease.Css.Extensions;
 
 namespace GodSpeak.Web.Migrations
 {
@@ -17,6 +18,20 @@ namespace GodSpeak.Web.Migrations
 
     internal sealed class Configuration : DbMigrationsConfiguration<GodSpeak.Web.Models.ApplicationDbContext>
     {
+        private string AppDataPath
+        {
+            get
+            {
+                var binFolderPath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, System.AppDomain.CurrentDomain.RelativeSearchPath ?? "");
+                binFolderPath += "App_Data/";
+                if (Directory.Exists(binFolderPath))
+                    return binFolderPath;
+
+                string path = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/");
+                return path;
+            }
+        }
+
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
@@ -26,7 +41,7 @@ namespace GodSpeak.Web.Migrations
         {
          
             if (!context.MessageCategories.Any())
-                LoadMessageCategories(context);
+                LoadMessages(context);
 
             CreateUser(context, "ben@rendr.io", "J0hn_galt");
 
@@ -79,33 +94,41 @@ namespace GodSpeak.Web.Migrations
 
        
 
-        private void LoadMessageCategories(ApplicationDbContext context)
+        private void LoadMessages(ApplicationDbContext context)
         {
-             var titles = new List<string>()
-             {
-                 "Love",
-                 "Faith",
-                 "Peace",
-                 "Hope",
-                 "Marriage",
-                 "Joy",
-                 "Prayer",
-                 "Strength",
-                 "Grace",
-                 "Children",
-                 "Forgiveness",
-                 "Healing",
-                 "Holy Spirit",
-                 "Salvation",
-                 "Fear",
-                 "Top 100 Most Searched/Read Bible Verses [2016]",
-                 "Wisdom from Proverbs",
-                 "What Jesus Said"
-             };
-            foreach (var title in titles)
+         
+            var categories = new List<string>();
+            var lines = File.ReadLines(AppDataPath + "GodSpeakVersesbyCategory.txt").ToList();
+            foreach (var line in lines)
+                if (!string.IsNullOrEmpty(line) && !line.Contains(":"))
+                    categories.AddRange(line.Split(',').Select(s => s.Trim()).ToList());
+
+            categories.Distinct().ForEach(c => context.MessageCategories.Add(new MessageCategory() {Title = c}));
+            context.SaveChanges();
+            for (var i = 0; i < lines.Count(); i++)
             {
-                context.MessageCategories.Add(new MessageCategory() {Title = title});
+                var line = lines[i];
+                if (line.Contains(":"))
+                {
+                    var catTitles = lines[i + 1].Split(',').Select(s => s.Trim()).ToList();
+                    var message = new Message()
+                    {
+                        VerseCode = line.Trim()
+                    };
+                    
+                    context.Messages.Add(message);
+                    context.SaveChanges();
+                    var matchingCats = context.MessageCategories.Where(mc => catTitles.Contains(mc.Title)).ToList();
+//                    var messageFromContext = context.Messages.First(m => m.VerseCode == message.VerseCode);
+                    foreach (var messageCategory in matchingCats)
+                    {
+                        message.Categories.Add(messageCategory);
+                        context.SaveChanges();
+                    }
+                    i += 1;
+                }
             }
+            context.SaveChanges();
         }
 
         

@@ -49,6 +49,11 @@ namespace GodSpeak.Web.Models
         public string VerseCode { get; set; }
 
         public virtual ICollection<MessageCategory> Categories { get; set; }
+
+        public Message()
+        {
+            Categories = new HashSet<MessageCategory>();
+        }
     }
 
     public class MessageCategory
@@ -60,6 +65,10 @@ namespace GodSpeak.Web.Models
         [Required]
         public string Title { get; set; }
 
+        public MessageCategory()
+        {
+            Messages = new HashSet<Message>();
+        }
         public virtual ICollection<Message> Messages{ get; set; }
 
     }
