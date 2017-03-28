@@ -177,6 +177,21 @@ namespace GodSpeak.Web.Controllers
             return userCode;
         }
 
+        [HttpGet]
+        [ResponseType(typeof(ApiResponse<UserApiObject>))]
+        [Route("api/User")]
+        public async Task<HttpResponseMessage> Profile()
+        {
+            if (!await RequestHasValidAuthToken(Request))
+                return CreateMissingTokenResponse();
+
+            var userId = await _authRepository.GetUserIdForToken(GetAuthToken(Request));
+            var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
+
+            return CreateResponse(HttpStatusCode.OK, "User Profile", "User Profile Retrieved Successfully",
+                UserApiObject.FromModel(user));
+        }
+
 
         [HttpPut]
         [ResponseType(typeof(ApiResponse<UserApiObject>))]
