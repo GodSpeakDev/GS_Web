@@ -40,6 +40,21 @@ namespace GodSpeak.Web.Models
         public virtual ICollection<MessageDayOfWeekSetting> MessageDayOfWeekSettings { get; set; }
     }
 
+    public class ScheduledMessage
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public Guid ScheduledMessageId { get; set; }
+
+        public string UserId { get; set; }
+
+        public string UserInviteCode { get; set; }
+
+        public DateTime ScheduledDateTime { get; set; }
+
+        public string VerseCode { get; set; }
+    }
+
     public class Message
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -180,6 +180,18 @@ namespace GodSpeak.Web.Migrations
                 .Index(t => t.Name, unique: true, name: "RoleNameIndex");
             
             CreateTable(
+                "dbo.ScheduledMessages",
+                c => new
+                    {
+                        ScheduledMessageId = c.Guid(nullable: false, identity: true),
+                        UserId = c.String(),
+                        UserInviteCode = c.String(),
+                        ScheduledDateTime = c.DateTime(nullable: false),
+                        VerseCode = c.String(),
+                    })
+                .PrimaryKey(t => t.ScheduledMessageId);
+            
+            CreateTable(
                 "dbo.MessageMessageCategories",
                 c => new
                     {
@@ -221,6 +233,7 @@ namespace GodSpeak.Web.Migrations
             DropIndex("dbo.ApplicationUserProfiles", new[] { "ApplicationUserProfileId" });
             DropIndex("dbo.ImpactDayGeoPoints", new[] { "ImpactDayRefId" });
             DropTable("dbo.MessageMessageCategories");
+            DropTable("dbo.ScheduledMessages");
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.MessageDayOfWeekSettings");
             DropTable("dbo.MessageCategorySettings");

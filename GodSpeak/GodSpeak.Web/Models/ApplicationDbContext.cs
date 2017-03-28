@@ -16,6 +16,8 @@ namespace GodSpeak.Web.Models
 
         public DbSet<ImpactDay> ImpactDays { get; set; }
 
+        public DbSet<ScheduledMessage> ScheduledMessages { get; set; }
+
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
