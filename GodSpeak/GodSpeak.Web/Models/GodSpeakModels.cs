@@ -40,6 +40,17 @@ namespace GodSpeak.Web.Models
         public virtual ICollection<MessageDayOfWeekSetting> MessageDayOfWeekSettings { get; set; }
     }
 
+    public class Message
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public Guid MessageId { get; set; }
+
+        public string VerseCode { get; set; }
+
+        public virtual ICollection<MessageCategory> Categories { get; set; }
+    }
+
     public class MessageCategory
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -49,6 +60,7 @@ namespace GodSpeak.Web.Models
         [Required]
         public string Title { get; set; }
 
+        public virtual ICollection<Message> Messages{ get; set; }
 
     }
 

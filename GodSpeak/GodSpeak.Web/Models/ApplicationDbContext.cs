@@ -9,7 +9,8 @@ namespace GodSpeak.Web.Models
         public DbSet<ApplicationUserProfile> Profiles { get; set; }
 
         public DbSet<InviteBundle> InviteBundles { get; set; }
-        
+
+        public DbSet<Message> Messages{ get; set; }
 
         public DbSet<MessageCategory> MessageCategories { get; set; }
 

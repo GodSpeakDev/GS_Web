@@ -54,6 +54,15 @@ namespace GodSpeak.Web.Migrations
                 .PrimaryKey(t => t.MessageCategoryId);
             
             CreateTable(
+                "dbo.Messages",
+                c => new
+                    {
+                        MessageId = c.Guid(nullable: false, identity: true),
+                        VerseCode = c.String(),
+                    })
+                .PrimaryKey(t => t.MessageId);
+            
+            CreateTable(
                 "dbo.ApplicationUserProfiles",
                 c => new
                     {
@@ -170,6 +179,19 @@ namespace GodSpeak.Web.Migrations
                 .PrimaryKey(t => t.Id)
                 .Index(t => t.Name, unique: true, name: "RoleNameIndex");
             
+            CreateTable(
+                "dbo.MessageMessageCategories",
+                c => new
+                    {
+                        Message_MessageId = c.Guid(nullable: false),
+                        MessageCategory_MessageCategoryId = c.Guid(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.Message_MessageId, t.MessageCategory_MessageCategoryId })
+                .ForeignKey("dbo.Messages", t => t.Message_MessageId, cascadeDelete: true)
+                .ForeignKey("dbo.MessageCategories", t => t.MessageCategory_MessageCategoryId, cascadeDelete: true)
+                .Index(t => t.Message_MessageId)
+                .Index(t => t.MessageCategory_MessageCategoryId);
+            
         }
         
         public override void Down()
@@ -182,7 +204,11 @@ namespace GodSpeak.Web.Migrations
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.MessageMessageCategories", "MessageCategory_MessageCategoryId", "dbo.MessageCategories");
+            DropForeignKey("dbo.MessageMessageCategories", "Message_MessageId", "dbo.Messages");
             DropForeignKey("dbo.ImpactDayGeoPoints", "ImpactDayRefId", "dbo.ImpactDays");
+            DropIndex("dbo.MessageMessageCategories", new[] { "MessageCategory_MessageCategoryId" });
+            DropIndex("dbo.MessageMessageCategories", new[] { "Message_MessageId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.MessageDayOfWeekSettings", new[] { "ApplicationUserProfileRefId" });
             DropIndex("dbo.MessageCategorySettings", new[] { "MessageCategoryRefId" });
@@ -194,6 +220,7 @@ namespace GodSpeak.Web.Migrations
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.ApplicationUserProfiles", new[] { "ApplicationUserProfileId" });
             DropIndex("dbo.ImpactDayGeoPoints", new[] { "ImpactDayRefId" });
+            DropTable("dbo.MessageMessageCategories");
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.MessageDayOfWeekSettings");
             DropTable("dbo.MessageCategorySettings");
@@ -202,6 +229,7 @@ namespace GodSpeak.Web.Migrations
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
             DropTable("dbo.ApplicationUserProfiles");
+            DropTable("dbo.Messages");
             DropTable("dbo.MessageCategories");
             DropTable("dbo.InviteBundles");
             DropTable("dbo.ImpactDayGeoPoints");
