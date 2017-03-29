@@ -66,8 +66,9 @@ namespace GodSpeak.Web.Migrations
                 "dbo.ApplicationUserProfiles",
                 c => new
                     {
-                        ApplicationUserProfileId = c.String(nullable: false, maxLength: 128),
+                        ApplicationUserProfileId = c.Guid(nullable: false, identity: true),
                         Code = c.String(nullable: false),
+                        UserId = c.String(nullable: false),
                         ReferringCode = c.String(),
                         InviteBalance = c.Int(nullable: false),
                         FirstName = c.String(nullable: false),
@@ -76,9 +77,73 @@ namespace GodSpeak.Web.Migrations
                         PostalCode = c.String(nullable: false),
                         Token = c.String(),
                     })
-                .PrimaryKey(t => t.ApplicationUserProfileId)
-                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserProfileId)
-                .Index(t => t.ApplicationUserProfileId);
+                .PrimaryKey(t => t.ApplicationUserProfileId);
+            
+            CreateTable(
+                "dbo.MessageCategorySettings",
+                c => new
+                    {
+                        MessageCategorySettingId = c.Guid(nullable: false, identity: true),
+                        Enabled = c.Boolean(nullable: false),
+                        ApplicationUserProfileRefId = c.Guid(nullable: false),
+                        MessageCategoryRefId = c.Guid(nullable: false),
+                    })
+                .PrimaryKey(t => t.MessageCategorySettingId)
+                .ForeignKey("dbo.ApplicationUserProfiles", t => t.ApplicationUserProfileRefId, cascadeDelete: true)
+                .ForeignKey("dbo.MessageCategories", t => t.MessageCategoryRefId, cascadeDelete: true)
+                .Index(t => t.ApplicationUserProfileRefId)
+                .Index(t => t.MessageCategoryRefId);
+            
+            CreateTable(
+                "dbo.MessageDayOfWeekSettings",
+                c => new
+                    {
+                        MessageDayOfWeekSettingId = c.Guid(nullable: false, identity: true),
+                        Enabled = c.Boolean(nullable: false),
+                        Title = c.String(nullable: false),
+                        StartTime = c.Time(nullable: false, precision: 7),
+                        EndTime = c.Time(nullable: false, precision: 7),
+                        NumOfMessages = c.Int(nullable: false),
+                        ApplicationUserProfileRefId = c.Guid(nullable: false),
+                    })
+                .PrimaryKey(t => t.MessageDayOfWeekSettingId)
+                .ForeignKey("dbo.ApplicationUserProfiles", t => t.ApplicationUserProfileRefId, cascadeDelete: true)
+                .Index(t => t.ApplicationUserProfileRefId);
+            
+            CreateTable(
+                "dbo.AspNetRoles",
+                c => new
+                    {
+                        Id = c.String(nullable: false, maxLength: 128),
+                        Name = c.String(nullable: false, maxLength: 256),
+                    })
+                .PrimaryKey(t => t.Id)
+                .Index(t => t.Name, unique: true, name: "RoleNameIndex");
+            
+            CreateTable(
+                "dbo.AspNetUserRoles",
+                c => new
+                    {
+                        UserId = c.String(nullable: false, maxLength: 128),
+                        RoleId = c.String(nullable: false, maxLength: 128),
+                    })
+                .PrimaryKey(t => new { t.UserId, t.RoleId })
+                .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .Index(t => t.UserId)
+                .Index(t => t.RoleId);
+            
+            CreateTable(
+                "dbo.ScheduledMessages",
+                c => new
+                    {
+                        ScheduledMessageId = c.Guid(nullable: false, identity: true),
+                        UserId = c.String(),
+                        UserInviteCode = c.String(),
+                        ScheduledDateTime = c.DateTime(nullable: false),
+                        VerseCode = c.String(),
+                    })
+                .PrimaryKey(t => t.ScheduledMessageId);
             
             CreateTable(
                 "dbo.AspNetUsers",
@@ -126,72 +191,6 @@ namespace GodSpeak.Web.Migrations
                 .Index(t => t.UserId);
             
             CreateTable(
-                "dbo.AspNetUserRoles",
-                c => new
-                    {
-                        UserId = c.String(nullable: false, maxLength: 128),
-                        RoleId = c.String(nullable: false, maxLength: 128),
-                    })
-                .PrimaryKey(t => new { t.UserId, t.RoleId })
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
-                .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
-                .Index(t => t.UserId)
-                .Index(t => t.RoleId);
-            
-            CreateTable(
-                "dbo.MessageCategorySettings",
-                c => new
-                    {
-                        MessageCategorySettingId = c.Guid(nullable: false, identity: true),
-                        Enabled = c.Boolean(nullable: false),
-                        ApplicationUserProfileRefId = c.String(maxLength: 128),
-                        MessageCategoryRefId = c.Guid(nullable: false),
-                    })
-                .PrimaryKey(t => t.MessageCategorySettingId)
-                .ForeignKey("dbo.ApplicationUserProfiles", t => t.ApplicationUserProfileRefId)
-                .ForeignKey("dbo.MessageCategories", t => t.MessageCategoryRefId, cascadeDelete: true)
-                .Index(t => t.ApplicationUserProfileRefId)
-                .Index(t => t.MessageCategoryRefId);
-            
-            CreateTable(
-                "dbo.MessageDayOfWeekSettings",
-                c => new
-                    {
-                        MessageDayOfWeekSettingId = c.Guid(nullable: false, identity: true),
-                        Enabled = c.Boolean(nullable: false),
-                        Title = c.String(nullable: false),
-                        StartTime = c.Time(nullable: false, precision: 7),
-                        EndTime = c.Time(nullable: false, precision: 7),
-                        NumOfMessages = c.Int(nullable: false),
-                        ApplicationUserProfileRefId = c.String(maxLength: 128),
-                    })
-                .PrimaryKey(t => t.MessageDayOfWeekSettingId)
-                .ForeignKey("dbo.ApplicationUserProfiles", t => t.ApplicationUserProfileRefId)
-                .Index(t => t.ApplicationUserProfileRefId);
-            
-            CreateTable(
-                "dbo.AspNetRoles",
-                c => new
-                    {
-                        Id = c.String(nullable: false, maxLength: 128),
-                        Name = c.String(nullable: false, maxLength: 256),
-                    })
-                .PrimaryKey(t => t.Id)
-                .Index(t => t.Name, unique: true, name: "RoleNameIndex");
-            
-            CreateTable(
-                "dbo.ScheduledMessages",
-                c => new
-                    {
-                        ScheduledMessageId = c.Guid(nullable: false, identity: true),
-                        UserId = c.String(),
-                        UserInviteCode = c.String(),
-                        ScheduledDateTime = c.DateTime(nullable: false),
-                        VerseCode = c.String(),
-                    })
-                .PrimaryKey(t => t.ScheduledMessageId);
-            
-            CreateTable(
                 "dbo.MessageMessageCategories",
                 c => new
                     {
@@ -208,39 +207,37 @@ namespace GodSpeak.Web.Migrations
         
         public override void Down()
         {
+            DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropForeignKey("dbo.MessageDayOfWeekSettings", "ApplicationUserProfileRefId", "dbo.ApplicationUserProfiles");
             DropForeignKey("dbo.MessageCategorySettings", "MessageCategoryRefId", "dbo.MessageCategories");
             DropForeignKey("dbo.MessageCategorySettings", "ApplicationUserProfileRefId", "dbo.ApplicationUserProfiles");
-            DropForeignKey("dbo.ApplicationUserProfiles", "ApplicationUserProfileId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.MessageMessageCategories", "MessageCategory_MessageCategoryId", "dbo.MessageCategories");
             DropForeignKey("dbo.MessageMessageCategories", "Message_MessageId", "dbo.Messages");
             DropForeignKey("dbo.ImpactDayGeoPoints", "ImpactDayRefId", "dbo.ImpactDays");
             DropIndex("dbo.MessageMessageCategories", new[] { "MessageCategory_MessageCategoryId" });
             DropIndex("dbo.MessageMessageCategories", new[] { "Message_MessageId" });
+            DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
+            DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
+            DropIndex("dbo.AspNetUsers", "UserNameIndex");
+            DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
+            DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.MessageDayOfWeekSettings", new[] { "ApplicationUserProfileRefId" });
             DropIndex("dbo.MessageCategorySettings", new[] { "MessageCategoryRefId" });
             DropIndex("dbo.MessageCategorySettings", new[] { "ApplicationUserProfileRefId" });
-            DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
-            DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
-            DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
-            DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
-            DropIndex("dbo.AspNetUsers", "UserNameIndex");
-            DropIndex("dbo.ApplicationUserProfiles", new[] { "ApplicationUserProfileId" });
             DropIndex("dbo.ImpactDayGeoPoints", new[] { "ImpactDayRefId" });
             DropTable("dbo.MessageMessageCategories");
-            DropTable("dbo.ScheduledMessages");
-            DropTable("dbo.AspNetRoles");
-            DropTable("dbo.MessageDayOfWeekSettings");
-            DropTable("dbo.MessageCategorySettings");
-            DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
+            DropTable("dbo.ScheduledMessages");
+            DropTable("dbo.AspNetUserRoles");
+            DropTable("dbo.AspNetRoles");
+            DropTable("dbo.MessageDayOfWeekSettings");
+            DropTable("dbo.MessageCategorySettings");
             DropTable("dbo.ApplicationUserProfiles");
             DropTable("dbo.Messages");
             DropTable("dbo.MessageCategories");

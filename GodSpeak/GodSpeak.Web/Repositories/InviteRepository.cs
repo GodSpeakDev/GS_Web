@@ -25,24 +25,27 @@ namespace GodSpeak.Web.Repositories
 
     public class InviteRepository:IInviteRepository
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        
+        private readonly IApplicationUserProfileRepository _profileRepo;
         private readonly ApplicationDbContext _dbContext;
 
-        public InviteRepository(UserManager<ApplicationUser> userManager, ApplicationDbContext dbContext)
+        public InviteRepository(IApplicationUserProfileRepository profileRepo, ApplicationDbContext dbContext)
         {
-            _userManager = userManager;
+            
+            _profileRepo = profileRepo;
             _dbContext = dbContext;
         }
 
         public async Task<bool> InviteCodeIsValid(string inviteCode)
         {
-            return await _userManager.Users.AnyAsync(u => u.Profile.Code == inviteCode);
+            return (await _profileRepo.All()).Any(u => u.Code == inviteCode);
 
         }
 
         public async Task<bool> InviteCodeHasBalance(string inviteCode)
         {
-            return (await _userManager.Users.FirstAsync(u => u.Profile.Code == inviteCode)).Profile.InviteBalance > 0;
+         
+            return (await _profileRepo.GetByCode(inviteCode)).InviteBalance > 0;
         }
 
         public async Task<List<InviteBundle>> Bundles()

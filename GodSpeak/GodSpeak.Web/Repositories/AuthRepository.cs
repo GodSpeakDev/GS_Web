@@ -40,8 +40,8 @@ namespace GodSpeak.Web.Repositories
         public async Task<IdentityUser> FindUser(string userName, string password)
         {
             IdentityUser user = await _userManager.FindAsync(userName, password);
-            return user == null ? null : (await _dbContext.Profiles.FirstAsync(p => p.ApplicationUser.Id == user.Id)).ApplicationUser;
-            //HACK: for some reason _userManager isn't returning updated user
+            return user;
+            
         }
 
         public string CalculateMd5Hash(string input)
@@ -76,17 +76,18 @@ namespace GodSpeak.Web.Repositories
 
         public async Task<bool> UserWithTokenExists(string token)
         {
-            return await _dbContext.Users.AnyAsync(u => u.Profile.Token == token);
+            return await _dbContext.Profiles.AnyAsync(p => p.Token == token);
         }
 
         public async Task<string> GetUserIdForToken(string token)
         {
-            return (await _dbContext.Users.FirstAsync(u => u.Profile.Token == token)).Id;
+            return (await _dbContext.Profiles.FirstAsync(u => u.Token == token)).UserId;
         }
 
         public async Task<ApplicationUser> FindUserByAuthToken(string token)
         {
-            return await _dbContext.Users.FirstAsync(u => u.Profile.Token == token);
+            var profile = await _dbContext.Profiles.FirstAsync(p => p.Token == token);
+            return await _dbContext.Users.FirstAsync(u => u.Id == profile.UserId);
         }
     }
 }

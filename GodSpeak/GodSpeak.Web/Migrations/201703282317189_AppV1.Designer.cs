@@ -13,7 +13,7 @@ namespace GodSpeak.Web.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201703201433160_AppV1"; }
+            get { return "201703282317189_AppV1"; }
         }
         
         string IMigrationMetadata.Source

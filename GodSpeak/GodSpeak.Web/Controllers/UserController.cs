@@ -18,8 +18,9 @@ namespace GodSpeak.Web.Controllers
     [Route("api/user/{action}")]
     public class UserController : ApiControllerBase
     {
+        private readonly IApplicationUserProfileRepository _profileRepo;
         private readonly IAuthRepository _authRepository;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationUserManager _userManager;
         private readonly IInviteRepository _inviteRepository;
 
         private readonly UserRegistrationUtil _regUtil;
@@ -27,11 +28,12 @@ namespace GodSpeak.Web.Controllers
         private readonly IIdentityMessageService _messageService;
         private readonly IImpactRepository _impactRepository;
 
-        public UserController(IAuthRepository authRepository, UserManager<ApplicationUser> userManager,
+        public UserController(IApplicationUserProfileRepository profileRepo, IAuthRepository authRepository, ApplicationUserManager userManager,
             IInviteRepository inviteRepository, UserRegistrationUtil regUtil, IInMemoryDataRepository inMemoryDataRepo, IIdentityMessageService messageService, IImpactRepository impactRepository) :base(authRepository)
         {
             var provider = new DpapiDataProtectionProvider("Sample");
 
+            _profileRepo = profileRepo;
             _authRepository = authRepository;
             _userManager = userManager;
             _userManager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(provider.Create("EmailConfirmation"));
@@ -54,7 +56,7 @@ namespace GodSpeak.Web.Controllers
             if (user == null)
                 return CreateResponse(HttpStatusCode.Forbidden, "Login Invalid", "Submitted credentials are invalid");
             return CreateResponse(HttpStatusCode.OK, "Login Valid", "Submitted credentials were valid",
-                UserApiObject.FromModel((ApplicationUser) user));
+                UserApiObject.FromModel((ApplicationUser) user, (await _profileRepo.All()).First(p => p.UserId == user.Id)));
         }
 
         [HttpGet]
@@ -123,8 +125,9 @@ namespace GodSpeak.Web.Controllers
                     "Something went wrong trying create user security record.", ex);
             }
 
+            
             var user = await _userManager.Users.FirstAsync(u => u.Email == registerUserObject.EmailAddress);
-
+            
             var profile = new ApplicationUserProfile
             {
                 MessageCategorySettings = _regUtil.GenerateDefaultMessageCategorySettings(),
@@ -135,16 +138,16 @@ namespace GodSpeak.Web.Controllers
                 PostalCode = registerUserObject.PostalCode,
                 ReferringCode = registerUserObject.InviteCode,
                 Code = await GenerateUniqueInviteCode(),
-                ApplicationUser = user,
+                UserId = user.Id,
                 Token = _authRepository.CalculateMd5Hash(user.Id + user.Email),
                 InviteBalance = 0
             };
-            user.Profile = profile;
+            
 
-            profile.ApplicationUser = user;
+            
             try
             {
-                await _userManager.UpdateAsync(user);
+                await _profileRepo.Insert(profile);
             }
             catch (Exception profileException)
             {
@@ -167,9 +170,9 @@ namespace GodSpeak.Web.Controllers
 
             try
             {
-                var referringUser = await _userManager.Users.FirstAsync(u => u.Profile.Code == profile.ReferringCode);
-                referringUser.Profile.InviteBalance = referringUser.Profile.InviteBalance - 1;
-                await _userManager.UpdateAsync(referringUser);
+                var referringUserProfile = await _profileRepo.GetByCode(profile.ReferringCode);
+                referringUserProfile.InviteBalance = referringUserProfile.InviteBalance - 1;
+                await _profileRepo.Update(referringUserProfile);
             }
             catch (Exception regException)
             {
@@ -179,14 +182,14 @@ namespace GodSpeak.Web.Controllers
             }
 
             return CreateResponse(HttpStatusCode.OK, "Registration Success", "User was successfully registered",
-                UserApiObject.FromModel(user));
+                UserApiObject.FromModel(user, profile));
         }
 
         private async Task<string> GenerateUniqueInviteCode()
         {
             var userCode = _regUtil.GenerateInviteCode();
-            while (await _userManager.Users.AnyAsync(u => u.Profile.Code == userCode))
-                userCode = _regUtil.GenerateInviteCode();
+//            while (await _profileRepo.GetByCode(userCode) == null)
+//                userCode = _regUtil.GenerateInviteCode();
             return userCode;
         }
 
@@ -202,7 +205,7 @@ namespace GodSpeak.Web.Controllers
             var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
 
             return CreateResponse(HttpStatusCode.OK, "User Profile", "User Profile Retrieved Successfully",
-                UserApiObject.FromModel(user));
+                UserApiObject.FromModel(user, await _profileRepo.GetByUserId(user.Id)));
         }
 
 
@@ -238,7 +241,7 @@ namespace GodSpeak.Web.Controllers
                await _userManager.ChangePasswordAsync(userId, updateRequestObj.CurrentPassword, updateRequestObj.NewPassword);
 
             
-            UpdateProfileProps(updateRequestObj, user);
+            UpdateProfileProps(updateRequestObj, await _profileRepo.GetByUserId(user.Id));
 
             
             try
@@ -273,15 +276,16 @@ namespace GodSpeak.Web.Controllers
             }
 
             return CreateResponse(HttpStatusCode.OK, "User Update Success", "User was successfully updated",
-                UserApiObject.FromModel(user));
+                UserApiObject.FromModel(user, await _profileRepo.GetByUserId(user.Id)));
         }
 
-        private static void UpdateMessageDayOfWeekSettings(UpdateUserObject updateRequestObj, ApplicationUser user)
+        private async Task UpdateMessageDayOfWeekSettings(UpdateUserObject updateRequestObj, ApplicationUser user)
         {
+            var profile = await _profileRepo.GetByUserId(user.Id);
             foreach (var setting in updateRequestObj.MessageDayOfWeekSettings)
             {
                 var existingSetting =
-                    user.Profile.MessageDayOfWeekSettings.First(s => s.MessageDayOfWeekSettingId == setting.Id);
+                    profile.MessageDayOfWeekSettings.First(s => s.MessageDayOfWeekSettingId == setting.Id);
                 existingSetting.Enabled = setting.Enabled;
                 existingSetting.StartTime = setting.StartTime;
                 existingSetting.EndTime = setting.EndTime;
@@ -289,19 +293,20 @@ namespace GodSpeak.Web.Controllers
             }
         }
 
-        private static void UpdateMessageCategorySettings(UpdateUserObject updateRequestObj, ApplicationUser user)
+        private async Task UpdateMessageCategorySettings(UpdateUserObject updateRequestObj, ApplicationUser user)
         {
+            var profile = await _profileRepo.GetByUserId(user.Id);
             foreach (var setting in updateRequestObj.MessageCategorySettings)
-                user.Profile.MessageCategorySettings.First(s => s.MessageCategorySettingId == setting.Id).Enabled =
+                profile.MessageCategorySettings.First(s => s.MessageCategorySettingId == setting.Id).Enabled =
                     setting.Enabled;
         }
 
-        private static void UpdateProfileProps(UpdateUserObject updateUserObject, ApplicationUser user)
+        private static void UpdateProfileProps(UpdateUserObject updateUserObject, ApplicationUserProfile profile)
         {
-            user.Profile.FirstName = updateUserObject.FirstName;
-            user.Profile.LastName = updateUserObject.LastName;
-            user.Profile.CountryCode = updateUserObject.CountryCode;
-            user.Profile.PostalCode = updateUserObject.PostalCode;
+            profile.FirstName = updateUserObject.FirstName;
+            profile.LastName = updateUserObject.LastName;
+            profile.CountryCode = updateUserObject.CountryCode;
+            profile.PostalCode = updateUserObject.PostalCode;
         }
     }
 

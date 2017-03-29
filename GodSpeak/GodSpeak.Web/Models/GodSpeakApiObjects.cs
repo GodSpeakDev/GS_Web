@@ -166,21 +166,21 @@ namespace GodSpeak.Web.Models
 
         public List<MessageDayOfWeekSettingApiObject> MessageDayOfWeekSettings { get; set; }
 
-        public static UserApiObject FromModel(ApplicationUser user)
+        public static UserApiObject FromModel(ApplicationUser user, ApplicationUserProfile profile)
         {
             return new UserApiObject()
             {
-                FirstName = user.Profile.FirstName,
-                CountryCode = user.Profile.CountryCode,
+                FirstName = profile.FirstName,
+                CountryCode = profile.CountryCode,
                 Email = user.Email,
-                InviteBalance = user.Profile.InviteBalance,
-                InviteCode = user.Profile.Code,
-                LastName = user.Profile.LastName,
-                PostalCode = user.Profile.PostalCode,
+                InviteBalance = profile.InviteBalance,
+                InviteCode = profile.Code,
+                LastName = profile.LastName,
+                PostalCode = profile.PostalCode,
                 PhotoUrl = "",
-                Token = user.Profile.Token,
-                MessageCategorySettings = user.Profile.MessageCategorySettings.Select(MessageCategorySettingApiObject.FromModel).ToList(),
-                MessageDayOfWeekSettings = user.Profile.MessageDayOfWeekSettings.Select(MessageDayOfWeekSettingApiObject.FromModel).ToList()
+                Token = profile.Token,
+                MessageCategorySettings = profile.MessageCategorySettings.Select(MessageCategorySettingApiObject.FromModel).ToList(),
+                MessageDayOfWeekSettings = profile.MessageDayOfWeekSettings.Select(MessageDayOfWeekSettingApiObject.FromModel).ToList()
                 
             };
         }

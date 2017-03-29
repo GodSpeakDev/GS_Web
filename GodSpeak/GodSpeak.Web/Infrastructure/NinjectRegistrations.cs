@@ -15,6 +15,7 @@ namespace GodSpeak.Web.Infrastructure
             Bind<ApplicationDbContext>().ToSelf();
             Bind<IUserStore<ApplicationUser>>().To<UserStore<ApplicationUser>>().WithConstructorArgument("context", Kernel.Get<ApplicationDbContext>()); ;
             Bind<UserManager<ApplicationUser>>().ToSelf();
+            Bind<ApplicationUserManager>().ToSelf();
 
             Bind<UserRegistrationUtil>().ToSelf();
             Bind<IIdentityMessageService>().To<EmailService>();

@@ -78,10 +78,10 @@ namespace GodSpeak.Web.Migrations
             };
             AddOrUpdateProfileToUser(context, "brett@venadotech.com", brett);
 
-            var impactRepo = new ImpactRepository(context, new UserRegistrationUtil(context), new InMemoryDataRepository());
-            impactRepo.RecordImpact(DateTime.Now.AddDays(-1), ben.PostalCode, ben.CountryCode, ben.Code).Wait();
+//            var impactRepo = new ImpactRepository(context, new UserRegistrationUtil(context), new InMemoryDataRepository());
+//            impactRepo.RecordImpact(DateTime.Now.AddDays(-1), ben.PostalCode, ben.CountryCode, ben.Code).Wait();
 
-            impactRepo.RecordImpact(DateTime.Now, brett.PostalCode, brett.CountryCode, brett.Code).Wait();
+//            impactRepo.RecordImpact(DateTime.Now, brett.PostalCode, brett.CountryCode, brett.Code).Wait();
 
             CreateInvite(context, "AS5Invites", "PS5Invites", 2.99m, 5);
             CreateInvite(context, "AS15Invites", "PS15Invites", 3.99m, 15);
@@ -154,21 +154,24 @@ namespace GodSpeak.Web.Migrations
             ApplicationUserProfile profile)
         {
             var user = context.Users.First(u => u.Email == email);
-            if (user.Profile == null)
+            profile.UserId = user.Id;
+            var profileToUpdate = context.Profiles.FirstOrDefault(p => p.UserId == user.Id);
+            if (profileToUpdate == null)
             {
-                user.Profile = profile;
+                
                 context.Profiles.Add(profile);
-             
+                context.SaveChanges();
+                profileToUpdate = profile;
             }
             else
             {
-                user.Profile.FirstName = profile.FirstName;
-                user.Profile.LastName = profile.LastName;
-                user.Profile.Code = profile.Code;
-                user.Profile.CountryCode = profile.CountryCode;
-                user.Profile.InviteBalance = profile.InviteBalance;
-                user.Profile.PostalCode = profile.PostalCode;
-                user.Profile.Token = profile.Token;
+                profileToUpdate.FirstName = profile.FirstName;
+                profileToUpdate.LastName = profile.LastName;
+                profileToUpdate.Code = profile.Code;
+                profileToUpdate.CountryCode = profile.CountryCode;
+                profileToUpdate.InviteBalance = profile.InviteBalance;
+                profileToUpdate.PostalCode = profile.PostalCode;
+                profileToUpdate.Token = profile.Token;
 //                user.Profile.MessageCategorySettings = profile.MessageCategorySettings;
 //                user.Profile.MessageDayOfWeekSettings = profile.MessageDayOfWeekSettings;
             }
@@ -177,12 +180,13 @@ namespace GodSpeak.Web.Migrations
             var userManager = new UserManager<ApplicationUser>(userStore);
             var authRepo = new AuthRepository(userManager, context);
 
-            user.Profile.Token = authRepo.CalculateMd5Hash(user.Id + user.Email);
-
-            context.Entry(user).State = EntityState.Modified;
-
-            
-            context.SaveChanges();
+            profileToUpdate.Token = authRepo.CalculateMd5Hash(user.Id + user.Email);
+//
+//            context.Entry(user).State = EntityState.Modified;
+//
+//            
+//                context.SaveChanges();
+       
         }
     }
 }

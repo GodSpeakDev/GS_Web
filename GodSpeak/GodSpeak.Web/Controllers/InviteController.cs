@@ -16,13 +16,15 @@ namespace GodSpeak.Web.Controllers
     [Route("api/invite/{action}")]
     public class InviteController : ApiControllerBase
     {
+        private readonly ApplicationUserManager _userManager;
         private readonly IInviteRepository _inviteRepository;
         private readonly IAuthRepository _authRepository;
         private readonly IApplicationUserProfileRepository _profileRepository;
         private readonly UserRegistrationUtil _regUtil;
 
-        public InviteController(IInviteRepository inviteRepository, IAuthRepository authRepository, IApplicationUserProfileRepository profileRepository, UserRegistrationUtil regUtil):base(authRepository)
+        public InviteController(ApplicationUserManager userManager, IInviteRepository inviteRepository, IAuthRepository authRepository, IApplicationUserProfileRepository profileRepository, UserRegistrationUtil regUtil):base(authRepository)
         {
+            _userManager = userManager;
             _inviteRepository = inviteRepository;
             _authRepository = authRepository;
             _profileRepository = profileRepository;
@@ -73,11 +75,12 @@ namespace GodSpeak.Web.Controllers
                 return CreateMissingTokenResponse();
 
             var user = await _authRepository.FindUserByAuthToken(GetAuthToken(Request));
-            var profiles = (await _profileRepository.All()).Where(p => p.ReferringCode == user.Profile.Code);
+            var profile = (await _profileRepository.All()).First(p => p.UserId == user.Id);
+            var profiles = (await _profileRepository.All()).Where(p => p.ReferringCode == profile.Code);
 
             var acceptedInvites = new List<AcceptedInviteObject>();
-            foreach (var profile in profiles)
-                acceptedInvites.Add(await CreateAcceptedInvite(profile));
+            foreach (var p in profiles)
+                acceptedInvites.Add(await CreateAcceptedInvite(p));
 
 
             return CreateResponse(HttpStatusCode.OK, "Accepted Invites", "Request for accepted invites succeeded", acceptedInvites);
@@ -87,11 +90,12 @@ namespace GodSpeak.Web.Controllers
         {
             var acceptedInviteCount = (await _profileRepository.All()).Count(p => p.ReferringCode == profile.Code);
             var hasGifted = acceptedInviteCount > 0;
+            var user = await _userManager.FindByIdAsync(profile.UserId);
 
             return new AcceptedInviteObject
             {
                 Title = $"{profile.FirstName} {profile.LastName}",
-                EmailAddress = profile.ApplicationUser.Email,
+                EmailAddress = user.Email,
                 SubTitle = hasGifted
                     ? $"{acceptedInviteCount} gifts given"
                     : "Has not given any gifts",

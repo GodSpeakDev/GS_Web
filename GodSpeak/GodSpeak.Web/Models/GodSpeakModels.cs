@@ -9,12 +9,16 @@ namespace GodSpeak.Web.Models
 {
     public class ApplicationUserProfile
     {
-        [ForeignKey("ApplicationUser")]
-        public string ApplicationUserProfileId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public Guid ApplicationUserProfileId { get; set; }
         [Required]
         public string Code { get; set; }
 
-        
+        [Required]
+        public string UserId { get; set; }
+
+
         public string ReferringCode { get; set; }
 
         public int InviteBalance { get; set; }
@@ -32,7 +36,7 @@ namespace GodSpeak.Web.Models
         public string PostalCode { get; set; }
 
         public string Token { get; set; }
-        public virtual ApplicationUser ApplicationUser { get; set; }
+        
 
         public virtual ICollection<MessageCategorySetting> MessageCategorySettings { get; set; }
 
@@ -97,7 +101,7 @@ namespace GodSpeak.Web.Models
         [DefaultValue(true)]
         public bool Enabled { get; set; }
         
-        public string ApplicationUserProfileRefId { get; set; }
+        public Guid ApplicationUserProfileRefId { get; set; }
 
         [ForeignKey("ApplicationUserProfileRefId")]
         public virtual ApplicationUserProfile ApplicationUserProfile { get; set; }
@@ -125,7 +129,7 @@ namespace GodSpeak.Web.Models
 
         public int NumOfMessages { get; set; }
 
-        public string ApplicationUserProfileRefId { get; set; }
+        public Guid ApplicationUserProfileRefId { get; set; }
 
         [ForeignKey("ApplicationUserProfileRefId")]
         public virtual ApplicationUserProfile ApplicationUserProfile { get; set; }
