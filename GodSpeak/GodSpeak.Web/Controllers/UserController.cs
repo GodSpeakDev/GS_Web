@@ -56,7 +56,7 @@ namespace GodSpeak.Web.Controllers
             if (user == null)
                 return CreateResponse(HttpStatusCode.Forbidden, "Login Invalid", "Submitted credentials are invalid");
             return CreateResponse(HttpStatusCode.OK, "Login Valid", "Submitted credentials were valid",
-                UserApiObject.FromModel((ApplicationUser) user, (await _profileRepo.All()).First(p => p.UserId == user.Id)));
+                UserApiObject.FromModel((ApplicationUser) user, await _profileRepo.GetByUserId(user.Id)));
         }
 
         [HttpGet]
