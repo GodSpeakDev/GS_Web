@@ -142,6 +142,15 @@ namespace GodSpeak.Web.Models
         public string Title { get; set; }
 
         public string Text { get; set; }
+
+        public static VerseApiObject FromModel(BibleVerse verse)
+        {
+            return new VerseApiObject()
+            {
+                Title = verse.ShortCode,
+                Text = verse.Text
+            };
+        }
     }
 
     public class ImpactPointApiObject

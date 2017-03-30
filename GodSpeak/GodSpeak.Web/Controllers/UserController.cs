@@ -327,6 +327,7 @@ namespace GodSpeak.Web.Controllers
             foreach (var setting in updateRequestObj.MessageCategorySettings)
                 profile.MessageCategorySettings.First(s => s.MessageCategorySettingId == setting.Id).Enabled =
                     setting.Enabled;
+            await _profileRepo.Update(profile);
         }
 
         private static void UpdateProfileProps(UpdateUserObject updateUserObject, ApplicationUserProfile profile)
