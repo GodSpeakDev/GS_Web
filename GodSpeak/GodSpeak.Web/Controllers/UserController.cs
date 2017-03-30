@@ -59,6 +59,8 @@ namespace GodSpeak.Web.Controllers
                 UserApiObject.FromModel((ApplicationUser) user, await _profileRepo.GetByUserId(user.Id)));
         }
 
+
+
         [HttpGet]
         [ResponseType(typeof(ApiResponse<UserApiObject>))]
         [ActionName("RecoverPassword")]
@@ -246,7 +248,7 @@ namespace GodSpeak.Web.Controllers
             
             try
             {
-                UpdateMessageCategorySettings(updateRequestObj, user);
+                await UpdateMessageCategorySettings(updateRequestObj, user);
             }
             catch (Exception ex)
             {
@@ -256,7 +258,7 @@ namespace GodSpeak.Web.Controllers
             
             try
             {
-                UpdateMessageDayOfWeekSettings(updateRequestObj, user);
+                await UpdateMessageDayOfWeekSettings(updateRequestObj, user);
             }
             catch (Exception ex)
             {

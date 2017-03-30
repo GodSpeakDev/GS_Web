@@ -47,6 +47,9 @@ namespace GodSpeak.Web.Controllers
         [ActionName("populate")]
         public async Task<HttpResponseMessage> Populate()
         {
+            if (_dbContext.Users.Any(u => u.Email == "ben@rendr.io"))
+                return CreateResponse(HttpStatusCode.OK, "Database Already Seeded",
+                    "The database has already been seeded");
             await Seed();
             return CreateResponse(HttpStatusCode.OK, "Database Seeded", "Database was successfully seeded");
         }
@@ -152,6 +155,8 @@ namespace GodSpeak.Web.Controllers
         {
             if (!context.InviteBundles.Any(b => b.AppStoreSku == appstoreSku))
                 context.InviteBundles.Add(new InviteBundle() { AppStoreSku = appstoreSku, PlayStoreSku = playstoreSku, Cost = cost, NumberOfInvites = count });
+
+            context.SaveChanges();
         }
 
         private static void CreateUser(ApplicationDbContext context, string email, string password)
