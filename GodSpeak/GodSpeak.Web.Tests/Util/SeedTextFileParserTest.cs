@@ -32,6 +32,8 @@ namespace GodSpeak.Web.Tests.Util
 
         public void TestParseBibleVerse()
         {
+            AssertLineParsed("Matthew 6:7 ``And when you are praying, do not use meaningless repetition as the Gentiles do, for they suppose that they will be heard for their many words."
+                ,"Matthew", 6, 7, "``And when you are praying, do not use meaningless repetition as the Gentiles do, for they suppose that they will be heard for their many words.", "Matthew 6:7");
             AssertLineParsed("Genesis 1:3 Then God said, \"Let there be light\"; and there was light.", 
                 "Genesis", 1, 3, "Then God said, \"Let there be light\"; and there was light.", "Genesis 1:3");
             AssertLineParsed("Exodus 7:1 Then the LORD said to Moses, \"See, I make you {as} God to Pharaoh, and your brother Aaron shall be your prophet.", "Exodus", 7, 1, "Then the LORD said to Moses, \"See, I make you {as} God to Pharaoh, and your brother Aaron shall be your prophet.", "Exodus 7:1");

@@ -9,6 +9,11 @@ namespace GodSpeak.Web.Util
         public BibleVerse ParseBibleVerse(string line)
         {
             var parts = line.Split(' ').ToList();
+            for (var index = 0; index < parts.Count; index++)
+            {
+                var part = parts[index];
+                parts[index] = part.Trim();
+            }
             var locationParts = parts.First(s => s.Contains(":")).Split(':');
             var locationIndex = parts.FindIndex(s => s.Contains(":"));
             return new BibleVerse()
@@ -17,7 +22,7 @@ namespace GodSpeak.Web.Util
                 Chapter = int.Parse(locationParts[0]),
                 Verse = int.Parse(locationParts[1]),
                 Text = string.Join(" ", parts.GetRange(locationIndex + 1, parts.Count - locationIndex - 1)),
-                ShortCode = string.Join(" ", parts.GetRange(0, locationIndex + 1))
+                ShortCode = string.Join(" ", parts.GetRange(0, locationIndex + 1)).Trim()
             };
         }
 
