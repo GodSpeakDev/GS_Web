@@ -192,7 +192,7 @@ namespace GodSpeak.Web.Controllers
                 profileToUpdate.CountryCode = profile.CountryCode;
                 profileToUpdate.InviteBalance = profile.InviteBalance;
                 profileToUpdate.PostalCode = profile.PostalCode;
-                profileToUpdate.Token = profile.Token;
+                
                 //                user.Profile.MessageCategorySettings = profile.MessageCategorySettings;
                 //                user.Profile.MessageDayOfWeekSettings = profile.MessageDayOfWeekSettings;
             }
@@ -201,7 +201,7 @@ namespace GodSpeak.Web.Controllers
             var userManager = new UserManager<ApplicationUser>(userStore);
             var authRepo = new AuthRepository(userManager, context);
 
-            profileToUpdate.Token = authRepo.CalculateMd5Hash(user.Id + user.Email);
+            
             //
             //            context.Entry(user).State = EntityState.Modified;
             //

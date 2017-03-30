@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace GodSpeak.Web.Repositories
 
         Task<ApplicationUser> FindUserByAuthToken(string token);
 
-        string CalculateMd5Hash(string input);
+        string CreateToken();
 
         Task<bool> UserWithTokenExists(string token);
 
@@ -44,7 +45,9 @@ namespace GodSpeak.Web.Repositories
             
         }
 
-        public string CalculateMd5Hash(string input)
+        
+
+        private string CalculateMd5Hash(string input)
 
         {
             
@@ -88,6 +91,11 @@ namespace GodSpeak.Web.Repositories
         {
             var profile = await _dbContext.Profiles.FirstAsync(p => p.Token == token);
             return await _dbContext.Users.FirstAsync(u => u.Id == profile.UserId);
+        }
+
+        public string CreateToken()
+        {
+            return Guid.NewGuid().ToString();
         }
     }
 }

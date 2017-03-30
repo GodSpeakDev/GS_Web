@@ -55,10 +55,36 @@ namespace GodSpeak.Web.Controllers
             var user = await _authRepository.FindUser(loginApi.Email, loginApi.Password);
             if (user == null)
                 return CreateResponse(HttpStatusCode.Forbidden, "Login Invalid", "Submitted credentials are invalid");
+            var profile = await _profileRepo.GetByUserId(user.Id);
+            profile.Token = _authRepository.CreateToken();
+            await _profileRepo.Update(profile);
             return CreateResponse(HttpStatusCode.OK, "Login Valid", "Submitted credentials were valid",
-                UserApiObject.FromModel((ApplicationUser) user, await _profileRepo.GetByUserId(user.Id)));
+                UserApiObject.FromModel((ApplicationUser) user, profile));
         }
 
+        [HttpPost]
+        [ResponseType(typeof(ApiResponse))]
+        [ActionName("logout")]
+        public async Task<HttpResponseMessage> Logout()
+        {
+            if (!await RequestHasValidAuthToken(Request))
+                return CreateMissingTokenResponse();
+            var userId = await _authRepository.GetUserIdForToken(GetAuthToken(Request));
+            var profile = await _profileRepo.GetByUserId(userId);
+            profile.Token = string.Empty;
+
+            try
+            {
+                await _profileRepo.Update(profile);
+            }
+            catch (Exception ex)
+            {
+                return CreateResponse(HttpStatusCode.InternalServerError, "User Logout Error",
+                    "Something went wrong trying to update profile", ex);
+            }
+
+            return CreateResponse(HttpStatusCode.OK, "User Logged Out", "Authorization token has been cleared");
+        }
 
 
         [HttpGet]
@@ -141,7 +167,7 @@ namespace GodSpeak.Web.Controllers
                 ReferringCode = registerUserObject.InviteCode,
                 Code = await GenerateUniqueInviteCode(),
                 UserId = user.Id,
-                Token = _authRepository.CalculateMd5Hash(user.Id + user.Email),
+                Token = _authRepository.CreateToken(),
                 InviteBalance = 0
             };
             
