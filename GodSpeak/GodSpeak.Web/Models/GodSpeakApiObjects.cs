@@ -125,6 +125,25 @@ namespace GodSpeak.Web.Models
         public DateTime Date { get; set; }
     }
 
+    public class MessageApiObject
+    {
+        public Guid Id { get; set; }
+        public DateTime DateTimeToDisplay { get; set; }
+
+        public VerseApiObject PreviousVerse { get; set; }
+
+        public VerseApiObject Verse { get; set; }
+
+        public VerseApiObject NextVerse { get; set; }
+    }
+
+    public class VerseApiObject
+    {
+        public string Title { get; set; }
+
+        public string Text { get; set; }
+    }
+
     public class ImpactPointApiObject
     {
         public static ImpactPointApiObject FromModel(ImpactDayGeoPoint model)
