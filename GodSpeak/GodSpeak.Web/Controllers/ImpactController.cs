@@ -46,6 +46,17 @@ namespace GodSpeak.Web.Controllers
                 days);
         }
 
+        [HttpGet]
+        [ResponseType(typeof(ApiResponse))]
+        [ActionName("didyouknow")]
+        public async Task<HttpResponseMessage> DidYouKnow()
+        {
+            var giftsDelivered = (await _profileRepo.All()).Count;
+            var deliveredMessagesCount = (await _impactRepo.All()).Sum(i => i.DeliveredMessages.Count);
+            return CreateResponse(HttpStatusCode.OK, "Impact", "Did You Know",
+                $"GodSpeak has been gifted {giftsDelivered} times.\rGodSpeak has delivered {deliveredMessagesCount} scriptures.");
+        }
+
         [HttpPost]
         [ResponseType(typeof(ApiResponse))]
         [ActionName("message")]

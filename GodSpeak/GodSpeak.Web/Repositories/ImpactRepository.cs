@@ -16,6 +16,8 @@ namespace GodSpeak.Web.Repositories
         Task RecordDeliveredMessage(DateTime date, string verseCode, string inviteCode, string userId);
 
         Task<List<ImpactDay>> GetImpactForInviteCode(string inviteCode);
+
+        Task<List<ImpactDay>> All();
     }
     public class ImpactRepository:IImpactRepository
     {
@@ -102,8 +104,9 @@ namespace GodSpeak.Web.Repositories
             
         }
 
-        
-
-
+        public async Task<List<ImpactDay>> All()
+        {
+            return await _context.ImpactDays.ToListAsync();
+        }
     }
 }
