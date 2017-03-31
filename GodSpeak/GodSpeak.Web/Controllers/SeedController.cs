@@ -95,9 +95,25 @@ namespace GodSpeak.Web.Controllers
             };
             AddOrUpdateProfileToUser(_dbContext, "brett@venadotech.com", brett);
 
+            CreateUser(_dbContext, "donations@godspeakapp.com", "v3nad0");
+            var donations = new ApplicationUserProfile()
+            {
+                FirstName = "Anonymous",
+                LastName = "Donor",
+                PostalCode = "74055",
+                Code = registerUtil.GenerateInviteCode(),
+                ReferringCode = ben.Code,
+                CountryCode = "US",
+                InviteBalance = 100,
+                MessageCategorySettings = registerUtil.GenerateDefaultMessageCategorySettings(),
+                MessageDayOfWeekSettings = registerUtil.GenerateDefaultDayOfWeekSettingsForUser()
+
+            };
+            AddOrUpdateProfileToUser(_dbContext, "donations@godspeakapp.com", donations);
 
 
-            
+
+
             await _impactRepo.RecordImpact(DateTime.Now.AddDays(-1), ben.PostalCode, ben.CountryCode, ben.Code);
 
             await _impactRepo.RecordImpact(DateTime.Now, brett.PostalCode, brett.CountryCode, brett.Code);

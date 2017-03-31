@@ -9,6 +9,7 @@ using System.Web.Http.Description;
 using GodSpeak.Web.Models;
 using GodSpeak.Web.Repositories;
 using GodSpeak.Web.Util;
+using Microsoft.AspNet.Identity;
 
 namespace GodSpeak.Web.Controllers
 {
@@ -16,14 +17,16 @@ namespace GodSpeak.Web.Controllers
     [Route("api/invite/{action}")]
     public class InviteController : ApiControllerBase
     {
+        private readonly IIdentityMessageService _messageService;
         private readonly ApplicationUserManager _userManager;
         private readonly IInviteRepository _inviteRepository;
         private readonly IAuthRepository _authRepository;
         private readonly IApplicationUserProfileRepository _profileRepository;
         private readonly UserRegistrationUtil _regUtil;
 
-        public InviteController(ApplicationUserManager userManager, IInviteRepository inviteRepository, IAuthRepository authRepository, IApplicationUserProfileRepository profileRepository, UserRegistrationUtil regUtil):base(authRepository)
+        public InviteController(IIdentityMessageService messageService, ApplicationUserManager userManager, IInviteRepository inviteRepository, IAuthRepository authRepository, IApplicationUserProfileRepository profileRepository, UserRegistrationUtil regUtil):base(authRepository)
         {
+            _messageService = messageService;
             _userManager = userManager;
             _inviteRepository = inviteRepository;
             _authRepository = authRepository;
@@ -116,8 +119,49 @@ namespace GodSpeak.Web.Controllers
             if (emailRequest == null || !ModelState.IsValid)
                 return CreateResponse(HttpStatusCode.BadRequest, "Invite Request Failed",
                     "Please submit a valid email address");
+            var donationsAccount = _userManager.Users.First(u => u.Email == "donations@godspeakapp.com");
 
-            //TODO: Actually email the user an invite code.
+            var donationsProfile = await _profileRepository.GetByUserId(donationsAccount.Id);
+
+
+
+            if (donationsProfile.InviteBalance > 0)
+            {
+                try
+                {
+                    donationsProfile.InviteBalance = donationsProfile.InviteBalance - 1;
+                    await _profileRepository.Update(donationsProfile);
+                }
+                catch (Exception ex)
+                {
+                    return CreateResponse(HttpStatusCode.InternalServerError, "Invite Request",
+                        "Sorry something went wrong updating our donations account", ex);
+                }
+            }
+            else
+            {
+                return CreateResponse(HttpStatusCode.OK, "Invite Request",
+                       "Sorry we don't have any donations available");
+            }
+
+            try
+            {
+                await _messageService.SendAsync(new IdentityMessage()
+                {
+                    Destination = emailRequest.EmailAddress,
+                    Subject = "Your GodSpeak Invite Code",
+                    Body = $"You can use this Invite Code to access GodSpeak {donationsProfile.Code}"
+                });
+            }
+            catch (Exception ex)
+            {
+                donationsProfile.InviteBalance = donationsProfile.InviteBalance + 1;
+                await _profileRepository.Update(donationsProfile);
+                return CreateResponse(HttpStatusCode.InternalServerError, "Invite Request Error",
+                    "Sorry, something went wrong trying to email your invite code.", ex);
+            }
+
+
             return CreateResponse(HttpStatusCode.OK, "Invite Request",
                 "Congratulations, we had an extra invite. Please check your email.");
         }
