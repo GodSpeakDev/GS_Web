@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using GodSpeak.Web.Models;
 using GodSpeak.Web.Repositories;
+using GodSpeak.Web.Util;
 
 namespace GodSpeak.Web.Controllers
 {
@@ -15,10 +16,16 @@ namespace GodSpeak.Web.Controllers
     public class ImpactController : ApiControllerBase
     {
         private readonly IImpactRepository _impactRepo;
+        private readonly IAuthRepository _authRepo;
+        private readonly IApplicationUserProfileRepository _profileRepo;
+        private readonly UserRegistrationUtil _regUtil;
 
-        public ImpactController(IImpactRepository impactRepo, IAuthRepository authRepo):base(authRepo)
+        public ImpactController(IImpactRepository impactRepo, IAuthRepository authRepo, IApplicationUserProfileRepository profileRepo, UserRegistrationUtil regUtil):base(authRepo)
         {
             _impactRepo = impactRepo;
+            _authRepo = authRepo;
+            _profileRepo = profileRepo;
+            _regUtil = regUtil;
         }
 
         [HttpGet]
@@ -37,6 +44,24 @@ namespace GodSpeak.Web.Controllers
 
             return CreateResponse(HttpStatusCode.OK, "Impact", $"Impact for code {inviteCode}",
                 days);
+        }
+
+        [HttpPost]
+        [ResponseType(typeof(ApiResponse))]
+        [ActionName("message")]
+        public async Task<HttpResponseMessage> RegisterMessageDelivered(DeliveredMessageRequestApiObject messageRequest)
+        {
+            if (!await RequestHasValidAuthToken(Request))
+                return CreateMissingTokenResponse();
+
+            var userId = await _authRepo.GetUserIdForToken(GetAuthToken(Request));
+            var profile = await _profileRepo.GetByUserId(userId);
+
+            var parentCodes = await _regUtil.GetParentInviteCodes(profile.Code);
+            foreach (var parentCode in parentCodes)
+                await _impactRepo.RecordDeliveredMessage(messageRequest.DateDelivered, messageRequest.VerseCode, parentCode, userId);
+            
+            return CreateResponse(HttpStatusCode.OK, "Impact", "Delivered message has been accounted for");
         }
 
 

@@ -26,6 +26,15 @@ namespace GodSpeak.Web.Models
         public string Password { get; set; }
     }
 
+    public class DeliveredMessageRequestApiObject
+    {
+        [Required]
+        public string VerseCode { get; set; }
+
+        [Required]
+        public DateTime DateDelivered { get; set; }
+    }
+
     public class CountryCodeApiObject
     {
         public string Title { get; set; }
@@ -116,13 +125,16 @@ namespace GodSpeak.Web.Models
             return new ImpactApiObject()
             {
                 Date = model.Day,
-                Points = model.Points.Select(ImpactPointApiObject.FromModel).ToList()
+                Points = model.Points.Select(ImpactPointApiObject.FromModel).ToList(),
+                ScripturesDelivered = model.DeliveredMessages.Count
             };
         }
 
         public ICollection<ImpactPointApiObject> Points { get; set; }
 
         public DateTime Date { get; set; }
+
+        public int ScripturesDelivered { get; set; }
     }
 
     public class MessageApiObject

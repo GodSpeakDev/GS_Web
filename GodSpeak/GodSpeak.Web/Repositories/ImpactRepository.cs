@@ -13,6 +13,8 @@ namespace GodSpeak.Web.Repositories
     {
         Task RecordImpact(DateTime date, string postalCode, string countryCode, string inviteCode);
 
+        Task RecordDeliveredMessage(DateTime date, string verseCode, string inviteCode, string userId);
+
         Task<List<ImpactDay>> GetImpactForInviteCode(string inviteCode);
     }
     public class ImpactRepository:IImpactRepository
@@ -83,7 +85,25 @@ namespace GodSpeak.Web.Repositories
 
         public async Task<List<ImpactDay>> GetImpactForInviteCode(string inviteCode)
         {
-            return await _context.ImpactDays.Where(d => d.InviteCode == inviteCode).OrderBy(d => d.Day).ToListAsync();
+            var days = await _context.ImpactDays.Where(d => d.InviteCode == inviteCode).OrderBy(d => d.Day).ToListAsync();
+            return days;
         }
+
+        public async Task RecordDeliveredMessage(DateTime date, string verseCode, string inviteCode, string userId)
+        {
+            var impactDay = await GetImpactDay(date, inviteCode);
+            if (impactDay.DeliveredMessages == null)
+                impactDay.DeliveredMessages = new List<ImpactDeliveredMessage>();
+            if (impactDay.DeliveredMessages.Any(m => m.UserId == userId && m.VerseCode == verseCode))
+                return;
+            impactDay.DeliveredMessages.Add(new ImpactDeliveredMessage() {UserId = userId, VerseCode =  verseCode});
+            _context.Entry(impactDay).State = EntityState.Modified;
+            _context.SaveChanges();
+            
+        }
+
+        
+
+
     }
 }

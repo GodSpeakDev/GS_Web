@@ -8,8 +8,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Management;
 using GodSpeak.Web.Models;
 using GodSpeak.Web.Repositories;
+using GodSpeak.Web.Util;
 
 namespace GodSpeak.Web.Controllers
 {
@@ -46,7 +48,7 @@ namespace GodSpeak.Web.Controllers
                 _context.Messages.Where(message => message.Categories.Any(cat => enabledMessageCategoriesIds.Contains(cat.MessageCategoryId))).ToList();
 
             var messages = new List<MessageApiObject> ();
-            GetMessageAPIObjects(messages, messageSpecs);
+            GetMessageApiObjects(messages, messageSpecs);
 
             var curDate = DateTime.UtcNow;
             var messagesForDayCounter = 0;
@@ -84,11 +86,12 @@ namespace GodSpeak.Web.Controllers
 
             }
 
+
             return CreateResponse(HttpStatusCode.OK, "Messages Retrieved",
                 "Message Queue successfully retrieved/generated", messages);
         }
 
-        private void GetMessageAPIObjects(List<MessageApiObject> messages, List<Message> messageSpecs)
+        private void GetMessageApiObjects(List<MessageApiObject> messages, List<Message> messageSpecs)
         {
             foreach (var messageSpec in messageSpecs)
             {
