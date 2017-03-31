@@ -205,7 +205,7 @@ namespace GodSpeak.Web.Models
                 InviteCode = profile.Code,
                 LastName = profile.LastName,
                 PostalCode = profile.PostalCode,
-                PhotoUrl = "",
+                PhotoUrl = profile.PhotoUrl,
                 Token = profile.Token,
                 MessageCategorySettings = profile.MessageCategorySettings.Select(MessageCategorySettingApiObject.FromModel).ToList(),
                 MessageDayOfWeekSettings = profile.MessageDayOfWeekSettings.Select(MessageDayOfWeekSettingApiObject.FromModel).ToList()

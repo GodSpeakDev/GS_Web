@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using GodSpeak.Web.Models;
@@ -236,6 +238,59 @@ namespace GodSpeak.Web.Controllers
                 UserApiObject.FromModel(user, await _profileRepo.GetByUserId(user.Id)));
         }
 
+        [HttpPost]
+        [ResponseType(typeof(ApiResponse<UserApiObject>))]
+        [Route("api/user/photo")]
+        public async Task<HttpResponseMessage> UploadPhoto()
+        {
+            if (!await RequestHasValidAuthToken(Request))
+                return CreateMissingTokenResponse();
+
+            var userId = await _authRepository.GetUserIdForToken(GetAuthToken(Request));
+            var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
+            var profile = await _profileRepo.GetByUserId(userId);
+
+            if (!Request.Content.IsMimeMultipartContent())
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+
+            var provider = new MultipartMemoryStreamProvider();
+            await Request.Content.ReadAsMultipartAsync(provider);
+            foreach (var file in provider.Contents)
+            {
+
+                try
+                {
+                    var filename = file.Headers.ContentDisposition.FileName.Trim('\"');
+                    var imageName = $"{Guid.NewGuid()}-{Path.GetFileName(filename)}";
+                    var profileImagesFolderPath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Profile_Images");
+                    if (!Directory.Exists(profileImagesFolderPath))
+                        Directory.CreateDirectory(profileImagesFolderPath);
+
+                    var path = Path.Combine(profileImagesFolderPath,
+                                                       imageName);
+                    var buffer = await file.ReadAsByteArrayAsync();
+                    File.WriteAllBytes(path, buffer);
+                    profile.PhotoUrl = "/Content/Profile_Images/" + imageName;
+                    
+                    await _profileRepo.Update(profile);
+                }
+                catch (Exception ex)
+                {
+                    return CreateResponse(HttpStatusCode.InternalServerError, "User Profile",
+                        "There was an error trying to save the file.", ex);
+                }
+                
+            }
+
+            
+        
+
+            
+
+            return CreateResponse(HttpStatusCode.OK, "User Profile", "User photo upload successfully",
+                UserApiObject.FromModel(user, profile));
+
+        }
 
         [HttpPut]
         [ResponseType(typeof(ApiResponse<UserApiObject>))]

@@ -76,6 +76,7 @@ namespace GodSpeak.Web.Migrations
                         CountryCode = c.String(nullable: false),
                         PostalCode = c.String(nullable: false),
                         Token = c.String(),
+                        PhotoUrl = c.String(),
                     })
                 .PrimaryKey(t => t.ApplicationUserProfileId);
             

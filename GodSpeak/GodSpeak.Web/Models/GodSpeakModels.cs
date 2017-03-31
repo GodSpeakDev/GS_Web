@@ -37,6 +37,7 @@ namespace GodSpeak.Web.Models
 
         public string Token { get; set; }
         
+        public string PhotoUrl { get; set; }
 
         public virtual ICollection<MessageCategorySetting> MessageCategorySettings { get; set; }
 
