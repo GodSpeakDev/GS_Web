@@ -48,6 +48,42 @@ namespace GodSpeak.Web.Controllers
             var messages = new List<MessageApiObject> ();
             GetMessageAPIObjects(messages, messageSpecs);
 
+            var curDate = DateTime.UtcNow;
+            var messagesForDayCounter = 0;
+            var daySettings = profile.MessageDayOfWeekSettings.ToList();
+            
+            if(!daySettings.Any(setting => setting.Enabled))
+                return CreateResponse(HttpStatusCode.OK, "Messages Retrieved", "Message Queue successfully retrieved/generated", new List<MessageApiObject>());
+
+            foreach (var messageApiObject in messages)
+            {
+                
+                var daySetting = daySettings[(int)curDate.DayOfWeek];
+
+                while(!daySetting.Enabled)
+                {
+                    messagesForDayCounter = 0;
+                    curDate = curDate.AddDays(1);
+                    daySetting = daySettings[(int)curDate.DayOfWeek];
+                }
+
+                var numForDay = daySetting.NumOfMessages;
+                var minutesBetweenDeliveries = (daySetting.EndTime.Subtract(daySetting.StartTime).TotalMinutes) / numForDay;
+
+                messageApiObject.DateTimeToDisplay =
+                    curDate.Date.AddMinutes(daySetting.StartTime.TotalMinutes)
+                        .AddMinutes(messagesForDayCounter * minutesBetweenDeliveries);
+
+                messagesForDayCounter += 1;
+                if (messagesForDayCounter == numForDay)
+                {
+                    messagesForDayCounter = 0;
+                    curDate = curDate.AddDays(1);
+                }
+
+
+            }
+
             return CreateResponse(HttpStatusCode.OK, "Messages Retrieved",
                 "Message Queue successfully retrieved/generated", messages);
         }

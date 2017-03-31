@@ -19,6 +19,19 @@ namespace GodSpeak.Web.Migrations
                 .PrimaryKey(t => t.ImpactDayId);
             
             CreateTable(
+                "dbo.ImpactDeliveredMessages",
+                c => new
+                    {
+                        ImpactDeliveredMessageId = c.Guid(nullable: false, identity: true),
+                        ImpactDayRefId = c.Guid(nullable: false),
+                        UserId = c.String(nullable: false),
+                        VerseCode = c.String(nullable: false),
+                    })
+                .PrimaryKey(t => t.ImpactDeliveredMessageId)
+                .ForeignKey("dbo.ImpactDays", t => t.ImpactDayRefId, cascadeDelete: true)
+                .Index(t => t.ImpactDayRefId);
+            
+            CreateTable(
                 "dbo.ImpactDayGeoPoints",
                 c => new
                     {
@@ -218,6 +231,7 @@ namespace GodSpeak.Web.Migrations
             DropForeignKey("dbo.MessageMessageCategories", "MessageCategory_MessageCategoryId", "dbo.MessageCategories");
             DropForeignKey("dbo.MessageMessageCategories", "Message_MessageId", "dbo.Messages");
             DropForeignKey("dbo.ImpactDayGeoPoints", "ImpactDayRefId", "dbo.ImpactDays");
+            DropForeignKey("dbo.ImpactDeliveredMessages", "ImpactDayRefId", "dbo.ImpactDays");
             DropIndex("dbo.MessageMessageCategories", new[] { "MessageCategory_MessageCategoryId" });
             DropIndex("dbo.MessageMessageCategories", new[] { "Message_MessageId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
@@ -230,6 +244,7 @@ namespace GodSpeak.Web.Migrations
             DropIndex("dbo.MessageCategorySettings", new[] { "MessageCategoryRefId" });
             DropIndex("dbo.MessageCategorySettings", new[] { "ApplicationUserProfileRefId" });
             DropIndex("dbo.ImpactDayGeoPoints", new[] { "ImpactDayRefId" });
+            DropIndex("dbo.ImpactDeliveredMessages", new[] { "ImpactDayRefId" });
             DropTable("dbo.MessageMessageCategories");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
@@ -244,6 +259,7 @@ namespace GodSpeak.Web.Migrations
             DropTable("dbo.MessageCategories");
             DropTable("dbo.InviteBundles");
             DropTable("dbo.ImpactDayGeoPoints");
+            DropTable("dbo.ImpactDeliveredMessages");
             DropTable("dbo.ImpactDays");
         }
     }

@@ -168,7 +168,27 @@ namespace GodSpeak.Web.Models
 
         public virtual ICollection<ImpactDayGeoPoint> Points { get; set; }
 
+        public virtual ICollection<ImpactDeliveredMessage> DeliveredMessages{ get; set; }
 
+
+    }
+
+    public class ImpactDeliveredMessage
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public Guid ImpactDeliveredMessageId { get; set; }
+
+        public Guid ImpactDayRefId { get; set; }
+
+        [ForeignKey("ImpactDayRefId")]
+        public virtual ImpactDay ImpactDay { get; set; }
+
+        [Required]
+        public string UserId { get; set; }
+
+        [Required]
+        public string VerseCode { get; set; }
     }
 
     public class ImpactDayGeoPoint
