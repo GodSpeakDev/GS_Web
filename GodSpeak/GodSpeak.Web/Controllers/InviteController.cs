@@ -40,15 +40,15 @@ namespace GodSpeak.Web.Controllers
         public async Task<HttpResponseMessage> Validate(string inviteCode)
         {
             if (!await _inviteRepository.InviteCodeIsValid(inviteCode))
-                return CreateResponse(HttpStatusCode.NotFound, "Invalid Invite Code",
-                    "The submitted invite code is invalid");
+                return CreateResponse(HttpStatusCode.NotFound, "Invalid Gift Code",
+                    "The submitted gift code is invalid");
 
             if (!await _inviteRepository.InviteCodeHasBalance(inviteCode))
-                return CreateResponse(HttpStatusCode.PaymentRequired, "Invite Code No Balance",
-                    "The submitted invite code does not have a remaining balance");
+                return CreateResponse(HttpStatusCode.PaymentRequired, "Gift Code No Balance",
+                    "The submitted gift code does not have a remaining balance");
 
-            return CreateResponse(HttpStatusCode.OK, "Invite Code Valid",
-                "Congratulations, the submitted invite code is valid");
+            return CreateResponse(HttpStatusCode.OK, "Gift Code Valid",
+                "Congratulations, the submitted gift code is valid");
 
         }
 
@@ -57,7 +57,7 @@ namespace GodSpeak.Web.Controllers
         [ActionName("parents")]
         public async Task<HttpResponseMessage> ParentInviteCodes(string inviteCode)
         {
-            return CreateResponse(HttpStatusCode.OK, "Parent Invite Codes", "Here are the codes",
+            return CreateResponse(HttpStatusCode.OK, "Parent Gift Codes", "Here are the codes",
                 await _regUtil.GetParentInviteCodes(inviteCode));
         }
 
@@ -65,7 +65,7 @@ namespace GodSpeak.Web.Controllers
         [ResponseType(typeof(ApiResponse<List<InviteBundle>>))]
         public async Task<HttpResponseMessage> Bundles()
         {
-            return CreateResponse(HttpStatusCode.OK, "Invite Bundles", "Request for Invite Bundles succeeded",
+            return CreateResponse(HttpStatusCode.OK, "Gift Bundles", "Request for Gift Bundles succeeded",
                 await _inviteRepository.Bundles());
         }
 
@@ -86,7 +86,7 @@ namespace GodSpeak.Web.Controllers
                 acceptedInvites.Add(await CreateAcceptedInvite(p));
 
 
-            return CreateResponse(HttpStatusCode.OK, "Accepted Invites", "Request for accepted invites succeeded", acceptedInvites);
+            return CreateResponse(HttpStatusCode.OK, "Accepted Gifts", "Request for accepted gifts succeeded", acceptedInvites);
         }
 
         private async Task<AcceptedInviteObject> CreateAcceptedInvite(ApplicationUserProfile profile)
@@ -112,12 +112,40 @@ namespace GodSpeak.Web.Controllers
         }
 
         [HttpPost]
+        [ActionName("Donate")]
+        [ResponseType(typeof(ApiResponse))]
+        public async Task<HttpResponseMessage> Donate()
+        {
+            if (!await RequestHasValidAuthToken(Request))
+                return CreateMissingTokenResponse();
+
+            var donorUserId = await _authRepository.GetUserIdForToken(GetAuthToken(Request));
+            var donorProfile = await _profileRepository.GetByUserId(donorUserId);
+
+            if (donorProfile.InviteBalance <= 0)
+                return CreateResponse(HttpStatusCode.OK, "Gift Donation Request",
+                    "Sorry, you do not have any remaining gifts to donate");
+
+            var donationsUser = _userManager.Users.First(u => u.Email == "donations@godspeakapp.com");
+            var donationsProfile = await _profileRepository.GetByUserId(donationsUser.Id);
+
+            donationsProfile.InviteBalance += 1;
+            await _profileRepository.Update(donationsProfile);
+
+            donorProfile.InviteBalance -= 1;
+            await _profileRepository.Update(donorProfile);
+
+            return CreateResponse(HttpStatusCode.OK, "Gift Request",
+                "You have successfully donated a gift to the world.");
+        }
+
+        [HttpPost]
         [ActionName("Request")]
         [ResponseType(typeof(ApiResponse))]
         public async Task<HttpResponseMessage> RequestInvite(EmailRequestApiObject emailRequest)
         {
             if (emailRequest == null || !ModelState.IsValid)
-                return CreateResponse(HttpStatusCode.BadRequest, "Invite Request Failed",
+                return CreateResponse(HttpStatusCode.BadRequest, "Gift Request Failed",
                     "Please submit a valid email address");
             var donationsAccount = _userManager.Users.First(u => u.Email == "donations@godspeakapp.com");
 
@@ -134,13 +162,13 @@ namespace GodSpeak.Web.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return CreateResponse(HttpStatusCode.InternalServerError, "Invite Request",
+                    return CreateResponse(HttpStatusCode.InternalServerError, "Gift Request",
                         "Sorry something went wrong updating our donations account", ex);
                 }
             }
             else
             {
-                return CreateResponse(HttpStatusCode.OK, "Invite Request",
+                return CreateResponse(HttpStatusCode.OK, "Gift Request",
                        "Sorry we don't have any donations available");
             }
 
@@ -149,21 +177,21 @@ namespace GodSpeak.Web.Controllers
                 await _messageService.SendAsync(new IdentityMessage()
                 {
                     Destination = emailRequest.EmailAddress,
-                    Subject = "Your GodSpeak Invite Code",
-                    Body = $"You can use this Invite Code to access GodSpeak {donationsProfile.Code}"
+                    Subject = "Your GodSpeak Gift Code",
+                    Body = $"You can use this Gift Code to access GodSpeak {donationsProfile.Code}"
                 });
             }
             catch (Exception ex)
             {
                 donationsProfile.InviteBalance = donationsProfile.InviteBalance + 1;
                 await _profileRepository.Update(donationsProfile);
-                return CreateResponse(HttpStatusCode.InternalServerError, "Invite Request Error",
-                    "Sorry, something went wrong trying to email your invite code.", ex);
+                return CreateResponse(HttpStatusCode.InternalServerError, "Gift Request Error",
+                    "Sorry, something went wrong trying to email your gift code.", ex);
             }
 
 
-            return CreateResponse(HttpStatusCode.OK, "Invite Request",
-                "Congratulations, we had an extra invite. Please check your email.");
+            return CreateResponse(HttpStatusCode.OK, "Gift Request",
+                "Congratulations, we had an extra gift. Please check your email.");
         }
 
         [HttpPost]
@@ -176,22 +204,22 @@ namespace GodSpeak.Web.Controllers
                 return CreateMissingTokenResponse();
 
             if (!ModelState.IsValid)
-                return CreateResponse(HttpStatusCode.BadRequest, "Invite Purchase Failed",
-                    "Request is missing invite bundle guid");
+                return CreateResponse(HttpStatusCode.BadRequest, "Gift Purchase Failed",
+                    "Request is missing gift bundle guid");
 
             if (!await _inviteRepository.BundleExists(guidRequest.Guid))
-                return CreateResponse(HttpStatusCode.NotFound, "Invite Purchase Failed",
-                    "No invite bundle was found with submitted guid");
+                return CreateResponse(HttpStatusCode.NotFound, "Gift Purchase Failed",
+                    "No gift bundle was found with submitted guid");
 
             var bundle = await _inviteRepository.BundleByGuid(guidRequest.Guid);
             var userId = await _authRepository.GetUserIdForToken(GetAuthToken(Request));
 
             if(!await _profileRepository.ApplyInviteCredit(userId, bundle.NumberOfInvites))
-                return CreateResponse(HttpStatusCode.NotFound, "Invite Purchase Failed",
+                return CreateResponse(HttpStatusCode.NotFound, "Gift Purchase Failed",
                     "Something went wrong applying credit");
 
-            return CreateResponse(HttpStatusCode.OK, "Invite Purchase Succeeded",
-                "Congratulations, you successfully purchased more invites.");
+            return CreateResponse(HttpStatusCode.OK, "Gift Purchase Succeeded",
+                "Congratulations, you successfully purchased more gifts.");
         }
 
        
