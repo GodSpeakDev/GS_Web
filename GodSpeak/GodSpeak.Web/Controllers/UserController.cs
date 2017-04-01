@@ -243,53 +243,61 @@ namespace GodSpeak.Web.Controllers
         [Route("api/user/photo")]
         public async Task<HttpResponseMessage> UploadPhoto()
         {
-            if (!await RequestHasValidAuthToken(Request))
-                return CreateMissingTokenResponse();
-
-            var userId = await _authRepository.GetUserIdForToken(GetAuthToken(Request));
-            var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
-            var profile = await _profileRepo.GetByUserId(userId);
-
-            if (!Request.Content.IsMimeMultipartContent())
-                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-
-            var provider = new MultipartMemoryStreamProvider();
-            await Request.Content.ReadAsMultipartAsync(provider);
-            foreach (var file in provider.Contents)
+            try
             {
+                if (!await RequestHasValidAuthToken(Request))
+                    return CreateMissingTokenResponse();
 
-                try
-                {
-                    var filename = file.Headers.ContentDisposition.FileName.Trim('\"');
-                    var imageName = $"{Guid.NewGuid()}-{Path.GetFileName(filename)}";
-                    var profileImagesFolderPath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Profile_Images");
-                    if (!Directory.Exists(profileImagesFolderPath))
-                        Directory.CreateDirectory(profileImagesFolderPath);
+                var userId = await _authRepository.GetUserIdForToken(GetAuthToken(Request));
+                var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
+                var profile = await _profileRepo.GetByUserId(userId);
 
-                    var path = Path.Combine(profileImagesFolderPath,
-                                                       imageName);
-                    var buffer = await file.ReadAsByteArrayAsync();
-                    File.WriteAllBytes(path, buffer);
-                    profile.PhotoUrl = "/Content/Profile_Images/" + imageName;
-                    
-                    await _profileRepo.Update(profile);
-                }
-                catch (Exception ex)
+                if (!Request.Content.IsMimeMultipartContent())
+                    throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+
+                var provider = new MultipartMemoryStreamProvider();
+                await Request.Content.ReadAsMultipartAsync(provider);
+                foreach (var file in provider.Contents)
                 {
-                    return CreateResponse(HttpStatusCode.InternalServerError, "User Profile",
-                        "There was an error trying to save the file.", ex);
+
+                    try
+                    {
+                        var filename = file.Headers.ContentDisposition.FileName.Trim('\"');
+                        var imageName = $"{Guid.NewGuid()}-{Path.GetFileName(filename)}";
+                        var profileImagesFolderPath =
+                            System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Profile_Images");
+                        if (!Directory.Exists(profileImagesFolderPath))
+                            Directory.CreateDirectory(profileImagesFolderPath);
+
+                        var path = Path.Combine(profileImagesFolderPath,
+                            imageName);
+                        var buffer = await file.ReadAsByteArrayAsync();
+                        File.WriteAllBytes(path, buffer);
+                        profile.PhotoUrl = "/Content/Profile_Images/" + imageName;
+
+                        await _profileRepo.Update(profile);
+                    }
+                    catch (Exception ex)
+                    {
+                        return CreateResponse(HttpStatusCode.InternalServerError, "User Profile",
+                            "There was an error trying to save the file.", ex);
+                    }
+
                 }
-                
+
+
+
+
+
+
+                return CreateResponse(HttpStatusCode.OK, "User Profile", "User photo upload successfully",
+                    UserApiObject.FromModel(user, profile));
             }
-
-            
-        
-
-            
-
-            return CreateResponse(HttpStatusCode.OK, "User Profile", "User photo upload successfully",
-                UserApiObject.FromModel(user, profile));
-
+            catch (Exception ex)
+            {
+                return CreateResponse(HttpStatusCode.InternalServerError, "User Profile",
+                    "Something went wrong trying to uplaod photo", ex);
+            }
         }
 
         [HttpPut]
@@ -374,6 +382,7 @@ namespace GodSpeak.Web.Controllers
                 existingSetting.EndTime = setting.EndTime;
                 existingSetting.NumOfMessages = setting.NumOfMessages;
             }
+            await _profileRepo.Update(profile);
         }
 
         private async Task UpdateMessageCategorySettings(UpdateUserObject updateRequestObj, ApplicationUser user)

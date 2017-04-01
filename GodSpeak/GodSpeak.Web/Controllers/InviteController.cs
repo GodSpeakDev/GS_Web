@@ -78,6 +78,7 @@ namespace GodSpeak.Web.Controllers
                 return CreateMissingTokenResponse();
 
             var user = await _authRepository.FindUserByAuthToken(GetAuthToken(Request));
+            
             var profile = (await _profileRepository.All()).First(p => p.UserId == user.Id);
             var profiles = (await _profileRepository.All()).Where(p => p.ReferringCode == profile.Code);
 
@@ -99,6 +100,9 @@ namespace GodSpeak.Web.Controllers
             {
                 Title = $"{profile.FirstName} {profile.LastName}",
                 EmailAddress = user.Email,
+                ImageUrl = profile.PhotoUrl,
+                GiftsGiven = acceptedInviteCount,
+                Subject = hasGifted?"Awesome Job":"Let's Help",
                 SubTitle = hasGifted
                     ? $"{acceptedInviteCount} gifts given"
                     : "Has not given any gifts",
@@ -107,7 +111,9 @@ namespace GodSpeak.Web.Controllers
                     : $"Encourage {profile.FirstName}",
                 Message = hasGifted
                     ? "Congrats on spreading the good word of Christ!"
-                    : "Don't forget to pay it forward!"
+                    : "Don't forget to pay it forward!",
+                DateClaimed = DateTime.Now.AddDays(-2)
+                    
             };
         }
 

@@ -112,9 +112,14 @@ namespace GodSpeak.Web.Models
 
         public string ButtonTitle { get; set; }
 
+        public string Subject { get; set; }
         public string Message { get; set; }
 
         public string EmailAddress { get; set; }
+
+        public int GiftsGiven { get; set; }
+
+        public DateTime DateClaimed { get; set; }
     }
 
     public class ImpactApiObject
