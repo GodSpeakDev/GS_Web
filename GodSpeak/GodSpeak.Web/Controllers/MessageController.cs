@@ -86,6 +86,19 @@ namespace GodSpeak.Web.Controllers
 
             }
 
+            messages.Insert(0, new MessageApiObject()
+            {
+                DateTimeToDisplay = DateTime.Now.AddDays(-1),
+                Id = Guid.NewGuid(),
+                NextVerse = VerseApiObject.FromModel(
+                                _memoryDataRepo.VerseCache["Isaiah 55:12"]),
+                Verse =  VerseApiObject.FromModel(
+                                _memoryDataRepo.VerseCache["Isaiah 55:11"]),
+                PreviousVerse = VerseApiObject.FromModel(
+                                _memoryDataRepo.VerseCache["Isaiah 55:10"])
+                
+                
+            });
 
             return CreateResponse(HttpStatusCode.OK, "Messages Retrieved",
                 "Message Queue successfully retrieved/generated", messages);

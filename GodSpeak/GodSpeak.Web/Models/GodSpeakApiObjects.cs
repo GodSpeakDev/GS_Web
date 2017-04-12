@@ -215,7 +215,10 @@ namespace GodSpeak.Web.Models
         {
             var daysOfWeek = new List<string>() { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
             var dayOfWeekSettings = profile.MessageDayOfWeekSettings.Select(MessageDayOfWeekSettingApiObject.FromModel).OrderBy(d => daysOfWeek.IndexOf(d.Title)).ToList();
-            
+
+            var categorySettings = profile.MessageCategorySettings.Select(MessageCategorySettingApiObject.FromModel).ToList();
+            categorySettings.Insert(0,categorySettings.Find(c => c.Title.Contains("100")));
+            categorySettings.RemoveAt(categorySettings.Count - 1);
             return new UserApiObject()
             {
                 FirstName = profile.FirstName,
@@ -227,7 +230,7 @@ namespace GodSpeak.Web.Models
                 PostalCode = profile.PostalCode,
                 PhotoUrl = profile.PhotoUrl,
                 Token = profile.Token,
-                MessageCategorySettings = profile.MessageCategorySettings.Select(MessageCategorySettingApiObject.FromModel).ToList(),
+                MessageCategorySettings = categorySettings,
                 MessageDayOfWeekSettings = dayOfWeekSettings
                 
             };
