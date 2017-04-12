@@ -213,6 +213,9 @@ namespace GodSpeak.Web.Models
 
         public static UserApiObject FromModel(ApplicationUser user, ApplicationUserProfile profile)
         {
+            var daysOfWeek = new List<string>() { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+            var dayOfWeekSettings = profile.MessageDayOfWeekSettings.Select(MessageDayOfWeekSettingApiObject.FromModel).OrderBy(d => daysOfWeek.IndexOf(d.Title)).ToList();
+            
             return new UserApiObject()
             {
                 FirstName = profile.FirstName,
@@ -225,7 +228,7 @@ namespace GodSpeak.Web.Models
                 PhotoUrl = profile.PhotoUrl,
                 Token = profile.Token,
                 MessageCategorySettings = profile.MessageCategorySettings.Select(MessageCategorySettingApiObject.FromModel).ToList(),
-                MessageDayOfWeekSettings = profile.MessageDayOfWeekSettings.Select(MessageDayOfWeekSettingApiObject.FromModel).ToList()
+                MessageDayOfWeekSettings = dayOfWeekSettings
                 
             };
         }
