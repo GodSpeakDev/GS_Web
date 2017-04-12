@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.EnterpriseServices;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -44,6 +46,48 @@ namespace GodSpeak.Web.Controllers
 
         [HttpGet]
         [ResponseType(typeof(ApiResponse))]
+        [ActionName("fixCategories")]
+        public async Task<HttpResponseMessage> FixCategories()
+        {
+            var badNames = new List<string>()
+            {
+                "Top 100 Searched Verses",
+                "Top 100 Searched Verse",
+                "Top 100",
+                "Top100"
+            };
+            var correctTitle = "Top 100 Most Searched Verses";
+            var correctCat = _dbContext.MessageCategories.First(m => m.Title == correctTitle);
+            var profiles = _dbContext.Profiles.ToList();
+            
+            foreach (var badName in badNames)
+            {
+                if(!_dbContext.MessageCategories.Any(c => c.Title == badName))
+                    continue;
+                
+                var cat = _dbContext.MessageCategories.First(c => c.Title == badName);
+                foreach (var catMessage in cat.Messages)
+                {
+                    correctCat.Messages.Add(catMessage);
+                }
+                
+                foreach (var profile in profiles)
+                {
+                    profile.MessageCategorySettings.Remove(profile.MessageCategorySettings.First(c => c.Category == cat));
+                    _dbContext.Entry(profile).State = EntityState.Modified;
+                }
+                _dbContext.MessageCategories.Remove(cat);
+            }
+            _dbContext.Entry(correctCat).State = EntityState.Modified;
+            
+
+            _dbContext.SaveChanges();
+
+            return CreateResponse(HttpStatusCode.OK, "Categories Cleaned Up", "");
+        }
+
+        [HttpGet]
+        [ResponseType(typeof(ApiResponse))]
         [ActionName("populate")]
         public async Task<HttpResponseMessage> Populate()
         {
@@ -53,7 +97,7 @@ namespace GodSpeak.Web.Controllers
             await Seed();
             return CreateResponse(HttpStatusCode.OK, "Database Seeded", "Database was successfully seeded");
         }
-
+        
         protected async Task Seed()
         {
 
