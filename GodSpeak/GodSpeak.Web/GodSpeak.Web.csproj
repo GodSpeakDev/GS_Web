@@ -192,6 +192,7 @@
     <Compile Include="Controllers\SeedController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Extensions\DbContextExtensions.cs" />
+    <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Management;
+using GodSpeak.Web.Extensions;
 using GodSpeak.Web.Models;
 using GodSpeak.Web.Repositories;
 using GodSpeak.Web.Util;
@@ -44,9 +45,10 @@ namespace GodSpeak.Web.Controllers
             var profile = await _profileRepo.GetByUserId(userId);
             var enabledMessageCategoriesIds = profile.MessageCategorySettings.Where(cat => cat.Enabled).Select(cat => cat.Category.MessageCategoryId).ToList();
 
+            
             var messageSpecs =
                 _context.Messages.Where(message => message.Categories.Any(cat => enabledMessageCategoriesIds.Contains(cat.MessageCategoryId))).ToList();
-
+            messageSpecs.Shuffle();
             var messages = new List<MessageApiObject> ();
             GetMessageApiObjects(messages, messageSpecs);
 
