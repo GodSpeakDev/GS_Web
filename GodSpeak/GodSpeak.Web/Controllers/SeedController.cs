@@ -44,6 +44,60 @@ namespace GodSpeak.Web.Controllers
             _dbContext = dbContext;
         }
 
+        
+
+        [HttpGet]
+        [ResponseType(typeof(ApiResponse))]
+        [ActionName("updateBundles")]
+        public async Task<HttpResponseMessage> UpdateBundles()
+        {
+            foreach (var bundle in _dbContext.InviteBundles)
+                _dbContext.InviteBundles.Remove(bundle);
+
+            _dbContext.InviteBundles.Add(new InviteBundle()
+            {
+               Cost = 8.99m,
+               AppStoreSku = "3GiftBundle",
+               PlayStoreSku = "3GiftBundle",
+               NumberOfInvites = 3
+            });
+
+            _dbContext.InviteBundles.Add(new InviteBundle()
+            {
+                Cost = 13.99m,
+                AppStoreSku = "7GiftBundle",
+                PlayStoreSku = "7GiftBundle",
+                NumberOfInvites = 7
+            });
+
+            _dbContext.InviteBundles.Add(new InviteBundle()
+            {
+                Cost = 11.99m,
+                AppStoreSku = "12GiftBundle",
+                PlayStoreSku = "12GiftBundle",
+                NumberOfInvites = 12
+            });
+
+            _dbContext.InviteBundles.Add(new InviteBundle()
+            {
+                Cost = 22.99m,
+                AppStoreSku = "25GiftBundle",
+                PlayStoreSku = "25GiftBundle",
+                NumberOfInvites = 25
+            });
+
+            _dbContext.InviteBundles.Add(new InviteBundle()
+            {
+                Cost = 59.99m,
+                AppStoreSku = "75GiftBundle",
+                PlayStoreSku = "75GiftBundle",
+                NumberOfInvites = 75
+            });
+
+            _dbContext.SaveChanges();
+            return CreateResponse(HttpStatusCode.OK, "Bundles Updated", "");
+        }
+
         [HttpGet]
         [ResponseType(typeof(ApiResponse))]
         [ActionName("fixCategories")]
@@ -56,8 +110,9 @@ namespace GodSpeak.Web.Controllers
                 "Top 100",
                 "Top100"
             };
-            var correctTitle = "Top 100 Most Searched Verses";
-            var correctCat = _dbContext.MessageCategories.First(m => m.Title == correctTitle);
+            
+            var correctCat = _dbContext.MessageCategories.First(m => m.Title.Contains("Top 100 Most Searched"));
+            correctCat.Title = "Top 100 Most Searched";
             var profiles = _dbContext.Profiles.ToList();
             
             foreach (var badName in badNames)

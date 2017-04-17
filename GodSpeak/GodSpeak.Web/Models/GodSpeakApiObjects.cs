@@ -217,8 +217,9 @@ namespace GodSpeak.Web.Models
             var dayOfWeekSettings = profile.MessageDayOfWeekSettings.Select(MessageDayOfWeekSettingApiObject.FromModel).OrderBy(d => daysOfWeek.IndexOf(d.Title)).ToList();
 
             var categorySettings = profile.MessageCategorySettings.Select(MessageCategorySettingApiObject.FromModel).ToList();
-            categorySettings.Insert(0,categorySettings.Find(c => c.Title.Contains("100")));
-            categorySettings.RemoveAt(categorySettings.Count - 1);
+            var top100Cat = categorySettings.Find(c => c.Title.Contains("100"));
+            categorySettings.Insert(0,top100Cat);
+            categorySettings.RemoveAt(categorySettings.LastIndexOf(top100Cat));
             return new UserApiObject()
             {
                 FirstName = profile.FirstName,

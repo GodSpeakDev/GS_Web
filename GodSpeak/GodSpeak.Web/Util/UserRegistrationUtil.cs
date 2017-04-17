@@ -39,7 +39,7 @@ namespace GodSpeak.Web.Util
         public List<MessageCategorySetting> GenerateDefaultMessageCategorySettings()
         {
             return
-                _dbContext.MessageCategories.ToList().Select(category => new MessageCategorySetting() { Category = category, Enabled = true })
+                _dbContext.MessageCategories.ToList().Select(category => new MessageCategorySetting() { Category = category, Enabled = (category.Title.Contains("100")) })
                     .ToList();
         }
 

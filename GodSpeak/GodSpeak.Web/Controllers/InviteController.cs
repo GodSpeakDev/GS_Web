@@ -66,7 +66,7 @@ namespace GodSpeak.Web.Controllers
         public async Task<HttpResponseMessage> Bundles()
         {
             return CreateResponse(HttpStatusCode.OK, "Gift Bundles", "Request for Gift Bundles succeeded",
-                await _inviteRepository.Bundles());
+                (await _inviteRepository.Bundles()).OrderBy(b => b.NumberOfInvites));
         }
 
         [HttpGet]
@@ -119,13 +119,14 @@ namespace GodSpeak.Web.Controllers
 
         [HttpPost]
         [ActionName("Donate")]
-        [ResponseType(typeof(ApiResponse))]
+        [ResponseType(typeof(ApiResponse<UserApiObject>))]
         public async Task<HttpResponseMessage> Donate()
         {
             if (!await RequestHasValidAuthToken(Request))
                 return CreateMissingTokenResponse();
 
             var donorUserId = await _authRepository.GetUserIdForToken(GetAuthToken(Request));
+            var donor = _userManager.Users.First(u => u.Id == donorUserId);
             var donorProfile = await _profileRepository.GetByUserId(donorUserId);
 
             if (donorProfile.InviteBalance <= 0)
@@ -142,7 +143,7 @@ namespace GodSpeak.Web.Controllers
             await _profileRepository.Update(donorProfile);
 
             return CreateResponse(HttpStatusCode.OK, "Gift Request",
-                "You have successfully donated a gift to the world.");
+                "You have successfully donated a gift to the world.", UserApiObject.FromModel((ApplicationUser)donor, donorProfile));
         }
 
         [HttpPost]

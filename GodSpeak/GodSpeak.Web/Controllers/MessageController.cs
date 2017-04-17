@@ -99,6 +99,18 @@ namespace GodSpeak.Web.Controllers
                 
                 
             });
+            foreach (var message in messages)
+            {
+                if(message.NextVerse != null)
+                    message.NextVerse.Title += " NASB";
+                if (message.PreviousVerse != null)
+                    message.PreviousVerse.Title += " NASB";
+                if (message.Verse!= null)
+                    message.Verse.Title += "NASB";
+            }
+
+
+            
 
             return CreateResponse(HttpStatusCode.OK, "Messages Retrieved",
                 "Message Queue successfully retrieved/generated", messages);
