@@ -207,11 +207,15 @@ namespace GodSpeak.Web.Models
 
         public string PhotoUrl { get; set; }
 
+        public double Latitude { get; set; }
+
+        public double Longitude { get; set; }
+
         public List<MessageCategorySettingApiObject> MessageCategorySettings {get; set; }
 
         public List<MessageDayOfWeekSettingApiObject> MessageDayOfWeekSettings { get; set; }
 
-        public static UserApiObject FromModel(ApplicationUser user, ApplicationUserProfile profile)
+        public static UserApiObject FromModel(ApplicationUser user, ApplicationUserProfile profile, PostalCodeGeoLocation geoPoint)
         {
             var daysOfWeek = new List<string>() { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
             var dayOfWeekSettings = profile.MessageDayOfWeekSettings.Select(MessageDayOfWeekSettingApiObject.FromModel).OrderBy(d => daysOfWeek.IndexOf(d.Title)).ToList();
@@ -220,7 +224,7 @@ namespace GodSpeak.Web.Models
             var top100Cat = categorySettings.Find(c => c.Title.Contains("100"));
             categorySettings.Insert(0,top100Cat);
             categorySettings.RemoveAt(categorySettings.LastIndexOf(top100Cat));
-            return new UserApiObject()
+            var userObject = new UserApiObject()
             {
                 FirstName = profile.FirstName,
                 CountryCode = profile.CountryCode,
@@ -232,9 +236,17 @@ namespace GodSpeak.Web.Models
                 PhotoUrl = profile.PhotoUrl,
                 Token = profile.Token,
                 MessageCategorySettings = categorySettings,
-                MessageDayOfWeekSettings = dayOfWeekSettings
+                MessageDayOfWeekSettings = dayOfWeekSettings,
+               
                 
             };
+            if (geoPoint != null)
+            {
+                userObject.Latitude = geoPoint.Latitude;
+                userObject.Longitude = geoPoint.Longitude;
+
+            }
+            return userObject;
         }
 
         

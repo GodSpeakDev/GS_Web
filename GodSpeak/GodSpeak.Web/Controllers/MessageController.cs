@@ -106,7 +106,7 @@ namespace GodSpeak.Web.Controllers
                 if (message.PreviousVerse != null)
                     message.PreviousVerse.Title += " NASB";
                 if (message.Verse!= null)
-                    message.Verse.Title += "NASB";
+                    message.Verse.Title += " NASB";
             }
 
 

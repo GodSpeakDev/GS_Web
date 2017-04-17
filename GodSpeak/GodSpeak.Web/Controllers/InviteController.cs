@@ -23,8 +23,9 @@ namespace GodSpeak.Web.Controllers
         private readonly IAuthRepository _authRepository;
         private readonly IApplicationUserProfileRepository _profileRepository;
         private readonly UserRegistrationUtil _regUtil;
+        private readonly InMemoryDataRepository _inMemoryDataRepository;
 
-        public InviteController(IIdentityMessageService messageService, ApplicationUserManager userManager, IInviteRepository inviteRepository, IAuthRepository authRepository, IApplicationUserProfileRepository profileRepository, UserRegistrationUtil regUtil):base(authRepository)
+        public InviteController(IIdentityMessageService messageService, ApplicationUserManager userManager, IInviteRepository inviteRepository, IAuthRepository authRepository, IApplicationUserProfileRepository profileRepository, UserRegistrationUtil regUtil, InMemoryDataRepository inMemoryDataRepository):base(authRepository)
         {
             _messageService = messageService;
             _userManager = userManager;
@@ -32,6 +33,7 @@ namespace GodSpeak.Web.Controllers
             _authRepository = authRepository;
             _profileRepository = profileRepository;
             _regUtil = regUtil;
+            _inMemoryDataRepository = inMemoryDataRepository;
         }
 
         [HttpGet]
@@ -142,8 +144,10 @@ namespace GodSpeak.Web.Controllers
             donorProfile.InviteBalance -= 1;
             await _profileRepository.Update(donorProfile);
 
+            var geoPoint = _inMemoryDataRepository.PostalCodeGeoCache[$"{donorProfile.CountryCode}-{donorProfile.PostalCode}"];
+
             return CreateResponse(HttpStatusCode.OK, "Gift Request",
-                "You have successfully donated a gift to the world.", UserApiObject.FromModel((ApplicationUser)donor, donorProfile));
+                "You have successfully donated a gift to the world.", UserApiObject.FromModel((ApplicationUser)donor, donorProfile, geoPoint));
         }
 
         [HttpPost]

@@ -60,8 +60,9 @@ namespace GodSpeak.Web.Controllers
             var profile = await _profileRepo.GetByUserId(user.Id);
             profile.Token = _authRepository.CreateToken();
             await _profileRepo.Update(profile);
+            var geoPoint = _inMemoryDataRepo.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
             return CreateResponse(HttpStatusCode.OK, "Login Valid", "Submitted credentials were valid",
-                UserApiObject.FromModel((ApplicationUser) user, profile));
+                UserApiObject.FromModel((ApplicationUser) user, profile, geoPoint));
         }
 
         [HttpPost]
@@ -210,9 +211,9 @@ namespace GodSpeak.Web.Controllers
                 return CreateResponse(HttpStatusCode.InternalServerError, "Registration Failure",
                     "Something went wrong reducing referrer's invite balance", regException);
             }
-
+            var geoPoint = _inMemoryDataRepo.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
             return CreateResponse(HttpStatusCode.OK, "Registration Success", "User was successfully registered",
-                UserApiObject.FromModel(user, profile));
+                UserApiObject.FromModel(user, profile, geoPoint));
         }
 
         private async Task<string> GenerateUniqueInviteCode()
@@ -234,8 +235,10 @@ namespace GodSpeak.Web.Controllers
             var userId = await _authRepository.GetUserIdForToken(GetAuthToken(Request));
             var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
 
+            var profile = await _profileRepo.GetByUserId(user.Id);
+            var geoPoint = _inMemoryDataRepo.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
             return CreateResponse(HttpStatusCode.OK, "User Profile", "User Profile Retrieved Successfully",
-                UserApiObject.FromModel(user, await _profileRepo.GetByUserId(user.Id)));
+                UserApiObject.FromModel(user, profile, geoPoint));
         }
 
         [HttpPost]
@@ -287,11 +290,11 @@ namespace GodSpeak.Web.Controllers
 
 
 
-
+                var geoPoint = _inMemoryDataRepo.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
 
 
                 return CreateResponse(HttpStatusCode.OK, "User Profile", "User photo upload successfully",
-                    UserApiObject.FromModel(user, profile));
+                    UserApiObject.FromModel(user, profile, geoPoint));
             }
             catch (Exception ex)
             {
@@ -331,8 +334,9 @@ namespace GodSpeak.Web.Controllers
             if (!string.IsNullOrEmpty(updateRequestObj.NewPassword))
                await _userManager.ChangePasswordAsync(userId, updateRequestObj.CurrentPassword, updateRequestObj.NewPassword);
 
-            
-            UpdateProfileProps(updateRequestObj, await _profileRepo.GetByUserId(user.Id));
+
+            var profile = await _profileRepo.GetByUserId(user.Id);
+            UpdateProfileProps(updateRequestObj, profile);
 
             
             try
@@ -365,9 +369,9 @@ namespace GodSpeak.Web.Controllers
                 CreateResponse(HttpStatusCode.InternalServerError, "User Update Failure",
                     "Something went wrong trying to update the user in the database", ex);
             }
-
+            var geoPoint = _inMemoryDataRepo.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
             return CreateResponse(HttpStatusCode.OK, "User Update Success", "User was successfully updated",
-                UserApiObject.FromModel(user, await _profileRepo.GetByUserId(user.Id)));
+                UserApiObject.FromModel(user, profile, geoPoint));
         }
 
         private async Task UpdateMessageDayOfWeekSettings(UpdateUserObject updateRequestObj, ApplicationUser user)
