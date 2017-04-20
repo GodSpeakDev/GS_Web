@@ -72,7 +72,7 @@ namespace GodSpeak.Web.Controllers
 
             _dbContext.InviteBundles.Add(new InviteBundle()
             {
-                Cost = 11.99m,
+                Cost = 17.99m,
                 AppStoreSku = "12GiftBundle",
                 PlayStoreSku = "12GiftBundle",
                 NumberOfInvites = 12
