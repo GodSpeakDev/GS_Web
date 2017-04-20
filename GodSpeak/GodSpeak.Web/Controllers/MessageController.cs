@@ -161,7 +161,7 @@ namespace GodSpeak.Web.Controllers
                     messages.Add(new MessageApiObject()
                     {
                         DateTimeToDisplay = DateTime.Now,
-                        Id = messageSpec.MessageId,
+                        Id = Guid.NewGuid(),
                         PreviousVerse = prevVerse,
                         Verse = currentVerse,
                         NextVerse = nextVerse
