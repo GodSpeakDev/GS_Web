@@ -24,9 +24,9 @@ namespace GodSpeak.Web.Util
 
             var profile = await _dbContext.Profiles.FirstAsync(p => p.Code == invite);
 
-            while (!string.IsNullOrEmpty(profile.ReferringCode))
+            while (!string.IsNullOrEmpty(profile.ReferringEmailAddress))
             {
-                var referringCode = profile.ReferringCode;
+                var referringCode = profile.ReferringEmailAddress;
                 codes.Add(referringCode);
                 if (string.IsNullOrEmpty(referringCode) || referringCode == "godspeak")
                     break;

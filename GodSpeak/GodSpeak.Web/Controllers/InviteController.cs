@@ -82,7 +82,7 @@ namespace GodSpeak.Web.Controllers
             var user = await _authRepository.FindUserByAuthToken(GetAuthToken(Request));
             
             var profile = (await _profileRepository.All()).First(p => p.UserId == user.Id);
-            var profiles = (await _profileRepository.All()).Where(p => p.ReferringCode == profile.Code);
+            var profiles = (await _profileRepository.All()).Where(p => p.ReferringEmailAddress == profile.Code);
 
             var acceptedInvites = new List<AcceptedInviteObject>();
             foreach (var p in profiles)
@@ -94,7 +94,7 @@ namespace GodSpeak.Web.Controllers
 
         private async Task<AcceptedInviteObject> CreateAcceptedInvite(ApplicationUserProfile profile)
         {
-            var acceptedInviteCount = (await _profileRepository.All()).Count(p => p.ReferringCode == profile.Code);
+            var acceptedInviteCount = (await _profileRepository.All()).Count(p => p.ReferringEmailAddress == profile.Code);
             var hasGifted = acceptedInviteCount > 0;
             var user = await _userManager.FindByIdAsync(profile.UserId);
 

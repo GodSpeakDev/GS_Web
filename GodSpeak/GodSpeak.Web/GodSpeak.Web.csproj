@@ -207,6 +207,10 @@
     <Compile Include="Migrations\201705112035382_InviteCodeNotRequired.Designer.cs">
       <DependentUpon>201705112035382_InviteCodeNotRequired.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705112051079_ChangeInviteCodeToReferringEmailAddress.cs" />
+    <Compile Include="Migrations\201705112051079_ChangeInviteCodeToReferringEmailAddress.Designer.cs">
+      <DependentUpon>201705112051079_ChangeInviteCodeToReferringEmailAddress.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -313,6 +317,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705112035382_InviteCodeNotRequired.resx">
       <DependentUpon>201705112035382_InviteCodeNotRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705112051079_ChangeInviteCodeToReferringEmailAddress.resx">
+      <DependentUpon>201705112051079_ChangeInviteCodeToReferringEmailAddress.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
