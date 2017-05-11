@@ -214,6 +214,10 @@
     <Compile Include="Migrations\201705112056508_RemoveInviteBalance.Designer.cs">
       <DependentUpon>201705112056508_RemoveInviteBalance.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705112107485_DeleteInviteBundleModel.cs" />
+    <Compile Include="Migrations\201705112107485_DeleteInviteBundleModel.Designer.cs">
+      <DependentUpon>201705112107485_DeleteInviteBundleModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -227,7 +231,6 @@
     <Compile Include="Repositories\IApplicationUserProfileRepository.cs" />
     <Compile Include="Repositories\IModelRepository.cs" />
     <Compile Include="Repositories\ImpactRepository.cs" />
-    <Compile Include="Repositories\InviteRepository.cs" />
     <Compile Include="Repositories\InMemoryDataRepository.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Util\SeedTextFileParser.cs" />
@@ -326,6 +329,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705112056508_RemoveInviteBalance.resx">
       <DependentUpon>201705112056508_RemoveInviteBalance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705112107485_DeleteInviteBundleModel.resx">
+      <DependentUpon>201705112107485_DeleteInviteBundleModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

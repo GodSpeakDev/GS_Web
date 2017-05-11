@@ -7,8 +7,7 @@ namespace GodSpeak.Web.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<ApplicationUserProfile> Profiles { get; set; }
-
-        public DbSet<InviteBundle> InviteBundles { get; set; }
+        
 
         public DbSet<Message> Messages{ get; set; }
 

@@ -23,7 +23,7 @@ namespace GodSpeak.Web.Controllers
         private readonly IApplicationUserProfileRepository _profileRepo;
         private readonly IAuthRepository _authRepository;
         private readonly ApplicationUserManager _userManager;
-        private readonly IInviteRepository _inviteRepository;
+        
 
         private readonly UserRegistrationUtil _regUtil;
         private readonly IInMemoryDataRepository _inMemoryDataRepo;
@@ -31,7 +31,7 @@ namespace GodSpeak.Web.Controllers
         private readonly IImpactRepository _impactRepository;
 
         public UserController(IApplicationUserProfileRepository profileRepo, IAuthRepository authRepository, ApplicationUserManager userManager,
-            IInviteRepository inviteRepository, UserRegistrationUtil regUtil, IInMemoryDataRepository inMemoryDataRepo, IIdentityMessageService messageService, IImpactRepository impactRepository) :base(authRepository)
+            UserRegistrationUtil regUtil, IInMemoryDataRepository inMemoryDataRepo, IIdentityMessageService messageService, IImpactRepository impactRepository) :base(authRepository)
         {
             var provider = new DpapiDataProtectionProvider("Sample");
 
@@ -39,7 +39,7 @@ namespace GodSpeak.Web.Controllers
             _authRepository = authRepository;
             _userManager = userManager;
             _userManager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(provider.Create("EmailConfirmation"));
-            _inviteRepository = inviteRepository;
+            
 
             _regUtil = regUtil;
             _inMemoryDataRepo = inMemoryDataRepo;

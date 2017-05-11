@@ -46,57 +46,7 @@ namespace GodSpeak.Web.Controllers
 
         
 
-        [HttpGet]
-        [ResponseType(typeof(ApiResponse))]
-        [ActionName("updateBundles")]
-        public async Task<HttpResponseMessage> UpdateBundles()
-        {
-            foreach (var bundle in _dbContext.InviteBundles)
-                _dbContext.InviteBundles.Remove(bundle);
-
-            _dbContext.InviteBundles.Add(new InviteBundle()
-            {
-               Cost = 8.99m,
-               AppStoreSku = "3GiftBundle",
-               PlayStoreSku = "3GiftBundle",
-               NumberOfInvites = 3
-            });
-
-            _dbContext.InviteBundles.Add(new InviteBundle()
-            {
-                Cost = 13.99m,
-                AppStoreSku = "7GiftBundle",
-                PlayStoreSku = "7GiftBundle",
-                NumberOfInvites = 7
-            });
-
-            _dbContext.InviteBundles.Add(new InviteBundle()
-            {
-                Cost = 17.99m,
-                AppStoreSku = "12GiftBundle",
-                PlayStoreSku = "12GiftBundle",
-                NumberOfInvites = 12
-            });
-
-            _dbContext.InviteBundles.Add(new InviteBundle()
-            {
-                Cost = 22.99m,
-                AppStoreSku = "25GiftBundle",
-                PlayStoreSku = "25GiftBundle",
-                NumberOfInvites = 25
-            });
-
-            _dbContext.InviteBundles.Add(new InviteBundle()
-            {
-                Cost = 59.99m,
-                AppStoreSku = "75GiftBundle",
-                PlayStoreSku = "75GiftBundle",
-                NumberOfInvites = 75
-            });
-
-            _dbContext.SaveChanges();
-            return CreateResponse(HttpStatusCode.OK, "Bundles Updated", "");
-        }
+       
 
         [HttpGet]
         [ResponseType(typeof(ApiResponse))]
@@ -213,12 +163,7 @@ namespace GodSpeak.Web.Controllers
             await _impactRepo.RecordImpact(DateTime.Now.AddDays(-1), ben.PostalCode, ben.CountryCode, ben.Code);
 
             await _impactRepo.RecordImpact(DateTime.Now, brett.PostalCode, brett.CountryCode, brett.Code);
-
-            CreateInvite(_dbContext, "AS5Invites", "PS5Invites", 2.99m, 5);
-            CreateInvite(_dbContext, "AS15Invites", "PS15Invites", 3.99m, 15);
-            CreateInvite(_dbContext, "AS25Invites", "PS25Invites", 4.99m, 25);
-            CreateInvite(_dbContext, "AS50Invites", "PS50Invites", 6.99m, 50);
-            CreateInvite(_dbContext, "AS100Invites", "PS100Invites", 10.99m, 100);
+            
         }
 
 
@@ -261,15 +206,7 @@ namespace GodSpeak.Web.Controllers
             }
             context.SaveChanges();
         }
-
-
-        private void CreateInvite(ApplicationDbContext context, string appstoreSku, string playstoreSku, decimal cost, int count)
-        {
-            if (!context.InviteBundles.Any(b => b.AppStoreSku == appstoreSku))
-                context.InviteBundles.Add(new InviteBundle() { AppStoreSku = appstoreSku, PlayStoreSku = playstoreSku, Cost = cost, NumberOfInvites = count });
-
-            context.SaveChanges();
-        }
+        
 
         private static void CreateUser(ApplicationDbContext context, string email, string password)
         {
