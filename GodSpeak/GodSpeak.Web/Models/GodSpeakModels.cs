@@ -12,7 +12,7 @@ namespace GodSpeak.Web.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public Guid ApplicationUserProfileId { get; set; }
-        [Required]
+    
         public string Code { get; set; }
 
         [Required]

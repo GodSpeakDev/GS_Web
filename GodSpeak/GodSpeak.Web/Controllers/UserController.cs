@@ -123,14 +123,7 @@ namespace GodSpeak.Web.Controllers
             if (registerUserObject.Password != registerUserObject.PasswordConfirm)
                 return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
                     "The submitted passwords do not match");
-
-            if (!await _inviteRepository.InviteCodeIsValid(registerUserObject.InviteCode))
-                return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
-                    "Submitted invite code is not valid");
-
-            if (!await _inviteRepository.InviteCodeHasBalance(registerUserObject.InviteCode))
-                return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
-                    "Submitted invite code does not have a balance");
+            
 
             if (await _userManager.Users.AnyAsync(u => u.Email == registerUserObject.EmailAddress))
                 return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
@@ -167,8 +160,6 @@ namespace GodSpeak.Web.Controllers
                 LastName = registerUserObject.LastName,
                 CountryCode = registerUserObject.CountryCode,
                 PostalCode = registerUserObject.PostalCode,
-                ReferringCode = registerUserObject.InviteCode,
-                Code = await GenerateUniqueInviteCode(),
                 UserId = user.Id,
                 Token = _authRepository.CreateToken(),
                 InviteBalance = 0
@@ -186,43 +177,12 @@ namespace GodSpeak.Web.Controllers
                 return CreateResponse(HttpStatusCode.InternalServerError, "Registration Failure",
                     "Something went wrong trying create user profile.", profileException);
             }
-
-            try
-            {
-                await _impactRepository.RecordImpact(DateTime.Today, profile.PostalCode, profile.CountryCode,
-                    profile.ReferringCode);
-            }
-            catch (Exception impactException)
-            {
-                await _userManager.DeleteAsync(user);
-                return CreateResponse(HttpStatusCode.InternalServerError, "Registration Failure",
-                    "Something went wrong recording impact.", impactException);
-            }
-
-            try
-            {
-                var referringUserProfile = await _profileRepo.GetByCode(profile.ReferringCode);
-                referringUserProfile.InviteBalance = referringUserProfile.InviteBalance - 1;
-                await _profileRepo.Update(referringUserProfile);
-            }
-            catch (Exception regException)
-            {
-                await _userManager.DeleteAsync(user);
-                return CreateResponse(HttpStatusCode.InternalServerError, "Registration Failure",
-                    "Something went wrong reducing referrer's invite balance", regException);
-            }
+            
             var geoPoint = _inMemoryDataRepo.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
             return CreateResponse(HttpStatusCode.OK, "Registration Success", "User was successfully registered",
                 UserApiObject.FromModel(user, profile, geoPoint));
         }
 
-        private async Task<string> GenerateUniqueInviteCode()
-        {
-            var userCode = _regUtil.GenerateInviteCode();
-//            while (await _profileRepo.GetByCode(userCode) == null)
-//                userCode = _regUtil.GenerateInviteCode();
-            return userCode;
-        }
 
         [HttpGet]
         [ResponseType(typeof(ApiResponse<UserApiObject>))]

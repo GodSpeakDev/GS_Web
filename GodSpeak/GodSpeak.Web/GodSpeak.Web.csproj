@@ -203,6 +203,10 @@
     <Compile Include="Migrations\201703282317189_AppV1.Designer.cs">
       <DependentUpon>201703282317189_AppV1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705112035382_InviteCodeNotRequired.cs" />
+    <Compile Include="Migrations\201705112035382_InviteCodeNotRequired.Designer.cs">
+      <DependentUpon>201705112035382_InviteCodeNotRequired.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -306,6 +310,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201703282317189_AppV1.resx">
       <DependentUpon>201703282317189_AppV1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705112035382_InviteCodeNotRequired.resx">
+      <DependentUpon>201705112035382_InviteCodeNotRequired.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

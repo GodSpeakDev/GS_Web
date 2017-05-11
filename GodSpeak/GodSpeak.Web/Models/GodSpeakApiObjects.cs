@@ -98,8 +98,7 @@ namespace GodSpeak.Web.Models
         [Required]
         public string PostalCode { get; set; }
 
-        [Required]
-        public string InviteCode { get; set; }
+       
     }
 
     public class AcceptedInviteObject
@@ -190,10 +189,6 @@ namespace GodSpeak.Web.Models
     {
        
 
-        public int InviteBalance { get; set; }
-
-        public string InviteCode { get; set; }
-
         public string Token { get; set; }
 
         public string FirstName { get; set; }
@@ -229,8 +224,6 @@ namespace GodSpeak.Web.Models
                 FirstName = profile.FirstName,
                 CountryCode = profile.CountryCode,
                 Email = user.Email,
-                InviteBalance = profile.InviteBalance,
-                InviteCode = profile.Code,
                 LastName = profile.LastName,
                 PostalCode = profile.PostalCode,
                 PhotoUrl = profile.PhotoUrl,
