@@ -18,10 +18,7 @@ namespace GodSpeak.Web.Models
         [Required]
         public string UserId { get; set; }
 
-
         public string ReferringEmailAddress { get; set; }
-
-        public int InviteBalance { get; set; }
 
         [Required]
         public string FirstName { get; set; }

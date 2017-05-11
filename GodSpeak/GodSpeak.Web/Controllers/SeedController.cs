@@ -171,7 +171,6 @@ namespace GodSpeak.Web.Controllers
                 Code = registerUtil.GenerateInviteCode(),
                 ReferringEmailAddress = "godspeak",
                 CountryCode = "US",
-                InviteBalance = 3,
                 MessageCategorySettings = registerUtil.GenerateDefaultMessageCategorySettings(),
                 MessageDayOfWeekSettings = registerUtil.GenerateDefaultDayOfWeekSettingsForUser()
 
@@ -187,7 +186,6 @@ namespace GodSpeak.Web.Controllers
                 Code = registerUtil.GenerateInviteCode(),
                 ReferringEmailAddress = ben.Code,
                 CountryCode = "US",
-                InviteBalance = 3,
                 MessageCategorySettings = registerUtil.GenerateDefaultMessageCategorySettings(),
                 MessageDayOfWeekSettings = registerUtil.GenerateDefaultDayOfWeekSettingsForUser()
 
@@ -203,7 +201,6 @@ namespace GodSpeak.Web.Controllers
                 Code = registerUtil.GenerateInviteCode(),
                 ReferringEmailAddress = ben.Code,
                 CountryCode = "US",
-                InviteBalance = 100,
                 MessageCategorySettings = registerUtil.GenerateDefaultMessageCategorySettings(),
                 MessageDayOfWeekSettings = registerUtil.GenerateDefaultDayOfWeekSettingsForUser()
 
@@ -305,7 +302,6 @@ namespace GodSpeak.Web.Controllers
                 profileToUpdate.LastName = profile.LastName;
                 profileToUpdate.Code = profile.Code;
                 profileToUpdate.CountryCode = profile.CountryCode;
-                profileToUpdate.InviteBalance = profile.InviteBalance;
                 profileToUpdate.PostalCode = profile.PostalCode;
                 
                 //                user.Profile.MessageCategorySettings = profile.MessageCategorySettings;

@@ -186,7 +186,6 @@
     <Compile Include="Controllers\GeoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImpactController.cs" />
-    <Compile Include="Controllers\InviteController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\SeedController.cs" />
@@ -210,6 +209,10 @@
     <Compile Include="Migrations\201705112051079_ChangeInviteCodeToReferringEmailAddress.cs" />
     <Compile Include="Migrations\201705112051079_ChangeInviteCodeToReferringEmailAddress.Designer.cs">
       <DependentUpon>201705112051079_ChangeInviteCodeToReferringEmailAddress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705112056508_RemoveInviteBalance.cs" />
+    <Compile Include="Migrations\201705112056508_RemoveInviteBalance.Designer.cs">
+      <DependentUpon>201705112056508_RemoveInviteBalance.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -320,6 +323,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705112051079_ChangeInviteCodeToReferringEmailAddress.resx">
       <DependentUpon>201705112051079_ChangeInviteCodeToReferringEmailAddress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705112056508_RemoveInviteBalance.resx">
+      <DependentUpon>201705112056508_RemoveInviteBalance.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

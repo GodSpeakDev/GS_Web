@@ -161,8 +161,7 @@ namespace GodSpeak.Web.Controllers
                 CountryCode = registerUserObject.CountryCode,
                 PostalCode = registerUserObject.PostalCode,
                 UserId = user.Id,
-                Token = _authRepository.CreateToken(),
-                InviteBalance = 0
+                Token = _authRepository.CreateToken()
             };
             
 
