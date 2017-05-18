@@ -23,6 +23,7 @@ namespace GodSpeak.Web.Infrastructure
             Bind<IAuthRepository>().To<AuthRepository>();
             Bind<IInMemoryDataRepository>().To<InMemoryDataRepository>();
             Bind<IImpactRepository>().To<ImpactRepository>();
+            Bind<IAppShareRepository>().To<AppShareRepository>();
         }
     }
 }
