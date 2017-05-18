@@ -231,6 +231,31 @@ namespace GodSpeak.Web.Controllers
 
         [HttpGet]
         [ResponseType(typeof(ApiResponse<UserApiObject>))]
+        [Route("api/User/Impact")]
+        public async Task<HttpResponseMessage> Impact()
+        {
+            if (!await RequestHasValidAuthToken(Request))
+                return CreateMissingTokenResponse();
+
+            var userId = await _authRepository.GetUserIdForToken(GetAuthToken(Request));
+
+            var days = (await _impactRepository.GetImpactForUserId(userId)).ToList().Select(ImpactApiObject.FromModel).ToList();
+
+            for (var i = 0; i < days.Count; i++)
+            {
+                var day = days[i];
+                if (i != 0)
+                    day.Points = day.Points.Concat(days[i - 1].Points).ToList();
+
+            }
+
+            return CreateResponse(HttpStatusCode.OK, "Impact", $"Impact for code {userId}",
+                days);
+
+        }
+
+        [HttpGet]
+        [ResponseType(typeof(ApiResponse))]
         [Route("api/User")]
         public async Task<HttpResponseMessage> Profile()
         {

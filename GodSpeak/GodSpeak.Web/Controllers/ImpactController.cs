@@ -33,9 +33,11 @@ namespace GodSpeak.Web.Controllers
         [HttpGet]
         [ResponseType(typeof(ApiResponse))]
         [ActionName("days")]
-        public async Task<HttpResponseMessage> Days(string inviteCode)
+        public async Task<HttpResponseMessage> Days(string userId)
         {
-            var days = (await _impactRepo.GetImpactForInviteCode(inviteCode)).ToList().Select(ImpactApiObject.FromModel).ToList();
+         
+            var days = (await _impactRepo.GetImpactForUserId(userId)).ToList().Select(ImpactApiObject.FromModel).ToList();
+            
             for (var i = 0; i < days.Count; i++)
             {
                 var day = days[i];
@@ -44,7 +46,7 @@ namespace GodSpeak.Web.Controllers
 
             }
 
-            return CreateResponse(HttpStatusCode.OK, "Impact", $"Impact for code {inviteCode}",
+            return CreateResponse(HttpStatusCode.OK, "Impact", $"Impact for code {userId}",
                 days);
         }
 

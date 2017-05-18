@@ -140,7 +140,7 @@ namespace GodSpeak.Web.Models
         public Guid ImpactDayId { get; set; }
 
         [Required]
-        public string InviteCode { get; set; }
+        public string EmailAddress { get; set; }
 
         [Required]
         public DateTime Day { get; set; }

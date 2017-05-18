@@ -15,7 +15,7 @@ namespace GodSpeak.Web.Repositories
 
         Task RecordDeliveredMessage(DateTime date, string verseCode, string inviteCode, string userId);
 
-        Task<List<ImpactDay>> GetImpactForInviteCode(string inviteCode);
+        Task<List<ImpactDay>> GetImpactForUserId(string userId);
 
         Task<List<ImpactDay>> All();
     }
@@ -24,20 +24,22 @@ namespace GodSpeak.Web.Repositories
         private readonly ApplicationDbContext _context;
         private readonly UserRegistrationUtil _regUtility;
         private readonly IInMemoryDataRepository _memoryDataRepository;
+        private readonly ApplicationUserManager _userManager;
 
-        public ImpactRepository(ApplicationDbContext context, UserRegistrationUtil regUtility, IInMemoryDataRepository memoryDataRepository)
+        public ImpactRepository(ApplicationDbContext context, UserRegistrationUtil regUtility, IInMemoryDataRepository memoryDataRepository, ApplicationUserManager userManager)
         {
             _context = context;
             _regUtility = regUtility;
             _memoryDataRepository = memoryDataRepository;
+            _userManager = userManager;
         }
 
         public async Task RecordImpact(DateTime date, string postalCode, string countryCode, string emailAddress)
         {
             var emailsToUpdate = await _regUtility.GetParentEmailAddresses(emailAddress);
-            foreach (var code in emailsToUpdate)
+            foreach (var address in emailsToUpdate)
             {
-                var impactDay = await GetImpactDay(date, code);
+                var impactDay = await GetImpactDay(date, address);
                 UpdateImpactDayPoints(postalCode, countryCode, impactDay);
 
                 try
@@ -70,11 +72,11 @@ namespace GodSpeak.Web.Repositories
         {
             var dateKey = GetDateKey(date);
             var impactDay =
-                await _context.ImpactDays.FirstOrDefaultAsync(d => d.DayTitle == dateKey && d.InviteCode == code);
+                await _context.ImpactDays.FirstOrDefaultAsync(d => d.DayTitle == dateKey && d.EmailAddress == code);
 
             if (impactDay != null) return impactDay;
 
-            impactDay = new ImpactDay() {InviteCode = code, Day = date.Date, DayTitle = dateKey};
+            impactDay = new ImpactDay() {EmailAddress = code, Day = date.Date, DayTitle = dateKey};
             _context.ImpactDays.Add(impactDay);
             await _context.SaveChangesAsync();
 
@@ -86,9 +88,11 @@ namespace GodSpeak.Web.Repositories
             return date.ToString("MMMM dd yyyy");
         }
 
-        public async Task<List<ImpactDay>> GetImpactForInviteCode(string inviteCode)
+        public async Task<List<ImpactDay>> GetImpactForUserId(string userId)
         {
-            var days = await _context.ImpactDays.Where(d => d.InviteCode == inviteCode).OrderBy(d => d.Day).ToListAsync();
+            var user = await _userManager.FindByIdAsync(userId);
+
+            var days = await _context.ImpactDays.Where(d => d.EmailAddress == user.Email).OrderBy(d => d.Day).ToListAsync();
             return days;
         }
 
