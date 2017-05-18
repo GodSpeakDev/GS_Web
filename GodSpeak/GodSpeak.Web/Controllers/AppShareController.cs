@@ -15,13 +15,20 @@ namespace GodSpeak.Web.Controllers
     [Route("api/share/{action}")]
     public class AppShareController : ApiControllerBase
     {
-        private IAppShareRepository _appShareRepo;
-        private IIdentityMessageService _messageService;
+        private readonly IAppShareRepository _appShareRepo;
+        private readonly IIdentityMessageService _messageService;
+        private readonly IAuthRepository _authRepo;
+        private readonly ApplicationUserManager _userManager;
+        private readonly ApplicationUserProfileRepository _profileRepo;
 
-        public AppShareController(IIdentityMessageService messageService, IAppShareRepository appShareRepo, IAuthRepository authRepository) : base(authRepository)
+        public AppShareController(IIdentityMessageService messageService, IAppShareRepository appShareRepo, IAuthRepository authRepository, ApplicationUserManager userManager, ApplicationUserProfileRepository profileRepository) : base(authRepository)
         {
             _appShareRepo = appShareRepo;
             _messageService = messageService;
+            _authRepo = authRepository;
+            _userManager = userManager;
+            _profileRepo = profileRepository;
+
         }
 
 
@@ -53,6 +60,43 @@ namespace GodSpeak.Web.Controllers
             return CreateResponse(HttpStatusCode.OK, "App Shared", "App was shared");
         }
 
-        
+
+        [HttpGet]
+        [ResponseType(typeof(ApiResponse<UserApiObject>))]
+        [Route("api/shared")]
+        public async Task<HttpResponseMessage> Retrieve(AppShareRequestObject requestObject)
+        {
+            if (!await RequestHasValidAuthToken(Request))
+                return CreateMissingTokenResponse();
+
+            var userId = await _authRepo.GetUserIdForToken(GetAuthToken(Request));
+            var user = await _userManager.FindByIdAsync(userId);
+
+            var referredProfiles = (await _profileRepo.All()).Where(p => p.ReferringEmailAddress == user.Email);
+
+            var results = new List<AcceptedInviteObject>();
+            foreach (var profile in referredProfiles)
+            {
+                var referredUser = await _userManager.FindByIdAsync(profile.UserId);
+                var sharedCount = (await _profileRepo.All()).Count(p => p.ReferringEmailAddress == referredUser.Email);
+                results.Add(new AcceptedInviteObject()
+                {
+                    EmailAddress = referredUser.Email,
+                    ImageUrl = profile.PhotoUrl,
+                    Title = $"{profile.LastName}, {profile.FirstName}",
+                    GiftsGiven = sharedCount,
+                    ButtonTitle = sharedCount > 0?"Congratulate Them":"Encourage Them",
+                    SubTitle = $"Has shared GodSpeak {sharedCount} times",
+                    Message = sharedCount > 0? "Awesome work on spreading the word of Christ.":"Don't be shy! Reach out and tell your friends about GodSpeak",
+                    Subject = "GodSpeak"
+                    
+                });
+
+            }
+
+            return CreateResponse(HttpStatusCode.OK, "App Shared", "App was shared", results);
+        }
+
+
     }
 }
