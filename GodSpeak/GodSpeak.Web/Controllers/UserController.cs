@@ -29,9 +29,10 @@ namespace GodSpeak.Web.Controllers
         private readonly IInMemoryDataRepository _inMemoryDataRepo;
         private readonly IIdentityMessageService _messageService;
         private readonly IImpactRepository _impactRepository;
+        private readonly IAppShareRepository _appShareRepo;
 
         public UserController(IApplicationUserProfileRepository profileRepo, IAuthRepository authRepository, ApplicationUserManager userManager,
-            UserRegistrationUtil regUtil, IInMemoryDataRepository inMemoryDataRepo, IIdentityMessageService messageService, IImpactRepository impactRepository) :base(authRepository)
+            UserRegistrationUtil regUtil, IInMemoryDataRepository inMemoryDataRepo, IIdentityMessageService messageService, IImpactRepository impactRepository, IAppShareRepository appShareRepository) :base(authRepository)
         {
             var provider = new DpapiDataProtectionProvider("Sample");
 
@@ -45,6 +46,7 @@ namespace GodSpeak.Web.Controllers
             _inMemoryDataRepo = inMemoryDataRepo;
             _messageService = messageService;
             _impactRepository = impactRepository;
+            _appShareRepo = appShareRepository;
         }
 
 
@@ -151,7 +153,15 @@ namespace GodSpeak.Web.Controllers
 
             
             var user = await _userManager.Users.FirstAsync(u => u.Email == registerUserObject.EmailAddress);
-            
+
+            var referringEmailAddress = "";
+
+            var referringAddresses = await _appShareRepo.GetReferrals(user.Email);
+            if(referringAddresses.Any())
+                referringEmailAddress = referringAddresses.First();
+
+
+
             var profile = new ApplicationUserProfile
             {
                 MessageCategorySettings = _regUtil.GenerateDefaultMessageCategorySettings(),
@@ -161,7 +171,8 @@ namespace GodSpeak.Web.Controllers
                 CountryCode = registerUserObject.CountryCode,
                 PostalCode = registerUserObject.PostalCode,
                 UserId = user.Id,
-                Token = _authRepository.CreateToken()
+                Token = _authRepository.CreateToken(),
+                ReferringEmailAddress = referringEmailAddress
             };
             
 
@@ -176,7 +187,23 @@ namespace GodSpeak.Web.Controllers
                 return CreateResponse(HttpStatusCode.InternalServerError, "Registration Failure",
                     "Something went wrong trying create user profile.", profileException);
             }
-            
+
+            try
+            {
+                if (referringAddresses.Any())
+                    foreach (var address in referringAddresses)
+                        await _impactRepository.RecordImpact(DateTime.Now, registerUserObject.PostalCode,
+                            registerUserObject.CountryCode, address);
+            }
+            catch (Exception impactException)
+            {
+                return CreateResponse(HttpStatusCode.InternalServerError, "Registration Impact Failure",
+                    "Something went wrong trying to record impact.", impactException);
+            }
+
+
+
+
             var geoPoint = _inMemoryDataRepo.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
             return CreateResponse(HttpStatusCode.OK, "Registration Success", "User was successfully registered",
                 UserApiObject.FromModel(user, profile, geoPoint));
@@ -218,7 +245,7 @@ namespace GodSpeak.Web.Controllers
             {
                 await
                     _impactRepository.RecordImpact(DateTime.Now, profile.PostalCode, profile.CountryCode,
-                        user.Email);
+                        referralObj.ReferringEmailAddress);
             }
             catch (Exception impactException)
             {

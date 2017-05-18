@@ -217,6 +217,8 @@ namespace GodSpeak.Web.Models
 
         public List<MessageDayOfWeekSettingApiObject> MessageDayOfWeekSettings { get; set; }
 
+        public string ReferringEmailAddress { get; set; }
+
         public static UserApiObject FromModel(ApplicationUser user, ApplicationUserProfile profile, PostalCodeGeoLocation geoPoint)
         {
             var daysOfWeek = new List<string>() { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
@@ -237,6 +239,7 @@ namespace GodSpeak.Web.Models
                 Token = profile.Token,
                 MessageCategorySettings = categorySettings,
                 MessageDayOfWeekSettings = dayOfWeekSettings,
+                ReferringEmailAddress = profile.ReferringEmailAddress
                
                 
             };
@@ -297,6 +300,25 @@ namespace GodSpeak.Web.Models
         }
     }
 
+    public class AppShareRequestObject
+    {
+        [Required]
+        public List<string> ToEmailAddresses { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public string FromEmailAddress { get; set; }
+
+        [Required]
+        public string FromName { get; set; }
+
+        [Required]
+        public string Message { get; set; }
+
+        [Required]
+        public string Subject { get; set; }
+    }
+
     public class ApiResponse
     {
         public string Title { get; set; }
@@ -309,4 +331,6 @@ namespace GodSpeak.Web.Models
         public T Payload { get; set; }
 
     }
+
+
 }

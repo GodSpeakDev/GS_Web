@@ -27,11 +27,12 @@ namespace GodSpeak.Web.Repositories
 
         public async Task RecordShare(string fromAddress, string toAddress)
         {
-            _context.AppShares.Add(new AppShare()
-            {
-                From = fromAddress,
-                To = toAddress
-            });
+            if(!await _context.AppShares.AnyAsync(s => s.From == fromAddress && s.To == toAddress))
+                _context.AppShares.Add(new AppShare()
+                {
+                    From = fromAddress,
+                    To = toAddress
+                });
 
             await _context.SaveChangesAsync();
         }
