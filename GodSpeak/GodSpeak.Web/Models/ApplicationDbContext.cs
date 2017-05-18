@@ -17,6 +17,8 @@ namespace GodSpeak.Web.Models
 
         public DbSet<ScheduledMessage> ScheduledMessages { get; set; }
 
+        public DbSet<AppShare> AppShares { get; set; }
+
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

@@ -222,6 +222,10 @@
     <Compile Include="Migrations\201705181645425_ChangeImpactDayInviteCodeToEmailAddress.Designer.cs">
       <DependentUpon>201705181645425_ChangeImpactDayInviteCodeToEmailAddress.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705181707447_CreateAppShare.cs" />
+    <Compile Include="Migrations\201705181707447_CreateAppShare.Designer.cs">
+      <DependentUpon>201705181707447_CreateAppShare.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -339,6 +343,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705181645425_ChangeImpactDayInviteCodeToEmailAddress.resx">
       <DependentUpon>201705181645425_ChangeImpactDayInviteCodeToEmailAddress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705181707447_CreateAppShare.resx">
+      <DependentUpon>201705181707447_CreateAppShare.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

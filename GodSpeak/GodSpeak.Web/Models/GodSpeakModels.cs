@@ -155,6 +155,21 @@ namespace GodSpeak.Web.Models
 
     }
 
+    public class AppShare
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public Guid AppShareId { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public string From { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public string To { get; set; }
+    }
+
     public class ImpactDeliveredMessage
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
