@@ -11,7 +11,7 @@ namespace GodSpeak.Web.Repositories
 {
     public interface IImpactRepository
     {
-        Task RecordImpact(DateTime date, string postalCode, string countryCode, string inviteCode);
+        Task RecordImpact(DateTime date, string postalCode, string countryCode, string emailAddress);
 
         Task RecordDeliveredMessage(DateTime date, string verseCode, string inviteCode, string userId);
 
@@ -32,17 +32,18 @@ namespace GodSpeak.Web.Repositories
             _memoryDataRepository = memoryDataRepository;
         }
 
-        public async Task RecordImpact(DateTime date, string postalCode, string countryCode, string inviteCode)
+        public async Task RecordImpact(DateTime date, string postalCode, string countryCode, string emailAddress)
         {
-            var codesToUpdate = await _regUtility.GetParentInviteCodes(inviteCode);
-            foreach (var code in codesToUpdate)
+            var emailsToUpdate = await _regUtility.GetParentEmailAddresses(emailAddress);
+            foreach (var code in emailsToUpdate)
             {
-                UpdateImpactDayPoints(postalCode, countryCode, await GetImpactDay(date, code));
+                var impactDay = await GetImpactDay(date, code);
+                UpdateImpactDayPoints(postalCode, countryCode, impactDay);
 
                 try
                 {
-//                    _context.Entry(await GetImpactDay(date, code)).State = EntityState.Modified;
-//                    _context.SaveChanges();
+                    _context.Entry(impactDay).State = EntityState.Modified;
+                    _context.SaveChanges();
                 }
                 catch (Exception ex)
                 {

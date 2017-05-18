@@ -199,11 +199,32 @@ namespace GodSpeak.Web.Controllers
 
 
             var userId = await _authRepository.GetUserIdForToken(GetAuthToken(Request));
+            var user = await _userManager.FindByIdAsync(userId);
             var profile = await _profileRepo.GetByUserId(userId);
 
             profile.ReferringEmailAddress = referralObj.ReferringEmailAddress;
 
-            await _profileRepo.Update(profile);
+            try
+            {
+                await _profileRepo.Update(profile);
+            }
+            catch (Exception profileUpdatException)
+            {
+                return CreateResponse(HttpStatusCode.InternalServerError, "Referral Registration Failure",
+                   "Something went wrong trying to update user profile.", profileUpdatException);
+            }
+
+            try
+            {
+                await
+                    _impactRepository.RecordImpact(DateTime.Now, profile.PostalCode, profile.CountryCode,
+                        user.Email);
+            }
+            catch (Exception impactException)
+            {
+                return CreateResponse(HttpStatusCode.InternalServerError, "Referral Registration Failure",
+                   "Something went wrong trying to record impact.", impactException);
+            }
 
             return CreateResponse(HttpStatusCode.OK, "User", "Referral has been registered");
         }

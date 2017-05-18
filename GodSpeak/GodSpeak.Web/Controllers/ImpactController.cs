@@ -19,13 +19,15 @@ namespace GodSpeak.Web.Controllers
         private readonly IAuthRepository _authRepo;
         private readonly IApplicationUserProfileRepository _profileRepo;
         private readonly UserRegistrationUtil _regUtil;
+        private readonly ApplicationUserManager _userManager;
 
-        public ImpactController(IImpactRepository impactRepo, IAuthRepository authRepo, IApplicationUserProfileRepository profileRepo, UserRegistrationUtil regUtil):base(authRepo)
+        public ImpactController(IImpactRepository impactRepo, IAuthRepository authRepo, IApplicationUserProfileRepository profileRepo, UserRegistrationUtil regUtil, ApplicationUserManager userManager) :base(authRepo)
         {
             _impactRepo = impactRepo;
             _authRepo = authRepo;
             _profileRepo = profileRepo;
             _regUtil = regUtil;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -66,11 +68,12 @@ namespace GodSpeak.Web.Controllers
                 return CreateMissingTokenResponse();
 
             var userId = await _authRepo.GetUserIdForToken(GetAuthToken(Request));
-            var profile = await _profileRepo.GetByUserId(userId);
+            var user = await _userManager.FindByIdAsync(userId);
+            
 
-            var parentCodes = await _regUtil.GetParentInviteCodes(profile.Code);
-            foreach (var parentCode in parentCodes)
-                await _impactRepo.RecordDeliveredMessage(messageRequest.DateDelivered, messageRequest.VerseCode, parentCode, userId);
+            var emailAddresses = await _regUtil.GetParentEmailAddresses(user.Email);
+            foreach (var address in emailAddresses)
+                await _impactRepo.RecordDeliveredMessage(messageRequest.DateDelivered, messageRequest.VerseCode, address, userId);
             
             return CreateResponse(HttpStatusCode.OK, "Impact", "Delivered message has been accounted for");
         }

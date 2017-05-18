@@ -15,25 +15,28 @@ namespace GodSpeak.Web.Util
         {
             _dbContext = dbContext;
         }
-        public async Task<List<string>> GetParentInviteCodes(string invite)
+        public async Task<List<string>> GetParentEmailAddresses(string emailAddress)
         {
-            var codes = new List<string>() {"godspeak"};
+            var addresses = new List<string>() {"impact@godspeak.com"};
 
-            if (string.IsNullOrEmpty(invite))
-                return codes;
+            if (string.IsNullOrEmpty(emailAddress))
+                return addresses;
 
-            var profile = await _dbContext.Profiles.FirstAsync(p => p.Code == invite);
+            var firstUserId = (await _dbContext.Users.FirstAsync(u => u.Email == emailAddress)).Id;
+
+            var profile = await _dbContext.Profiles.FirstAsync(p => p.UserId == firstUserId);
 
             while (!string.IsNullOrEmpty(profile.ReferringEmailAddress))
             {
-                var referringCode = profile.ReferringEmailAddress;
-                codes.Add(referringCode);
-                if (string.IsNullOrEmpty(referringCode) || referringCode == "godspeak")
+                var referringEmailAddress = profile.ReferringEmailAddress;
+                addresses.Add(referringEmailAddress);
+                if (string.IsNullOrEmpty(referringEmailAddress) || referringEmailAddress == "impact@godspeak.com")
                     break;
-                profile = await _dbContext.Profiles.FirstAsync(p => p.Code == referringCode);
+                var userId = (await _dbContext.Users.FirstAsync(u => u.Email == profile.ReferringEmailAddress)).Id;
+                profile = await _dbContext.Profiles.FirstAsync(p => p.UserId == userId);
             }
 
-            return codes.Distinct().ToList();
+            return addresses.Distinct().ToList();
         }
 
         public List<MessageCategorySetting> GenerateDefaultMessageCategorySettings()
