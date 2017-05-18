@@ -35,6 +35,13 @@ namespace GodSpeak.Web.Models
         public DateTime DateDelivered { get; set; }
     }
 
+    public class RegisterReferralApiObject
+    {
+        [Required]
+        [EmailAddress]
+        public string ReferringEmailAddress { get; set; }
+    }
+
     public class CountryCodeApiObject
     {
         public string Title { get; set; }

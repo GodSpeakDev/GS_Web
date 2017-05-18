@@ -181,7 +181,32 @@ namespace GodSpeak.Web.Controllers
             return CreateResponse(HttpStatusCode.OK, "Registration Success", "User was successfully registered",
                 UserApiObject.FromModel(user, profile, geoPoint));
         }
+        [HttpPost]
+        [ResponseType(typeof(ApiResponse))]
+        [Route("api/User/Referral")]
+        public async Task<HttpResponseMessage> RegisterReferral(RegisterReferralApiObject referralObj)
+        {
+            if (!await RequestHasValidAuthToken(Request))
+                return CreateMissingTokenResponse();
 
+            if (!ModelState.IsValid)
+                return CreateResponse(HttpStatusCode.BadRequest, "Referral Registration Failure",
+                    $"The request was missing valid data:\n {string.Join("\n", GetModelErrors())}");
+
+            if(await _userManager.FindByEmailAsync(referralObj.ReferringEmailAddress) == null)
+                return CreateResponse(HttpStatusCode.BadRequest, "Referral Registration Failure",
+                    $"{referralObj.ReferringEmailAddress} does not match any existing users");
+
+
+            var userId = await _authRepository.GetUserIdForToken(GetAuthToken(Request));
+            var profile = await _profileRepo.GetByUserId(userId);
+
+            profile.ReferringEmailAddress = referralObj.ReferringEmailAddress;
+
+            await _profileRepo.Update(profile);
+
+            return CreateResponse(HttpStatusCode.OK, "User", "Referral has been registered");
+        }
 
         [HttpGet]
         [ResponseType(typeof(ApiResponse<UserApiObject>))]

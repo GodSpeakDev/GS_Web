@@ -20,6 +20,8 @@ namespace GodSpeak.Web.Repositories
             return await _context.Profiles.FindAsync(id);
         }
 
+        
+
         public async Task<List<ApplicationUserProfile>> All()
         {
             return await _context.Profiles.ToListAsync();
@@ -54,6 +56,8 @@ namespace GodSpeak.Web.Repositories
         {
             _context?.Dispose();
         }
+
+        
 
         public async Task<bool> ApplyInviteCredit(string userId, int numOfInvites)
         {

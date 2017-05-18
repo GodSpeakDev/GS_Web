@@ -9,6 +9,7 @@ namespace GodSpeak.Web.Repositories
 
         Task<ApplicationUserProfile> GetByUserId(string id);
 
+        
         Task<bool> ApplyInviteCredit(string userId, int numOfInvites);
     }
 }
