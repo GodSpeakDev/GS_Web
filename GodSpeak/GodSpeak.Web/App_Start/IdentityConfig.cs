@@ -24,7 +24,7 @@ namespace GodSpeak.Web
             var client = new SmtpClient("smtp.gmail.com");
             //If you need to authenticate
             client.EnableSsl = true;
-            client.Port = 587;
+            client.Port = 25;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
             client.Credentials = new NetworkCredential("ben@rendr.io", "h0llyh3yd3");
