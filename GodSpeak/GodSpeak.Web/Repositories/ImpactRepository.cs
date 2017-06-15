@@ -36,7 +36,12 @@ namespace GodSpeak.Web.Repositories
 
         public async Task RecordImpact(DateTime date, string postalCode, string countryCode, string emailAddress)
         {
-            var emailsToUpdate = await _regUtility.GetParentEmailAddresses(emailAddress);
+            var emailsToUpdate = new List<string>();
+            if (emailAddress != "impact@godspeak.com")
+            {
+                emailsToUpdate = await _regUtility.GetParentEmailAddresses(emailAddress);
+            
+            }
             emailsToUpdate.Add(emailAddress);
             foreach (var address in emailsToUpdate)
             {

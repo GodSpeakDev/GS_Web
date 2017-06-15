@@ -218,6 +218,10 @@ namespace GodSpeak.Web.Models
 
         public double Longitude { get; set; }
 
+        public string InviteCode { get; set; }
+
+        public int InviteBalance { get; set; }
+
         public List<MessageCategorySettingApiObject> MessageCategorySettings {get; set; }
 
         public List<MessageDayOfWeekSettingApiObject> MessageDayOfWeekSettings { get; set; }
@@ -244,9 +248,11 @@ namespace GodSpeak.Web.Models
                 Token = profile.Token,
                 MessageCategorySettings = categorySettings,
                 MessageDayOfWeekSettings = dayOfWeekSettings,
-                ReferringEmailAddress = profile.ReferringEmailAddress
-               
-                
+                ReferringEmailAddress = profile.ReferringEmailAddress,
+                InviteCode = profile.Code,
+                InviteBalance = profile.InviteBalance
+
+
             };
             if (geoPoint != null)
             {
