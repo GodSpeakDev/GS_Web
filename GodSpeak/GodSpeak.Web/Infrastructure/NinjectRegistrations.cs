@@ -20,6 +20,7 @@ namespace GodSpeak.Web.Infrastructure
             Bind<UserRegistrationUtil>().ToSelf();
             Bind<IIdentityMessageService>().To<EmailService>();
             Bind<IApplicationUserProfileRepository>().To<ApplicationUserProfileRepository>();
+            Bind<IInviteRepository>().To<InviteRepository>();
             Bind<IAuthRepository>().To<AuthRepository>();
             Bind<IInMemoryDataRepository>().To<InMemoryDataRepository>();
             Bind<IImpactRepository>().To<ImpactRepository>();

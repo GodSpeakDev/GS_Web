@@ -246,6 +246,7 @@
     <Compile Include="Repositories\IModelRepository.cs" />
     <Compile Include="Repositories\ImpactRepository.cs" />
     <Compile Include="Repositories\InMemoryDataRepository.cs" />
+    <Compile Include="Repositories\InviteRepository.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Util\SeedTextFileParser.cs" />
     <Compile Include="Util\UserRegistrationUtil.cs" />
