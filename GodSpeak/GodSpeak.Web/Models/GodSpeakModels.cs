@@ -7,6 +7,22 @@ using System.Data;
 
 namespace GodSpeak.Web.Models
 {
+
+    public class InviteBundle
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public Guid InviteBundleId { get; set; }
+        [Required]
+        public string AppStoreSku { get; set; }
+        [Required]
+        public string PlayStoreSku { get; set; }
+
+        public int NumberOfInvites { get; set; }
+
+        public decimal Cost { get; set; }
+    }
+
     public class ApplicationUserProfile
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
