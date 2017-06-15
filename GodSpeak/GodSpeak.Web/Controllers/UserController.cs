@@ -132,7 +132,11 @@ namespace GodSpeak.Web.Controllers
             if (registerUserObject.Platform == "android" && await _profileRepo.GetByCode(registerUserObject.ReferringInviteCode) == null)
                 return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
                     "Request's invite code is invalid");
-            
+
+            if (registerUserObject.Platform == "android" && (await _profileRepo.GetByCode(registerUserObject.ReferringInviteCode)).InviteBalance == 0)
+                return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
+                    "The referring invite code does not have anymore available invites.");
+
 
             if (registerUserObject.Password != registerUserObject.PasswordConfirm)
                 return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
@@ -200,7 +204,8 @@ namespace GodSpeak.Web.Controllers
                 PostalCode = registerUserObject.PostalCode,
                 UserId = user.Id,
                 Token = _authRepository.CreateToken(),
-                ReferringEmailAddress = referringEmailAddress
+                ReferringEmailAddress = referringEmailAddress,
+                InviteBalance = 0
             };
             
 
@@ -214,6 +219,21 @@ namespace GodSpeak.Web.Controllers
                 await _userManager.DeleteAsync(user);
                 return CreateResponse(HttpStatusCode.InternalServerError, "Registration Failure",
                     "Something went wrong trying create user profile.", profileException);
+            }
+
+            if (registerUserObject.Platform == "android")
+            {
+                try
+                {
+                    var referringUser = await _profileRepo.GetByCode(registerUserObject.ReferringInviteCode);
+                    referringUser.InviteBalance = Math.Max(0, referringUser.InviteBalance - 1);
+                    await _profileRepo.Update(referringUser);
+                }
+                catch (Exception ex)
+                {
+                    return CreateResponse(HttpStatusCode.InternalServerError, "Registration Failure",
+                        "Something went wrong trying to decriment the referring users balance.", ex);
+                }
             }
 
             try

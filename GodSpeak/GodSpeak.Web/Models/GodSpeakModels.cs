@@ -52,6 +52,8 @@ namespace GodSpeak.Web.Models
         
         public string PhotoUrl { get; set; }
 
+        public int InviteBalance { get; set; }
+
         public virtual ICollection<MessageCategorySetting> MessageCategorySettings { get; set; }
 
        
