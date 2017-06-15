@@ -61,7 +61,7 @@ namespace GodSpeak.Web.Util
         private readonly Random _random = new Random();
         public string GenerateInviteCode()
         {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
             return new string(Enumerable.Repeat(chars, 8)
               .Select(s => s[_random.Next(s.Length)]).ToArray());
         }

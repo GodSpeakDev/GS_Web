@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
@@ -124,6 +125,15 @@ namespace GodSpeak.Web.Controllers
                 return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
                     $"The request was missing valid data:\n {string.Join("\n", GetModelErrors())}");
 
+            if (registerUserObject.Platform == "android" && string.IsNullOrEmpty(registerUserObject.ReferringInviteCode))
+                return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
+                    "Request is missing ReferringInviteCode");
+
+            if (registerUserObject.Platform == "android" && await _profileRepo.GetByCode(registerUserObject.ReferringInviteCode) == null)
+                return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
+                    "Request's invite code is invalid");
+            
+
             if (registerUserObject.Password != registerUserObject.PasswordConfirm)
                 return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
                     "The submitted passwords do not match");
@@ -157,17 +167,33 @@ namespace GodSpeak.Web.Controllers
             var user = await _userManager.Users.FirstAsync(u => u.Email == registerUserObject.EmailAddress);
 
             var referringEmailAddress = "";
+            var referringAddresses = new List<string>();
 
-            var referringAddresses = await _appShareRepo.GetReferrals(user.Email);
-            if(referringAddresses.Any())
-                referringEmailAddress = referringAddresses.First();
+            if (!string.IsNullOrEmpty(registerUserObject.ReferringInviteCode))
+            {
+                var referringUserId = (await _profileRepo.GetByCode(registerUserObject.ReferringInviteCode)).UserId;
+                referringEmailAddress = (await _userManager.FindByIdAsync(referringUserId)).Email;
+                referringAddresses = await _regUtil.GetParentEmailAddresses(referringEmailAddress);
+                referringAddresses.Add(referringEmailAddress);
+            }
+            else
+            {
+                referringAddresses = await _appShareRepo.GetReferrals(user.Email);
+                if (referringAddresses.Any())
+                    referringEmailAddress = referringAddresses.First();
 
+            }
+
+            var inviteCode = _regUtil.GenerateInviteCode();
+            while (await _profileRepo.GetByCode(inviteCode) != null)
+                inviteCode = _regUtil.GenerateInviteCode();
 
 
             var profile = new ApplicationUserProfile
             {
                 MessageCategorySettings = _regUtil.GenerateDefaultMessageCategorySettings(),
                 MessageDayOfWeekSettings = _regUtil.GenerateDefaultDayOfWeekSettingsForUser(),
+                Code = inviteCode,
                 FirstName = registerUserObject.FirstName,
                 LastName = registerUserObject.LastName,
                 CountryCode = registerUserObject.CountryCode,

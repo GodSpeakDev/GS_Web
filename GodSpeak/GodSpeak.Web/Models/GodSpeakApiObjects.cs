@@ -105,6 +105,11 @@ namespace GodSpeak.Web.Models
         [Required]
         public string PostalCode { get; set; }
 
+        public string Platform { get; set; }
+
+        public string ReferringInviteCode { get; set; }
+        
+
        
     }
 
