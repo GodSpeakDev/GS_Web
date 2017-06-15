@@ -170,7 +170,7 @@ namespace GodSpeak.Web.Controllers
                 LastName = "Bishop",
                 PostalCode = "63017",
                 Code = registerUtil.GenerateInviteCode(),
-                ReferringEmailAddress = "godspeak",
+                ReferringEmailAddress = "impact@godspeak.com",
                 CountryCode = "US",
                 MessageCategorySettings = registerUtil.GenerateDefaultMessageCategorySettings(),
                 MessageDayOfWeekSettings = registerUtil.GenerateDefaultDayOfWeekSettingsForUser()

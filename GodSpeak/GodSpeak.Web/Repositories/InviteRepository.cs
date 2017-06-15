@@ -13,7 +13,7 @@ namespace GodSpeak.Web.Repositories
     {
         Task<bool> InviteCodeIsValid(string inviteCode);
 
-
+        Task<bool> InviteCodeHasBalance(string inviteCode);
         Task<List<InviteBundle>> Bundles();
 
         Task<bool> BundleExists(Guid guid);
@@ -41,6 +41,10 @@ namespace GodSpeak.Web.Repositories
 
         }
 
+        public async Task<bool> InviteCodeHasBalance(string inviteCode)
+        {
+            return (await _profileRepo.GetByCode(inviteCode)).InviteBalance > 0;
+        }
 
 
         public async Task<List<InviteBundle>> Bundles()

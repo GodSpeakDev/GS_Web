@@ -39,6 +39,30 @@ namespace GodSpeak.Web.Util
             return addresses.Distinct().ToList();
         }
 
+        public async Task<List<string>> GetParentInviteCodes(string inviteCode)
+        {
+            var codes = new List<string>() { "godspeak" };
+
+            if (string.IsNullOrEmpty(inviteCode))
+                return codes;
+
+  
+
+            var profile = await _dbContext.Profiles.FirstAsync(p => p.Code == inviteCode);
+
+            while (!string.IsNullOrEmpty(profile.ReferringEmailAddress))
+            {
+                var referringEmailAddress = profile.ReferringEmailAddress;
+                codes.Add(profile.Code);
+                if (string.IsNullOrEmpty(referringEmailAddress) || referringEmailAddress == "impact@godspeak.com")
+                    break;
+                var userId = (await _dbContext.Users.FirstAsync(u => u.Email == profile.ReferringEmailAddress)).Id;
+                profile = await _dbContext.Profiles.FirstAsync(p => p.UserId == userId);
+            }
+
+            return codes.Distinct().ToList();
+        }
+
         public List<MessageCategorySetting> GenerateDefaultMessageCategorySettings()
         {
             return
