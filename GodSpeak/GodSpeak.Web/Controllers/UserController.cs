@@ -336,6 +336,42 @@ namespace GodSpeak.Web.Controllers
 
             }
 
+            var profile = await _profileRepo.GetByUserId(userId);
+            var geoPoint = _inMemoryDataRepo.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
+
+            //Making sure user's location is included in the impact map
+
+            if (!days.Any())
+            {
+                
+                
+                days.Add(new ImpactApiObject()
+                {
+                    Date = DateTime.Now,
+                    Points = new List<ImpactPointApiObject>()
+                    {
+                        new ImpactPointApiObject()
+                        {
+                            Latitude = geoPoint.Latitude,
+                            Longitude = geoPoint.Longitude
+                        }
+                    }
+                });
+            }
+
+
+            foreach (var day in days)
+            {
+                if (!day.Points.Any(p => p.Latitude == geoPoint.Latitude && geoPoint.Longitude == p.Longitude))
+                {
+                    day.Points.Add(new ImpactPointApiObject()
+                    {
+                        Latitude = geoPoint.Latitude,
+                        Longitude = geoPoint.Longitude
+                    });
+                }
+            }
+
             return CreateResponse(HttpStatusCode.OK, "Impact", $"Impact for code {userId}",
                 days);
 
