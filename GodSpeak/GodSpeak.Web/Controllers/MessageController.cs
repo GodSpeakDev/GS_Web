@@ -91,7 +91,7 @@ namespace GodSpeak.Web.Controllers
             messages.Insert(0, new MessageApiObject()
             {
                 DateTimeToDisplay = DateTime.Now.AddDays(-1),
-                Id = Guid.NewGuid(),
+                Id = Guid.Parse("3489988c-a3a7-40e2-8039-ff632ad0730d"),
                 NextVerse = VerseApiObject.FromModel(
                                 _memoryDataRepo.VerseCache["Isaiah 55:12"]),
                 Verse =  VerseApiObject.FromModel(
