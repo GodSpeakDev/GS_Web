@@ -275,6 +275,8 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="App_Data\country-codes.csv" />
+    <None Include="Properties\PublishProfiles\givegodspeak - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\givegodspeak - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\godspeak-staging - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\godspeak-staging - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />

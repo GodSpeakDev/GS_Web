@@ -57,7 +57,7 @@ namespace GodSpeak.Web.Controllers
             {
                 Cost = 8.99m,
                 AppStoreSku = "3GiftBundle",
-                PlayStoreSku = "3GiftBundle",
+                PlayStoreSku = "gift_bundle_3",
                 NumberOfInvites = 3
             });
 
@@ -65,7 +65,7 @@ namespace GodSpeak.Web.Controllers
             {
                 Cost = 13.99m,
                 AppStoreSku = "7GiftBundle",
-                PlayStoreSku = "7GiftBundle",
+                PlayStoreSku = "gift_bundle_7",
                 NumberOfInvites = 7
             });
 
@@ -73,7 +73,7 @@ namespace GodSpeak.Web.Controllers
             {
                 Cost = 17.99m,
                 AppStoreSku = "12GiftBundle",
-                PlayStoreSku = "12GiftBundle",
+                PlayStoreSku = "gift_bundle_12",
                 NumberOfInvites = 12
             });
 
@@ -81,7 +81,7 @@ namespace GodSpeak.Web.Controllers
             {
                 Cost = 22.99m,
                 AppStoreSku = "25GiftBundle",
-                PlayStoreSku = "25GiftBundle",
+                PlayStoreSku = "gift_bundle_25",
                 NumberOfInvites = 25
             });
 
@@ -89,7 +89,7 @@ namespace GodSpeak.Web.Controllers
             {
                 Cost = 59.99m,
                 AppStoreSku = "75GiftBundle",
-                PlayStoreSku = "75GiftBundle",
+                PlayStoreSku = "gift_bundle_75",
                 NumberOfInvites = 75
             });
 
