@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -42,7 +43,10 @@ namespace GodSpeak.Web.Controllers
             _authRepository = authRepository;
             _userManager = userManager;
             _userManager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(provider.Create("EmailConfirmation"));
-            
+            _userManager.UserValidator = new UserValidator<ApplicationUser>(_userManager)
+            {
+                AllowOnlyAlphanumericUserNames = false
+            };
 
             _regUtil = regUtil;
             _inMemoryDataRepo = inMemoryDataRepo;
@@ -50,6 +54,8 @@ namespace GodSpeak.Web.Controllers
             _impactRepository = impactRepository;
             _appShareRepo = appShareRepository;
             _inviteRepository = inviteRepository;
+
+            
         }
 
 
@@ -155,11 +161,16 @@ namespace GodSpeak.Web.Controllers
 
             try
             {
-                _userManager.Create(new ApplicationUser()
+                var result = _userManager.Create(new ApplicationUser()
                 {
                     Email = registerUserObject.EmailAddress,
                     UserName = registerUserObject.EmailAddress
                 }, registerUserObject.Password);
+
+                if (result.Errors.Any())
+                    return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure", result.Errors.First());
+
+                Debug.Write("Testing...");
             }
             catch (Exception ex)
             {
@@ -167,6 +178,7 @@ namespace GodSpeak.Web.Controllers
                     "Something went wrong trying create user security record.", ex);
             }
 
+            var allUsers = await _userManager.Users.ToListAsync();
             
             var user = await _userManager.Users.FirstAsync(u => u.Email == registerUserObject.EmailAddress);
 
