@@ -160,23 +160,23 @@ namespace GodSpeak.Web.Controllers
             if (!_dbContext.MessageCategories.Any())
                 LoadMessages(_dbContext);
 
-            CreateUser(_dbContext, "ben@rendr.io", "J0hn_galt");
-
-            var registerUtil = new UserRegistrationUtil(_dbContext);
-
-            var ben = new ApplicationUserProfile()
-            {
-                FirstName = "Benjamin",
-                LastName = "Bishop",
-                PostalCode = "63017",
-                Code = registerUtil.GenerateInviteCode(),
-                ReferringEmailAddress = "impact@godspeak.com",
-                CountryCode = "US",
-                MessageCategorySettings = registerUtil.GenerateDefaultMessageCategorySettings(),
-                MessageDayOfWeekSettings = registerUtil.GenerateDefaultDayOfWeekSettingsForUser()
-
-            };
-            AddOrUpdateProfileToUser(_dbContext, "ben@rendr.io", ben);
+//            CreateUser(_dbContext, "ben@rendr.io", "J0hn_galt");
+//
+//            var registerUtil = new UserRegistrationUtil(_dbContext);
+//
+//            var ben = new ApplicationUserProfile()
+//            {
+//                FirstName = "Benjamin",
+//                LastName = "Bishop",
+//                PostalCode = "63017",
+//                Code = registerUtil.GenerateInviteCode(),
+//                ReferringEmailAddress = "impact@godspeak.com",
+//                CountryCode = "US",
+//                MessageCategorySettings = registerUtil.GenerateDefaultMessageCategorySettings(),
+//                MessageDayOfWeekSettings = registerUtil.GenerateDefaultDayOfWeekSettingsForUser()
+//
+//            };
+//            AddOrUpdateProfileToUser(_dbContext, "ben@rendr.io", ben);
 
             CreateUser(_dbContext, "brett@venadotech.com", "v3nad0");
             var brett = new ApplicationUserProfile()
