@@ -24,8 +24,17 @@ namespace GodSpeak.Web
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/godspeak_portal").Include(
+                     "~/Scripts/clipboard.js",
+                     "~/Scripts/dashboard.js",
+                     "~/Scripts/hero-map.js",
+                     "~/Scripts/scripts.js",
+                     "~/Scripts/signup.js"
+
+
+                ));
         }
     }
 }

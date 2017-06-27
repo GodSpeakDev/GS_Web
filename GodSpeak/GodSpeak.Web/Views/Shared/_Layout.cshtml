@@ -2,43 +2,94 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+<header class="header site-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-6 col-md-offset-1 col-md-5">
+                <div class="navbar-left">
+                    <a class="brand" href="#">
+                        <span class="sr-only">GodSpeak App</span>
+                    </a>
+
+                </div>
+                <div class="navbar-left hidden-xs">
+                    <p class="greeting">Welcome back, Curtis!</p>
+                </div>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
-                @Html.Partial("_LoginPartial")
+
+            <div class="col-xs-6 hidden-xs">
+                <div class="navbar-right text-right">
+                    <a href="#" class="logout-link">
+                        Logout
+                    </a>
+                </div>
             </div>
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
+</header>
+<!--
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink("Application name", "Index", "Home", new {area = ""}, new {@class = "navbar-brand"})
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                <li>@Html.ActionLink("About", "About", "Home")</li>
+                <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+            </ul>
+            @Html.Partial("_LoginPartial")
+        </div>
     </div>
+</div>
+-->
+    
+    @RenderBody()
+<!-- Footer -->
+<footer class="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="hidden-xs col-sm-6 col-md-offset-1 col-md-5">
+                <ul class="list-inline footer-links">
+                    <li>
+                        <div class="brand"></div>
+                    </li>
+                    <li><a href="#">About</a></li>
+                    <li>
+                        <span>|</span>
+                    </li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-5 text-right">
+                <p class="copyright">© GodSpeak 2017 All Rights Reserved</p>
+            </div>
+        </div>
+    </div>
+</footer>
+    
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+<!-- Bootstrap CDN -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>    
+
+@Scripts.Render("~/bundles/godspeak_portal")
+@RenderSection("scripts", required: false)
 </body>
 </html>

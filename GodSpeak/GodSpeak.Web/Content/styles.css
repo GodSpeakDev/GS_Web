@@ -1,4 +1,4 @@
-﻿* {
+* {
   font-family: Helvetica, sans-serif; }
 
 body {
@@ -27,7 +27,7 @@ body {
     display: block; }
 
 .brand {
-  background: url("Images/gs-logo-new.svg") 50% 50% no-repeat;
+  background: url("../../assets/img/gs-logo-new.svg") 50% 50% no-repeat;
   height: 31px;
   line-height: 31px;
   margin-top: 11px;
@@ -54,7 +54,7 @@ body {
   width: 20px;
   padding: 16px 19px;
   display: block;
-  background: url("Images/copy.svg") 50% 50% no-repeat;
+  background: url("../../assets/img/copy.svg") 50% 50% no-repeat;
   border-color: transparent; }
   .btn-copy:hover, .btn-copy:focus {
     border-radius: 0; }
@@ -164,14 +164,14 @@ body {
   height: 61px;
   width: 61px;
   display: block;
-  background: url("Images/android.png") 50% 50% no-repeat;
+  background: url("../img/android.png") 50% 50% no-repeat;
   background-size: contain; }
 
 .app-store-icon {
   height: 61px;
   width: 61px;
   display: block;
-  background: url("Images/app-store.png") 50% 50% no-repeat;
+  background: url("../img/app-store.png") 50% 50% no-repeat;
   background-size: contain; }
 
 .panel-gifts {
@@ -408,7 +408,7 @@ body {
       width: 300px;
       position: absolute;
       right: 50%;
-      background: url("Images/android-screenshot.png") 50% 100% no-repeat;
+      background: url("../img/android-screenshot.png") 50% 100% no-repeat;
       background-size: contain; }
 
   .signup .inner {
@@ -420,7 +420,7 @@ body {
       width: 300px;
       position: absolute;
       right: 50%;
-      background: url("Images/iphone-screenshot.png") 50% 100% no-repeat;
+      background: url("../img/iphone-screenshot.png") 50% 100% no-repeat;
       background-size: contain; } }
 /* Medium Devices, Desktops */
 @media only screen and (min-width: 992px) {
