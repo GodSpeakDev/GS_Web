@@ -27,10 +27,11 @@ namespace GodSpeak.Web
                       "~/Content/site.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/godspeak_portal").Include(
-                     "~/Scripts/clipboard.js",
+                     "~/Scripts/clipboard.min.js",
+                     "~/Scripts/scripts.js",
                      "~/Scripts/dashboard.js",
                      "~/Scripts/hero-map.js",
-                     "~/Scripts/scripts.js",
+                     
                      "~/Scripts/signup.js"
 
 

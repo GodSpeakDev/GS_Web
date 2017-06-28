@@ -107,8 +107,8 @@ namespace GodSpeak.Web.Repositories
 
         public async Task<List<GiftRequest>> UnBoughtGifts(string code, PhonePlatforms platform)
         {
-            var allGiftRequestsForCode = _dbContext.GiftRequests.Where(req => req.ReferringCode == code && req.Platform == platform);
-            return await allGiftRequestsForCode.Where(req => !DoesUserExist(req.Email)).ToListAsync();
+            var allGiftRequestsForCode = _dbContext.GiftRequests.Where(req => req.ReferringCode == code && req.Platform == platform).ToList();
+            return allGiftRequestsForCode.Where(req => !DoesUserExist(req.Email)).ToList();
 
         }
 
@@ -129,8 +129,8 @@ namespace GodSpeak.Web.Repositories
 
         public async Task<List<GiftRequest>> BoughtGifts(string code, PhonePlatforms platform)
         {
-            var allGiftRequestsForCode = _dbContext.GiftRequests.Where(req => req.ReferringCode == code && req.Platform == platform);
-            return await allGiftRequestsForCode.Where(req => DoesUserExist(req.Email)).ToListAsync();
+            var allGiftRequestsForCode = _dbContext.GiftRequests.Where(req => req.ReferringCode == code && req.Platform == platform).ToList();
+            return allGiftRequestsForCode.Where(req => DoesUserExist(req.Email)).ToList();
         }
     }
 }
