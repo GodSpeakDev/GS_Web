@@ -79,5 +79,11 @@ namespace GodSpeak.Web.Controllers
             return View();
 
         }
+        [HttpGet]
+        public async Task<ActionResult> DeleteRequest(Guid id)
+        {
+            await _inviteRepository.DeleteGiftRequest(id);
+            return RedirectToAction("Index");
+        }
     }
 }
