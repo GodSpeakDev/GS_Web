@@ -22,15 +22,14 @@
 
                 </div>
                 <div class="navbar-left hidden-xs">
-                    <p class="greeting">Welcome back, Curtis!</p>
+                    <p class="greeting">Welcome back, @ViewBag.UserFirstName!</p>
                 </div>
             </div>
 
             <div class="col-xs-6 hidden-xs">
                 <div class="navbar-right text-right">
-                    <a href="#" class="logout-link">
-                        Logout
-                    </a>
+                    @Html.ActionLink("Logout", "LogOff", "Account", new {}, new { @class = "logout-link" })
+                    
                 </div>
             </div>
         </div>
@@ -60,6 +59,7 @@
 -->
     
     @RenderBody()
+<div style="height: 100px;"></div>
 <!-- Footer -->
 <footer class="site-footer">
     <div class="container">
@@ -69,15 +69,15 @@
                     <li>
                         <div class="brand"></div>
                     </li>
-                    <li><a href="#">About</a></li>
+                    <li><a href="http://givegodspeak.com">About</a></li>
                     <li>
                         <span>|</span>
                     </li>
-                    <li><a href="#">Blog</a></li>
+                    <li><a href="http://givegodspeak.com/blog">Blog</a></li>
                 </ul>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-5 text-right">
-                <p class="copyright">© GodSpeak 2017 All Rights Reserved</p>
+                <p class="copyright">© GodSpeak @DateTime.Now.ToString("yyyy") All Rights Reserved</p>
             </div>
         </div>
     </div>

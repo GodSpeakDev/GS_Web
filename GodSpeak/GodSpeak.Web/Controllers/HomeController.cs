@@ -1,16 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using GodSpeak.Web.Repositories;
+using Microsoft.AspNet.Identity;
 
 namespace GodSpeak.Web.Controllers
 {
     public class HomeController : Controller
     {
-        [Authorize]
-        public ActionResult Index()
+        private readonly ApplicationUserManager _userManager;
+        private readonly IApplicationUserProfileRepository _profileRepository;
+
+        public HomeController(ApplicationUserManager userManager, IApplicationUserProfileRepository profileRepository)
         {
+            _userManager = userManager;
+            _profileRepository = profileRepository;
+        }
+
+
+        [Authorize]
+        public async Task<ActionResult> Index()
+        {
+            ViewBag.Title = "Your GodSpeak Dashboard";
+
+            var userId = User.Identity.GetUserId();
+            var profile = await _profileRepository.GetByUserId(userId);
+
+            ViewBag.UserFirstName = profile.FirstName;
+
             return View();
         }
 
