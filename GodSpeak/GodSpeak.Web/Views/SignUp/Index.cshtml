@@ -43,6 +43,7 @@
                                     @Html.HiddenFor(m => m.InviteCode, new {ViewBag.InviteCode})
                                     @Html.LabelFor(m => m.Email)
                                     @Html.TextBoxFor(m => m.Email, new {@class = "form-control"})
+
                                     @Html.ValidationMessageFor(m => m.Email, "", new {@class = "text-danger"})
 
                                 </div>
