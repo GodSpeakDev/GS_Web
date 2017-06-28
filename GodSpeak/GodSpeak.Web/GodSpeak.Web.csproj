@@ -185,6 +185,7 @@
     <Compile Include="Controllers\ApiControllerBase.cs" />
     <Compile Include="Controllers\AppShareController.cs" />
     <Compile Include="Controllers\GeoController.cs" />
+    <Compile Include="Controllers\GiftiTunesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImpactController.cs" />
     <Compile Include="Controllers\InviteController.cs" />
@@ -439,6 +440,7 @@
     <Content Include="Views\Shared\_PlainLayout.cshtml" />
     <Content Include="Views\SignUp\Index.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\GiftiTunes\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -483,6 +485,7 @@
       <DependentUpon>201706282016342_GiftRequestsHaveTimestamp.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

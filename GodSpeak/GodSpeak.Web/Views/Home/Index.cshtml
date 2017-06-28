@@ -230,10 +230,8 @@
 
         <p>You have gifted GodSpeak to @ViewBag.PurchasediOSRequests.Count iOS Users and have <strong>@ViewBag.UnpurchasediOSRequests.Count to purchase.</strong></p>
     </div>
-    <a href="#" class="btn btn-lg btn-primary btn-purchase">
-        Purchase @ViewBag.UnpurchasediOSRequests.Count iPhone Gifts
-
-    </a>
+    @Html.ActionLink($"Purchase {ViewBag.UnpurchasediOSRequests.Count} iPhone Gifts","Index","GiftiTunes", new {}, new { @class = "btn btn-lg btn-primary btn-purchase" })
+ 
     @using (Html.BeginForm("Index", "Home", new { }, FormMethod.Post, new { role = "form", @class = "add-email-form" }))
     {
         <input data-val="true" data-val-required="The InviteCode field is required." id="InviteCode" name="InviteCode" type="hidden" value="@ViewBag.InviteCode" />
