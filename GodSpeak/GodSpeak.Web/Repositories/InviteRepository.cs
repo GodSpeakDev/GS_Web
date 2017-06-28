@@ -92,7 +92,8 @@ namespace GodSpeak.Web.Repositories
             {
                 Email = emailAddress,
                 Platform = platform,
-                ReferringCode = referringCode
+                ReferringCode = referringCode,
+                DateTimeRequested = DateTime.Now
             });
 
             await _dbContext.SaveChangesAsync();

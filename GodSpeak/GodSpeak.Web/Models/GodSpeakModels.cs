@@ -275,6 +275,9 @@ namespace GodSpeak.Web.Models
 
         [Required]
         public string ReferringCode { get; set; }
+
+        
+        public DateTime DateTimeRequested { get; set; }
     }
 
     public class BibleVerse

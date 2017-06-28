@@ -169,7 +169,7 @@
                                                 <a href="#"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></a>
                                             </td>
                                             <td>@request.Email</td>
-                                            <td>Signed Up 6/30/17</td>
+                                            <td>Requested @request.DateTimeRequested.ToString("M/dd/yyyy")</td>
                                         </tr>
                                     }
                                     @if (ViewBag.UnpurchasedAndroidRequests.Count == 0)
@@ -205,7 +205,7 @@
                                     {
                                         <tr>
                                             <td>@req.Email</td>
-                                            <td>Signed Up 6/30/17</td>
+                                            <td>Requested @req.DateTimeRequested.ToString("M/dd/yyyy")</td>
                                         </tr>
                                     }
                                     @if (ViewBag.PurchasedAndroidRequests.Count == 0)
@@ -277,7 +277,7 @@
                                                 <a href="#"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></a>
                                             </td>
                                             <td>@req.Email</td>
-                                            <td>Signed Up 6/30/17</td>
+                                            <td>Requested @req.DateTimeRequested.ToString("M/dd/yyyy")</td>
                                         </tr>
                                     }
                                     @if (ViewBag.UnpurchasediOSRequests.Count == 0)
@@ -313,7 +313,7 @@
                                     {
                                         <tr>
                                             <td>@req.Email</td>
-                                            <td>Signed Up 6/30/17</td>
+                                            <td>Requested @req.DateTimeRequestede.ToString("M/dd/yyyy")</td>
                                         </tr>
 
                                     }

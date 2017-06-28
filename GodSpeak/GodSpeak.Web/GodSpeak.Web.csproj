@@ -241,6 +241,10 @@
     <Compile Include="Migrations\201706281727499_HasGiftRequests.Designer.cs">
       <DependentUpon>201706281727499_HasGiftRequests.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706282016342_GiftRequestsHaveTimestamp.cs" />
+    <Compile Include="Migrations\201706282016342_GiftRequestsHaveTimestamp.Designer.cs">
+      <DependentUpon>201706282016342_GiftRequestsHaveTimestamp.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -474,6 +478,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706281727499_HasGiftRequests.resx">
       <DependentUpon>201706281727499_HasGiftRequests.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706282016342_GiftRequestsHaveTimestamp.resx">
+      <DependentUpon>201706282016342_GiftRequestsHaveTimestamp.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
