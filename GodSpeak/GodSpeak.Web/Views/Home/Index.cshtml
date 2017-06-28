@@ -1,4 +1,18 @@
-﻿
+﻿@using GodSpeak.Web.Models
+@model SignUpViewModel
+@if (!string.IsNullOrEmpty(ViewBag.ResultMessage))
+{
+    <section class="notice">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <p>@ViewBag.ResultMessage</p>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
 <!-- hero map -->
 <section class="map-wrapper">
     <div class="" id="map"></div>
@@ -110,17 +124,19 @@
                 <a href="#" class="btn btn-lg btn-primary btn-purchase">
                     Purchase @ViewBag.UnpurchasedAndroidRequests.Count Android Phone Gifts
                 </a>
-                <form class="add-email-form">
+                @using (Html.BeginForm("Index", "Home", new { }, FormMethod.Post, new { role = "form", @class = "add-email-form" }))
+                {
+                    <input data-val="true" data-val-required="The InviteCode field is required." id="InviteCode" name="InviteCode" type="hidden" value="@ViewBag.InviteCode" />
+                    <input data-val="true" data-val-required="The Phone Type field is required." id="Platform" name="Platform" type="hidden" value="@PhonePlatforms.Android" />
+                    
                     <label for="android-email">
                         <span class="sr-only">Enter Android Phone User Email Address</span>
                     </label>
                     <div class="row">
                         <div class="col-xs-9">
-                            <input type="text"
-                                   class="form-control"
-                                   id="android-email"
-                                   placeholder="Android User Email Address"
-                                   value="">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Android User Email Address" })
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                         
                         </div>
                         <div class="col-xs-3">
                             <button class="btn btn-secondary" type="submit">
@@ -128,7 +144,7 @@
                             </button>
                         </div>
                     </div>
-                </form>
+                }
 
 
                 <div class="panel-group" id="android-emails" role="tablist" aria-multiselectable="true">
@@ -218,18 +234,19 @@
                     Purchase @ViewBag.UnpurchasediOSRequests.Count iPhone Gifts
 
                 </a>
-                <form class="add-email-form">
+                @using (Html.BeginForm("Index", "Home", new { }, FormMethod.Post, new { role = "form", @class = "add-email-form" }))
+                {
+                    <input data-val="true" data-val-required="The InviteCode field is required." id="InviteCode" name="InviteCode" type="hidden" value="@ViewBag.InviteCode" />
+                    <input data-val="true" data-val-required="The Phone Type field is required." id="Platform" name="Platform" type="hidden" value="@PhonePlatforms.iPhone" />
+
                     <label for="iPhone-email">
                         <span class="sr-only">Enter iPhone User Email Address</span>
                     </label>
 
                     <div class="row">
                         <div class="col-xs-9">
-                            <input type="text"
-                                   class="form-control"
-                                   id="iPhone-email"
-                                   placeholder="iPhone User Email Address"
-                                   value="">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder="iPhone User Email Address" })
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger", placeholder = "Android User Email Address" })
                         </div>
                         <div class="col-xs-3">
                             <button class="btn btn-secondary" type="submit">
@@ -237,7 +254,7 @@
                             </button>
                         </div>
                     </div>
-                </form>
+                }
                 <div class="panel-group" id="iphone-emails" role="tablist" aria-multiselectable="true">
                     <div class="panel panel-default panel-gifts">
                         <div class="panel-heading" role="tab" id="headingOne">

@@ -40,7 +40,7 @@
                             {
 
                                 <div class="form-group">
-                                    @Html.HiddenFor(m => m.InviteCode, new {ViewBag.InviteCode})
+                                    <input data-val="true" data-val-required="The InviteCode field is required." id="InviteCode" name="InviteCode" type="hidden" value="@ViewBag.InviteCode" />
                                     @Html.LabelFor(m => m.Email)
                                     @Html.TextBoxFor(m => m.Email, new {@class = "form-control"})
 
