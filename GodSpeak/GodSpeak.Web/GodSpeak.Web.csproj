@@ -191,6 +191,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\SeedController.cs" />
+    <Compile Include="Controllers\SignUpController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Extensions\DbContextExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
@@ -236,6 +237,10 @@
     <Compile Include="Migrations\201706151434282_ReAddInviteBalanceToProfile.Designer.cs">
       <DependentUpon>201706151434282_ReAddInviteBalanceToProfile.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706281727499_HasGiftRequests.cs" />
+    <Compile Include="Migrations\201706281727499_HasGiftRequests.Designer.cs">
+      <DependentUpon>201706281727499_HasGiftRequests.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -243,6 +248,7 @@
     <Compile Include="Models\GodSpeakModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\SignUpViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ApplicationUserProfileRepository.cs" />
     <Compile Include="Repositories\AppShareRepository.cs" />
@@ -430,6 +436,7 @@
     <Content Include="Views\ApplicationUserInvites\Edit.cshtml" />
     <Content Include="Views\ApplicationUserInvites\Index.cshtml" />
     <Content Include="Views\Shared\_PlainLayout.cshtml" />
+    <Content Include="Views\SignUp\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -466,6 +473,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706151434282_ReAddInviteBalanceToProfile.resx">
       <DependentUpon>201706151434282_ReAddInviteBalanceToProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706281727499_HasGiftRequests.resx">
+      <DependentUpon>201706281727499_HasGiftRequests.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

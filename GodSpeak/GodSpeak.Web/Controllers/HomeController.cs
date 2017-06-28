@@ -28,7 +28,7 @@ namespace GodSpeak.Web.Controllers
 
             var userId = User.Identity.GetUserId();
             var profile = await _profileRepository.GetByUserId(userId);
-
+            ViewBag.InviteCode = profile.Code;
             ViewBag.UserFirstName = profile.FirstName;
 
             return View();
@@ -45,6 +45,11 @@ namespace GodSpeak.Web.Controllers
         {
             ViewBag.Message = "Your contact page.";
 
+            return View();
+        }
+
+        public ActionResult SignUp()
+        {
             return View();
         }
     }

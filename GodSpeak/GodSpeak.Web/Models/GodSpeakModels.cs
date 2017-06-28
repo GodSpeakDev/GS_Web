@@ -261,6 +261,22 @@ namespace GodSpeak.Web.Models
 
     }
 
+    public class GiftRequest
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public Guid GiftRequestId { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+
+        [Required]
+        public PhonePlatforms Platform { get; set; }
+
+        [Required]
+        public string ReferringCode { get; set; }
+    }
+
     public class BibleVerse
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

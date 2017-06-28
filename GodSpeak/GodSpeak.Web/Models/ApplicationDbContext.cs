@@ -21,6 +21,8 @@ namespace GodSpeak.Web.Models
 
         public DbSet<AppShare> AppShares { get; set; }
 
+        public DbSet<GiftRequest> GiftRequests { get; set; }
+
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

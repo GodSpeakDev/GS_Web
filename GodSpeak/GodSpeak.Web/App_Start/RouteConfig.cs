@@ -14,6 +14,12 @@ namespace GodSpeak.Web
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "SignUp",
+                url: "SignUp/{inviteCode}",
+                defaults: new { controller = "SignUp", action = "Index", inviteCode = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }

@@ -1,0 +1,73 @@
+﻿@using GodSpeak.Web.Models
+@model SignUpViewModel
+@{
+    ViewBag.Title = "SignUp";
+    Layout = "~/Views/Shared/_PlainLayout.cshtml";
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.ResultMessage))
+{
+    <section class="notice">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <p>@ViewBag.ResultMessage</p>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+
+<section class="signup">
+    <div class="inner">
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-sm-5 col-sm-offset-6 col-md-4 col-md-offset-6">
+
+                    <div class="form-wrapper">
+
+
+                        <p>
+                            @ViewBag.Name is wanting to gift you the gift of GodSpeak! Help them out by telling them what kind
+                            of phone you use: 
+                        </p>
+
+                        
+                            @using (Html.BeginForm("Index", "SignUp", new {ReturnUrl = ViewBag.ReturnUrl}, FormMethod.Post, new {role = "form"}))
+                            {
+
+                                <div class="form-group">
+                                    @Html.HiddenFor(m => m.InviteCode, new {ViewBag.InviteCode})
+                                    @Html.LabelFor(m => m.Email)
+                                    @Html.TextBoxFor(m => m.Email, new {@class = "form-control"})
+                                    @Html.ValidationMessageFor(m => m.Email, "", new {@class = "text-danger"})
+
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Platform)
+                                    @Html.DropDownListFor(m => m.Platform,
+                                    new SelectList(Enum.GetValues(typeof(PhonePlatforms))),
+                                    "Select Phone Type",
+                                    new { @class = "btn btn-default dropdown-toggle form-control" })
+                                    @Html.ValidationMessageFor(m => m.Platform, "", new { @class = "text-danger" })
+                                    
+                                </div>
+
+
+                                <input type="submit" value="Sign Me Up" class="btn btn-primary btn-lg btn-block"/>
+
+                                <a class="btn btn-secondary btn-lg btn-block" href="http://givegodspeak.com">
+                                    Learn More
+                                </a>
+                            }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
