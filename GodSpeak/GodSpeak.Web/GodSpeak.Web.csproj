@@ -429,6 +429,7 @@
     <Content Include="Views\ApplicationUserInvites\Details.cshtml" />
     <Content Include="Views\ApplicationUserInvites\Edit.cshtml" />
     <Content Include="Views\ApplicationUserInvites\Index.cshtml" />
+    <Content Include="Views\Shared\_PlainLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
