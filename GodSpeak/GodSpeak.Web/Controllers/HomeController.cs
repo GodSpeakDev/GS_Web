@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -15,13 +16,17 @@ namespace GodSpeak.Web.Controllers
         private readonly ApplicationUserManager _userManager;
         private readonly IApplicationUserProfileRepository _profileRepository;
         private readonly IInviteRepository _inviteRepository;
+        private readonly IImpactRepository _impactRepository;
+        private readonly IInMemoryDataRepository _inMemoryDataRepository;
 
         public HomeController(ApplicationUserManager userManager, IApplicationUserProfileRepository profileRepository,
-            IInviteRepository inviteRepository)
+            IInviteRepository inviteRepository, IImpactRepository impactRepository, IInMemoryDataRepository inMemoryDataRepository)
         {
             _userManager = userManager;
             _profileRepository = profileRepository;
             _inviteRepository = inviteRepository;
+            _impactRepository = impactRepository;
+            _inMemoryDataRepository = inMemoryDataRepository;
         }
 
 
@@ -33,7 +38,7 @@ namespace GodSpeak.Web.Controllers
             var userId = User.Identity.GetUserId();
             var profile = await _profileRepository.GetByUserId(userId);
             await UpdateViewBag(profile);
-
+            
             return View();
         }
 
@@ -48,6 +53,26 @@ namespace GodSpeak.Web.Controllers
 
             ViewBag.UnpurchasediOSRequests = await _inviteRepository.UnBoughtGifts(profile.Code, PhonePlatforms.iPhone);
             ViewBag.PurchasediOSRequests = await _inviteRepository.BoughtGifts(profile.Code, PhonePlatforms.iPhone);
+
+            //var p2 = { lat: 40.0057614, lng: -85.5277284 };
+            var impactDays = (await _impactRepository.GetImpactForUserId(profile.UserId));
+            List<string> points = new List<string>();
+            if (impactDays.Any())
+            {
+                var latestImpactDay = impactDays.Last();
+                
+                foreach (var point in latestImpactDay.Points)
+                {
+                    points.Add($"{{ \"point\":{{ \"lat\" :{point.Latitude}, \"lng\":{point.Longitude} }}, \"label\" : \"{point.Count}\" }}");
+                }
+            }
+            var geoPoint = _inMemoryDataRepository.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
+            var usersPoint = $"{{ \"point\":{{ \"lat\" :{geoPoint.Latitude}, \"lng\":{geoPoint.Longitude} }}, \"label\" : \"1\" }}";
+            points.Add(usersPoint);
+            
+            ViewBag.PointsJS = $"[{String.Join(",", points)}]";
+            ViewBag.UserPoint = usersPoint;
+            Debug.WriteLine("Test");
         }
 
         [HttpPost]

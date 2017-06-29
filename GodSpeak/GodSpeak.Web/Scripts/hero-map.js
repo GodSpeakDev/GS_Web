@@ -3,10 +3,10 @@ function initMap() {
     // Create the map with no initial style specified.
     // It therefore has default styling.
     map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: 39.9131538, lng: -85.381044},
+        center: getCenter(),
         zoom: 10,
         mapTypeControl: false,
-        scrollwheel:  false,
+        scrollwheel:  true,
         disableDefaultUI: true
     });
 
@@ -15,67 +15,10 @@ function initMap() {
 
 
     var image = {
-        url: '/assets/img/oval.png'
+        url: '/Content/Images/oval.png'
     };
 
-    // Markers
-    var p1 = {lat: 39.9131538, lng: -85.381044};
-
-    var p1Marker = new google.maps.Marker({
-        position: p1,
-        map: map,
-        label: {
-            text: '1',
-            color: 'white',
-            fontSize: '20px'
-        },
-        icon: image
-    });
-
-    ///////////////////////
-
-    var p2 = {lat: 40.0057614, lng: -85.5277284};
-
-    var p2Marker = new google.maps.Marker({
-        position: p2,
-        map: map,
-        label: {
-            text: '2',
-            color: 'white',
-            fontSize: '20px'
-        },
-        icon: image
-    });
-
-    ///////////////////////
-
-    var p3 = {lat: 40.001838, lng: -85.331061};
-
-    var p3Marker = new google.maps.Marker({
-        position: p3,
-        map: map,
-        label: {
-            text: '3',
-            color: 'white',
-            fontSize: '20px'
-        },
-        icon: image
-    });
-
-    ///////////////////////
-
-    var p4 = {lat: 39.832935, lng: -85.3532805};
-
-    var p4Marker = new google.maps.Marker({
-        position: p4,
-        map: map,
-        label: {
-            text: '4',
-            color: 'white',
-            fontSize: '20px'
-        },
-        icon: image
-    });
+    initMarkers(map, image);
 
 }
 

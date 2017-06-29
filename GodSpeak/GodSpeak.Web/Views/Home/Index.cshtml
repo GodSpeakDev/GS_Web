@@ -1,4 +1,5 @@
-﻿@using GodSpeak.Web.Models
+﻿
+@using GodSpeak.Web.Models
 @model SignUpViewModel
 @if (!string.IsNullOrEmpty(ViewBag.ResultMessage))
 {
@@ -398,4 +399,28 @@
            }
 
         }, '#purchase-android-gifts-button');
+        var points = @Html.Raw(ViewBag.PointsJS);
+    var userPoint = @Html.Raw(ViewBag.UserPoint);
+    function initMarkers(map, image) {
+        // Markers
+
+        for (var i = 0; i < points.length; i++) {
+            var marker = new google.maps.Marker({
+                position: points[i].point,
+                map: map,
+                label: {
+                    text: points[i].label,
+                    color: 'white',
+                    fontSize: '20px'
+                },
+                icon: image
+            });
+        }
+
+        
+    }
+
+    function getCenter() {
+        return userPoint.point;
+    }
 </script>
