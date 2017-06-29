@@ -28,7 +28,7 @@ namespace GodSpeak.Web.Controllers
         // GET: GiftiTunes
         public async Task<ActionResult> Index()
         {
-
+            ViewBag.Title = "How To Gift via iTunes";
             try
             {
                 var userId = User.Identity.GetUserId();

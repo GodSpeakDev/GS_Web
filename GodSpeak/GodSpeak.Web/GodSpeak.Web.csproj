@@ -441,6 +441,7 @@
     <Content Include="Views\SignUp\Index.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\GiftiTunes\Index.cshtml" />
+    <Content Include="Views\GiftiTunes\Index.Mobile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
