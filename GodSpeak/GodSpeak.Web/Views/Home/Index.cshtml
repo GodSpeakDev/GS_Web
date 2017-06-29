@@ -120,10 +120,14 @@
         </div>
         <p>You have gifted GodSpeak to @ViewBag.PurchasedAndroidRequests.Count Android Users and have <strong>@ViewBag.UnpurchasedAndroidRequests.Count to purchase.</strong></p>
     </div>
+    
+    
+    <div class="purchase-cta-title">Purchase @ViewBag.UnpurchasedAndroidRequests.Count Android Phone Gifts</div>
+    <div id="purchase-android-gifts-button" >
 
-    <a href="#" class="btn btn-lg btn-primary btn-purchase">
-        Purchase @ViewBag.UnpurchasedAndroidRequests.Count Android Phone Gifts
-    </a>
+    </div>
+
+    
     @using (Html.BeginForm("Index", "Home", new { }, FormMethod.Post, new { role = "form", @class = "add-email-form" }))
     {
         <input data-val="true" data-val-required="The InviteCode field is required." id="InviteCode" name="InviteCode" type="hidden" value="@ViewBag.InviteCode" />
@@ -230,8 +234,11 @@
 
         <p>You have gifted GodSpeak to @ViewBag.PurchasediOSRequests.Count iOS Users and have <strong>@ViewBag.UnpurchasediOSRequests.Count to purchase.</strong></p>
     </div>
-    @Html.ActionLink($"Purchase {ViewBag.UnpurchasediOSRequests.Count} iPhone Gifts","Index","GiftiTunes", new {}, new { @class = "btn btn-lg btn-primary btn-purchase" })
- 
+    <div class="purchase-cta-title">
+        Purchase @ViewBag.UnpurchasediOSRequests.Count iPhone Gifts
+    </div>
+    @Html.ActionLink($"Gift on iTunes","Index","GiftiTunes", new {}, new { @class = "btn btn-lg btn-primary btn-purchase" })
+    <div style="height: 20px;"></div>
     @using (Html.BeginForm("Index", "Home", new { }, FormMethod.Post, new { role = "form", @class = "add-email-form" }))
     {
         <input data-val="true" data-val-required="The InviteCode field is required." id="InviteCode" name="InviteCode" type="hidden" value="@ViewBag.InviteCode" />
@@ -352,3 +359,43 @@
 </div>
 
 
+<script>
+        paypal.Button.render({
+
+            env: 'production',//'production', // Or 'sandbox',
+
+            client: {
+                sandbox: 'ARyw-UImuy-Gi2ZMfY67iAGcUPlNKla7DwRZeIC4pLQNdtyavxGJEQSoV04ne0dZt5EdhWRwXuX7GIFO',
+                production: 'AfkdoKBHLTlg3uLS7q1B0tnqlyTyAdqS4lwAiBkfEKrSjQumRZV2zZ22VlbXAC0y5O5WiB4nlevU9pdy'
+            },
+
+            style: {
+                size: 'responsive',
+                color: 'blue'
+            },
+
+
+            commit: false, // Show a 'Pay Now' button
+
+            payment: function (data, actions) {
+                return actions.payment.create({
+                    payment: {
+                        transactions: [
+                            {
+                                amount: { total: '1.00', currency: 'USD' }
+                            }
+                        ]
+                    }
+                });
+            },
+
+            onAuthorize: function(data, actions) {
+                return actions.payment.execute().then(function (payment) {
+
+                    // The payment is complete!
+                    // You can now show a confirmation message to the customer
+                });
+           }
+
+        }, '#purchase-android-gifts-button');
+</script>

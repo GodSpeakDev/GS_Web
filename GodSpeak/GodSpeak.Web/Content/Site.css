@@ -387,6 +387,16 @@ body {
     display: none;
 }
 
+.purchase-cta-title {
+    font-size: 20px;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 10px;
+    font-weight: bold;
+
+
+}
+
 .purchase-steps {
   padding: 30px 0; }
 
