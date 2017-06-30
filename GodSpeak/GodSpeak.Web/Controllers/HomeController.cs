@@ -54,7 +54,7 @@ namespace GodSpeak.Web.Controllers
             ViewBag.UnpurchasediOSRequests = await _inviteRepository.UnBoughtGifts(profile.Code, PhonePlatforms.iPhone);
             ViewBag.PurchasediOSRequests = await _inviteRepository.BoughtGifts(profile.Code, PhonePlatforms.iPhone);
 
-            //var p2 = { lat: 40.0057614, lng: -85.5277284 };
+            
             var impactDays = (await _impactRepository.GetImpactForUserId(profile.UserId));
             List<string> points = new List<string>();
             if (impactDays.Any())
