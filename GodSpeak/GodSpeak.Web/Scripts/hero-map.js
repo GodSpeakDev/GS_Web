@@ -4,7 +4,7 @@ function initMap() {
     // It therefore has default styling.
     map = new google.maps.Map(document.getElementById('map'), {
         center: getCenter(),
-        zoom: 10,
+        zoom: 6,
         mapTypeControl: false,
         scrollwheel:  true,
         disableDefaultUI: true
