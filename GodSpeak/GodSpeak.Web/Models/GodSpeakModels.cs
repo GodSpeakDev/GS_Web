@@ -7,7 +7,23 @@ using System.Data;
 
 namespace GodSpeak.Web.Models
 {
+    public class PayPalTransaction
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public Guid PayPalTransactionId { get; set; }
 
+        [Required]
+        public string PayPalPaymentId { get; set; }
+
+        [Required]
+        public decimal PayPalTransactionAmount { get; set; }
+
+        [Required]
+        public string InviteCode { get; set; }
+
+        public DateTime DateTimePurchased { get; set; }
+    }
     public class InviteBundle
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

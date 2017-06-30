@@ -359,11 +359,18 @@
     </div>
 </div>
 
+@using (Html.BeginForm("PurchasedAndroidInvites", "Home", new { }, FormMethod.Post, new { role = "form", id = "purchased_android_form", @class = "add-email-form" }))
+{
+    <input data-val="true" data-val-required="InviteCode field is required." id="InviteCode" name="InviteCode" type="hidden" value="@ViewBag.InviteCode" />
+    <input data-val="true" data-val-required="PayPalPaymentId field is required." id="PayPalPaymentId" name="PayPalPaymentId" type="hidden" />
+    <input data-val="true" data-val-required="PayPalTransactionAmount field is required." id="PayPalTransactionAmount" name="PayPalTransactionAmount" type="hidden" />
+}
+
 
 <script>
         paypal.Button.render({
 
-            env: 'production',//'production', // Or 'sandbox',
+            env: 'sandbox',//'production', // Or 'sandbox',
 
             client: {
                 sandbox: 'ARyw-UImuy-Gi2ZMfY67iAGcUPlNKla7DwRZeIC4pLQNdtyavxGJEQSoV04ne0dZt5EdhWRwXuX7GIFO',
@@ -392,7 +399,17 @@
 
             onAuthorize: function(data, actions) {
                 return actions.payment.execute().then(function (payment) {
+                    console.log(payment);
+                    if (payment.state === "approved") {
+                        var paymentId = payment.id;
+                        var transactionAmount = payment.transactions[0].amount.total;
 
+                        $("#PayPalPaymentId").val(paymentId);
+                        $("#PayPalTransactionAmount").val(transactionAmount);
+                        $("#purchased_android_form").submit();
+                    } else {
+                        alert('Sorry, something went wrong trying to process your payment.');
+                    }
                     // The payment is complete!
                     // You can now show a confirmation message to the customer
                 });

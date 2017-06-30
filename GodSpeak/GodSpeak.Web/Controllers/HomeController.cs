@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -40,6 +41,13 @@ namespace GodSpeak.Web.Controllers
             await UpdateViewBag(profile);
             
             return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult> PurchasedAndroidInvites(PayPalTransaction transaction)
+        {
+            return RedirectToAction("Index");
         }
 
         private async Task UpdateViewBag(ApplicationUserProfile profile)
