@@ -8,6 +8,7 @@ namespace GodSpeak.Web.Models
     {
         public DbSet<ApplicationUserProfile> Profiles { get; set; }
         
+        public DbSet<PayPalTransaction> PayPalTransactions { get; set; }
 
         public DbSet<InviteBundle> InviteBundles { get; set; }
 

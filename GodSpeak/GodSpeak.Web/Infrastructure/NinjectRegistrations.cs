@@ -25,6 +25,7 @@ namespace GodSpeak.Web.Infrastructure
             Bind<IInMemoryDataRepository>().To<InMemoryDataRepository>();
             Bind<IImpactRepository>().To<ImpactRepository>();
             Bind<IAppShareRepository>().To<AppShareRepository>();
+            Bind<IPayPalTransactionRepository>().To<PayPalTransactionRepository>();
         }
     }
 }

@@ -119,16 +119,22 @@
         <div class="android-icon icon">
             <span class="sr-only">Android Icon</span>
         </div>
-        <p>You have gifted GodSpeak to @ViewBag.PurchasedAndroidRequests.Count Android Users and have <strong>@ViewBag.UnpurchasedAndroidRequests.Count to purchase.</strong></p>
+        <p>You have an Android Gift Balance of @ViewBag.AndroidGiftBalance and <strong>You have @(ViewBag.UnpurchasedAndroidRequests.Count - ViewBag.AndroidGiftBalance) to purchase.</strong></p>
     </div>
     
-    
-    <div class="purchase-cta-title">Purchase @ViewBag.UnpurchasedAndroidRequests.Count Android Phone Gifts</div>
-    <div id="purchase-android-gifts-button" >
+    @if (ViewBag.UnpurchasedAndroidRequests.Count - ViewBag.AndroidGiftBalance > 0)
+    {
+        <div class="purchase-cta-title">Purchase @(ViewBag.UnpurchasedAndroidRequests.Count - ViewBag.AndroidGiftBalance) Android Phone Gifts</div>
+        <div id="purchase-android-gifts-button">
 
-    </div>
+        </div>
+    }
+    else
+    {
+        <div class="purchase-cta-title" style="min-height: 95px;">Do you know some Android users?<br /> Enter their email below!</div>
+    }
 
-    
+
     @using (Html.BeginForm("Index", "Home", new { }, FormMethod.Post, new { role = "form", @class = "add-email-form" }))
     {
         <input data-val="true" data-val-required="The InviteCode field is required." id="InviteCode" name="InviteCode" type="hidden" value="@ViewBag.InviteCode" />
@@ -158,7 +164,7 @@
                 <h4 class="panel-title">
                     <a role="button" data-toggle="collapse" data-parent="#android-emails"
                        href="#android-to-purchase" aria-expanded="true" aria-controls="collapseOne">
-                        Android Gifts to Purchase
+                        Android Users You've Invited
                         <span class="accordion-icon plus"></span>
                     </a>
                 </h4>
@@ -197,7 +203,7 @@
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" data-parent="#android-emails"
                        href="#android-purchased" aria-expanded="false" aria-controls="collapseTwo">
-                        Purchased Android Phone Gifts
+                        Android Users You've Gifted
                         <span class="accordion-icon plus"></span>
                     </a>
                 </h4>
@@ -216,7 +222,7 @@
                         @if (ViewBag.PurchasedAndroidRequests.Count == 0)
                         {
                             <tr>
-                                <td>You have not purchased any Android phone gifts.</td>
+                                <td>No one has claimed any of your Android phone gifts.</td>
                                 <td></td>
                             </tr>
                         }
@@ -235,11 +241,18 @@
 
         <p>You have gifted GodSpeak to @ViewBag.PurchasediOSRequests.Count iOS Users and have <strong>@ViewBag.UnpurchasediOSRequests.Count to purchase.</strong></p>
     </div>
-    <div class="purchase-cta-title">
-        Purchase @ViewBag.UnpurchasediOSRequests.Count iPhone Gifts
-    </div>
-    @Html.ActionLink($"Gift on iTunes","Index","GiftiTunes", new {}, new { @class = "btn btn-lg btn-primary btn-purchase" })
-    <div style="height: 20px;"></div>
+    @if (@ViewBag.UnpurchasediOSRequests.Count > 0)
+    {
+        <div class="purchase-cta-title">
+            Purchase @ViewBag.UnpurchasediOSRequests.Count iPhone Gifts
+        </div>
+        @Html.ActionLink($"Gift on iTunes", "Index", "GiftiTunes", new {}, new {@class = "btn btn-lg btn-primary btn-purchase"})
+    }
+    else
+    {
+        <div class="purchase-cta-title" style="min-height: 75px;">Do you know some iPhone users?<br /> Enter their email below!</div>
+    }
+        <div style="height: 20px;"></div>
     @using (Html.BeginForm("Index", "Home", new { }, FormMethod.Post, new { role = "form", @class = "add-email-form" }))
     {
         <input data-val="true" data-val-required="The InviteCode field is required." id="InviteCode" name="InviteCode" type="hidden" value="@ViewBag.InviteCode" />

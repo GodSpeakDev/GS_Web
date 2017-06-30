@@ -19,15 +19,17 @@ namespace GodSpeak.Web.Controllers
         private readonly IInviteRepository _inviteRepository;
         private readonly IImpactRepository _impactRepository;
         private readonly IInMemoryDataRepository _inMemoryDataRepository;
+        private readonly IPayPalTransactionRepository _palTransactionRepository;
 
         public HomeController(ApplicationUserManager userManager, IApplicationUserProfileRepository profileRepository,
-            IInviteRepository inviteRepository, IImpactRepository impactRepository, IInMemoryDataRepository inMemoryDataRepository)
+            IInviteRepository inviteRepository, IImpactRepository impactRepository, IInMemoryDataRepository inMemoryDataRepository, IPayPalTransactionRepository palTransactionRepository)
         {
             _userManager = userManager;
             _profileRepository = profileRepository;
             _inviteRepository = inviteRepository;
             _impactRepository = impactRepository;
             _inMemoryDataRepository = inMemoryDataRepository;
+            _palTransactionRepository = palTransactionRepository;
         }
 
 
@@ -47,7 +49,28 @@ namespace GodSpeak.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> PurchasedAndroidInvites(PayPalTransaction transaction)
         {
-            return RedirectToAction("Index");
+            var message = "";
+            if (!ModelState.IsValid)
+                message = "Submission is missing required info.";
+            var transactionAlreadyProcess = await _palTransactionRepository.TranscationExists(transaction.PayPalPaymentId);
+            if (transactionAlreadyProcess)
+                message = "Sorry, this transaction was already completed";
+
+            if (ModelState.IsValid && !transactionAlreadyProcess)
+            {
+                transaction.DateTimePurchased = DateTime.Now;
+                
+                await _palTransactionRepository.SaveTransactions(transaction);
+                var profile = await _profileRepository.GetByCode(transaction.InviteCode);
+                var numberOfInvitesToCredit = (await _inviteRepository.UnBoughtGifts(transaction.InviteCode, PhonePlatforms.Android)).Count;
+                profile.InviteBalance +=
+                    numberOfInvitesToCredit;
+
+                await _profileRepository.Update(profile);
+                message = $"You have successfully purchased {numberOfInvitesToCredit} Android Gifts!";
+            }
+
+            return RedirectToAction("Index", new {message});
         }
 
         private async Task UpdateViewBag(ApplicationUserProfile profile)
@@ -62,6 +85,7 @@ namespace GodSpeak.Web.Controllers
 
             ViewBag.UnpurchasediOSRequests = await _inviteRepository.UnBoughtGifts(profile.Code, PhonePlatforms.iPhone);
             ViewBag.PurchasediOSRequests = await _inviteRepository.BoughtGifts(profile.Code, PhonePlatforms.iPhone);
+            ViewBag.AndroidGiftBalance = profile.InviteBalance;
 
             var bundles = await _inviteRepository.Bundles();
             var matchingBundle = bundles.First(b => b.NumberOfInvites >= unpurchasedAndroidRequests.Count);
