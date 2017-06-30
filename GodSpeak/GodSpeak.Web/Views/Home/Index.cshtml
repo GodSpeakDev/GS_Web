@@ -31,7 +31,7 @@
                                class="form-control"
                                id="share-link"
                                aria-describedby="basic-addon3"
-                               value="http://impact.givegodspeak.com/">
+                               value="@ViewBag.ImpactShareUrl">
                         <span class="input-group-btn">
                             <button class="btn btn-default btn-copy"
                                     data-clipboard-target="#share-link"
@@ -51,7 +51,7 @@
                                class="form-control"
                                id="embed-link"
                                aria-describedby="basic-addon3"
-                               value="<iframe src=‘http://impact.give'></iframe>">
+                               value="@ViewBag.ImpactEmbedCode">
                         <span class="input-group-btn">
                             <button class="btn btn-default btn-copy"
                                     data-clipboard-target="#embed-link"

@@ -72,6 +72,10 @@ namespace GodSpeak.Web.Controllers
             
             ViewBag.PointsJS = $"[{String.Join(",", points)}]";
             ViewBag.UserPoint = usersPoint;
+
+            string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";
+            ViewBag.ImpactShareUrl = $"{baseUrl}/Map/{profile.Code}";
+            ViewBag.ImpactEmbedCode = $"<iframe width='100%' height='100%' src='{baseUrl}/Map/{profile.Code}'></iframe>";
             Debug.WriteLine("Test");
         }
 
