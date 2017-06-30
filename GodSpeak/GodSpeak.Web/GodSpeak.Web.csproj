@@ -258,6 +258,7 @@
     <Compile Include="Models\GodSpeakModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\ShareAndroidGiftViewModel.cs" />
     <Compile Include="Models\SignUpViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ApplicationUserProfileRepository.cs" />
@@ -451,6 +452,7 @@
     <Content Include="Views\GiftiTunes\Index.cshtml" />
     <Content Include="Views\GiftiTunes\Index.Mobile.cshtml" />
     <Content Include="Views\Map\Index.cshtml" />
+    <Content Include="Views\Home\ShareAndroidGift.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

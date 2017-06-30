@@ -179,7 +179,7 @@
                                 <td>
                                     <a href="#" data-toggle="modal" data-target="#confirm-delete" data-href="/Home/DeleteRequest?id=@request.GiftRequestId"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></a>
                                 </td>
-                                <td>@request.Email</td>
+                                <td>@Html.ActionLink($"{request.Email}", "ShareAndroidGift","Home", new {}, new {})</td>
                                 <td>Requested @request.DateTimeRequested.ToString("M/dd/yyyy")</td>
                             </tr>
                         }

@@ -20,9 +20,10 @@ namespace GodSpeak.Web.Controllers
         private readonly IImpactRepository _impactRepository;
         private readonly IInMemoryDataRepository _inMemoryDataRepository;
         private readonly IPayPalTransactionRepository _palTransactionRepository;
+        private readonly IIdentityMessageService _messageService;
 
         public HomeController(ApplicationUserManager userManager, IApplicationUserProfileRepository profileRepository,
-            IInviteRepository inviteRepository, IImpactRepository impactRepository, IInMemoryDataRepository inMemoryDataRepository, IPayPalTransactionRepository palTransactionRepository)
+            IInviteRepository inviteRepository, IImpactRepository impactRepository, IInMemoryDataRepository inMemoryDataRepository, IPayPalTransactionRepository palTransactionRepository, IIdentityMessageService messageService)
         {
             _userManager = userManager;
             _profileRepository = profileRepository;
@@ -30,6 +31,7 @@ namespace GodSpeak.Web.Controllers
             _impactRepository = impactRepository;
             _inMemoryDataRepository = inMemoryDataRepository;
             _palTransactionRepository = palTransactionRepository;
+            _messageService = messageService;
         }
 
 
@@ -67,7 +69,7 @@ namespace GodSpeak.Web.Controllers
                     numberOfInvitesToCredit;
 
                 await _profileRepository.Update(profile);
-                message = $"You have successfully purchased {numberOfInvitesToCredit} Android Gifts!";
+                return RedirectToAction("ShareAndroidGift");
             }
 
             return RedirectToAction("Index", new {message});
@@ -142,6 +144,37 @@ namespace GodSpeak.Web.Controllers
             return View();
 
         }
+
+        [HttpGet]
+        public async Task<ActionResult> ShareAndroidGift()
+        {
+            var userId = User.Identity.GetUserId();
+            var profile = await _profileRepository.GetByUserId(userId);
+            ViewBag.UserFirstName = profile.FirstName;
+            ViewBag.InviteBalance = profile.InviteBalance;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ShareAndroidGift(ShareAndroidGiftViewModel vm)
+        {
+            var userId = User.Identity.GetUserId();
+            var profile = await _profileRepository.GetByUserId(userId);
+            var peopleToEmail = await _inviteRepository.UnBoughtGifts(profile.Code, PhonePlatforms.Android);
+
+            foreach (var giftRequest in peopleToEmail)
+            {
+                await _messageService.SendAsync(new IdentityMessage()
+                {
+                    Body       = $"{vm.Message} \r\rYou can redeem your gift by downloading the GodSpeak app from the PlayStore (https://play.google.com/store/apps/details?id=com.givegodspeak.android) and entering GIFT CODE: {profile.Code}",
+                    Destination = giftRequest.Email,
+                    Subject = $"You Have Been Gifted GodSpeak by {profile.FirstName} {profile.LastName}"
+                });
+            }
+            
+            return RedirectToAction("Index", new {message = "You have successully notified your Android Gift recepients"});
+        }
+
         [HttpGet]
         public async Task<ActionResult> DeleteRequest(Guid id)
         {
