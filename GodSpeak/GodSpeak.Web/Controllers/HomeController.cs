@@ -47,24 +47,26 @@ namespace GodSpeak.Web.Controllers
             ViewBag.InviteCode = profile.Code;
             ViewBag.UserFirstName = profile.FirstName;
 
-            ViewBag.UnpurchasedAndroidRequests = await _inviteRepository.UnBoughtGifts(profile.Code,
+            var unpurchasedAndroidRequests = await _inviteRepository.UnBoughtGifts(profile.Code,
                 PhonePlatforms.Android);
+            ViewBag.UnpurchasedAndroidRequests = unpurchasedAndroidRequests;
             ViewBag.PurchasedAndroidRequests = await _inviteRepository.BoughtGifts(profile.Code, PhonePlatforms.Android);
 
             ViewBag.UnpurchasediOSRequests = await _inviteRepository.UnBoughtGifts(profile.Code, PhonePlatforms.iPhone);
             ViewBag.PurchasediOSRequests = await _inviteRepository.BoughtGifts(profile.Code, PhonePlatforms.iPhone);
 
-            
+            var bundles = await _inviteRepository.Bundles();
+            var matchingBundle = bundles.First(b => b.NumberOfInvites >= unpurchasedAndroidRequests.Count);
+            ViewBag.OutstandingAndroidBalance =
+                $"{Math.Round(((float) matchingBundle.Cost / (float) matchingBundle.NumberOfInvites) * unpurchasedAndroidRequests.Count, 2):#.00}";
+
             var impactDays = (await _impactRepository.GetImpactForUserId(profile.UserId));
             List<string> points = new List<string>();
             if (impactDays.Any())
             {
                 var latestImpactDay = impactDays.Last();
-                
-                foreach (var point in latestImpactDay.Points)
-                {
-                    points.Add($"{{ \"point\":{{ \"lat\" :{point.Latitude}, \"lng\":{point.Longitude} }}, \"label\" : \"{point.Count}\" }}");
-                }
+
+                points.AddRange(latestImpactDay.Points.Select(point => $"{{ \"point\":{{ \"lat\" :{point.Latitude}, \"lng\":{point.Longitude} }}, \"label\" : \"{point.Count}\" }}"));
             }
             var geoPoint = _inMemoryDataRepository.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
             var usersPoint = $"{{ \"point\":{{ \"lat\" :{geoPoint.Latitude}, \"lng\":{geoPoint.Longitude} }}, \"label\" : \"1\" }}";
