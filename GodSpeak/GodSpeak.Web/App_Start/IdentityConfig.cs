@@ -27,10 +27,11 @@ namespace GodSpeak.Web
             client.Port = 25;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
-            client.Credentials = new NetworkCredential("ben@rendr.io", "h0llyh3yd3");
+//                        client.Credentials = new NetworkCredential("ben@rendr.io", "h0llyh3yd3");
+            client.Credentials = new NetworkCredential("payitforward@givegodspeak.com", "G0d_Sp3ak");
 
             var mailMessage = new MailMessage();
-            mailMessage.From = new MailAddress("ben@rendr.io");
+            mailMessage.From = new MailAddress("support@givegodspeak.com");
             mailMessage.To.Add(message.Destination);
             mailMessage.Subject = message.Subject;
             mailMessage.Body = message.Body;

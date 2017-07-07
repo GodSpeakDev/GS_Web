@@ -37,7 +37,7 @@ namespace GodSpeak.Web.Controllers
                 points.AddRange(latestImpactDay.Points.Select(point => $"{{ \"point\":{{ \"lat\" :{point.Latitude}, \"lng\":{point.Longitude} }}, \"label\" : \"{point.Count}\" }}"));
 
                 ViewBag.ImpactText =
-                    $"{profile.FirstName}'s Impact: {latestImpactDay.Points.Sum(p => p.Count)} Apps Gift/Shared {latestImpactDay.DeliveredMessages} Scriptures Delivered";
+                    $"{profile.FirstName}'s Impact: {latestImpactDay.Points.Sum(p => (p.Count == 0)?1:p.Count)} Apps Gift/Shared {latestImpactDay.DeliveredMessages.Count} Scriptures Delivered";
             }
             var geoPoint = _inMemoryDataRepository.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
             var usersPoint = $"{{ \"point\":{{ \"lat\" :{geoPoint.Latitude}, \"lng\":{geoPoint.Longitude} }}, \"label\" : \"1\" }}";

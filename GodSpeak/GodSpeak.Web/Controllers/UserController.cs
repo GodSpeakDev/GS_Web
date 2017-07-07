@@ -131,15 +131,15 @@ namespace GodSpeak.Web.Controllers
                 return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
                     $"The request was missing valid data:\n {string.Join("\n", GetModelErrors())}");
 
-            if (registerUserObject.Platform == "android" && string.IsNullOrEmpty(registerUserObject.ReferringInviteCode))
+            if (registerUserObject.Platform == "android" && string.IsNullOrEmpty(registerUserObject.InviteCode))
                 return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
                     "Request is missing ReferringInviteCode");
 
-            if (registerUserObject.Platform == "android" && await _profileRepo.GetByCode(registerUserObject.ReferringInviteCode) == null)
+            if (registerUserObject.Platform == "android" && await _profileRepo.GetByCode(registerUserObject.InviteCode) == null)
                 return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
                     "Request's invite code is invalid");
 
-            if (registerUserObject.Platform == "android" && (await _profileRepo.GetByCode(registerUserObject.ReferringInviteCode)).InviteBalance == 0)
+            if (registerUserObject.Platform == "android" && (await _profileRepo.GetByCode(registerUserObject.InviteCode)).InviteBalance == 0)
                 return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
                     "The referring invite code does not have anymore available invites.");
 
@@ -185,9 +185,9 @@ namespace GodSpeak.Web.Controllers
             var referringEmailAddress = "";
             var referringAddresses = new List<string>();
 
-            if (!string.IsNullOrEmpty(registerUserObject.ReferringInviteCode))
+            if (!string.IsNullOrEmpty(registerUserObject.InviteCode))
             {
-                var referringUserId = (await _profileRepo.GetByCode(registerUserObject.ReferringInviteCode)).UserId;
+                var referringUserId = (await _profileRepo.GetByCode(registerUserObject.InviteCode)).UserId;
                 referringEmailAddress = (await _userManager.FindByIdAsync(referringUserId)).Email;
                 referringAddresses = await _regUtil.GetParentEmailAddresses(referringEmailAddress);
                 referringAddresses.Add(referringEmailAddress);
@@ -217,7 +217,8 @@ namespace GodSpeak.Web.Controllers
                 UserId = user.Id,
                 Token = _authRepository.CreateToken(),
                 ReferringEmailAddress = referringEmailAddress,
-                InviteBalance = 0
+                InviteBalance = 0,
+                DateRegistered = DateTime.Now
             };
             
 
@@ -237,7 +238,7 @@ namespace GodSpeak.Web.Controllers
             {
                 try
                 {
-                    var referringUser = await _profileRepo.GetByCode(registerUserObject.ReferringInviteCode);
+                    var referringUser = await _profileRepo.GetByCode(registerUserObject.InviteCode);
                     referringUser.InviteBalance = Math.Max(0, referringUser.InviteBalance - 1);
                     await _profileRepo.Update(referringUser);
                 }
@@ -328,52 +329,10 @@ namespace GodSpeak.Web.Controllers
 
             var days = (await _impactRepository.GetImpactForUserId(userId)).ToList().Select(ImpactApiObject.FromModel).ToList();
 
-            for (var i = 0; i < days.Count; i++)
-            {
-                var day = days[i];
-                if (i != 0)
-                    day.Points = day.Points.Concat(days[i - 1].Points).ToList();
-
-            }
-
-            var profile = await _profileRepo.GetByUserId(userId);
-            var geoPoint = _inMemoryDataRepo.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
-
-            //Making sure user's location is included in the impact map
-
-            if (!days.Any())
-            {
-                
-                
-                days.Add(new ImpactApiObject()
-                {
-                    Date = DateTime.Now,
-                    Points = new List<ImpactPointApiObject>()
-                    {
-                        new ImpactPointApiObject()
-                        {
-                            Latitude = geoPoint.Latitude,
-                            Longitude = geoPoint.Longitude
-                        }
-                    }
-                });
-            }
-
-
-            foreach (var day in days)
-            {
-                if (!day.Points.Any(p => p.Latitude == geoPoint.Latitude && geoPoint.Longitude == p.Longitude))
-                {
-                    day.Points.Add(new ImpactPointApiObject()
-                    {
-                        Latitude = geoPoint.Latitude,
-                        Longitude = geoPoint.Longitude
-                    });
-                }
-            }
+          
 
             return CreateResponse(HttpStatusCode.OK, "Impact", $"Impact for code {userId}",
-                days);
+                days.OrderBy(d => d.Date));
 
         }
 

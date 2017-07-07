@@ -54,7 +54,7 @@ namespace GodSpeak.Web.Models
         [Required]
         public string FirstName { get; set; }
 
-        [Required]
+        
         public string LastName { get; set; }
 
         public string CurrentPassword { get; set; }
@@ -106,7 +106,7 @@ namespace GodSpeak.Web.Models
 
         public string Platform { get; set; }
 
-        public string ReferringInviteCode { get; set; }
+        public string InviteCode { get; set; }
         
 
        
@@ -141,9 +141,12 @@ namespace GodSpeak.Web.Models
             {
                 Date = model.Day,
                 Points = model.Points.Select(ImpactPointApiObject.FromModel).ToList(),
+                InvitesClaimed = model.Points.Count,
                 ScripturesDelivered = model.DeliveredMessages.Count
             };
         }
+
+        public int InvitesClaimed { get; set; }
 
         public ICollection<ImpactPointApiObject> Points { get; set; }
 

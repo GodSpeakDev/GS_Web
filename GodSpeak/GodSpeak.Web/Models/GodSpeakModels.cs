@@ -55,7 +55,7 @@ namespace GodSpeak.Web.Models
         [Required]
         public string FirstName { get; set; }
 
-        [Required]
+        
         public string LastName { get; set; }
 
         [Required]
@@ -69,6 +69,8 @@ namespace GodSpeak.Web.Models
         public string PhotoUrl { get; set; }
 
         public int InviteBalance { get; set; }
+
+        public DateTime DateRegistered { get; set; }
 
         public virtual ICollection<MessageCategorySetting> MessageCategorySettings { get; set; }
 

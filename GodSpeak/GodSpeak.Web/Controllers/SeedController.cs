@@ -153,7 +153,23 @@ namespace GodSpeak.Web.Controllers
             await Seed();
             return CreateResponse(HttpStatusCode.OK, "Database Seeded", "Database was successfully seeded");
         }
-        
+
+        [HttpGet]
+        [ResponseType(typeof(ApiResponse))]
+        [ActionName("updateRegDate")]
+        public async Task<HttpResponseMessage> UpdateRegDate()
+        {
+            var profiles = await _dbContext.Profiles.ToListAsync();
+            foreach (var profile in profiles)
+            {
+                var impact = await _impactRepo.GetImpactForUserId(profile.UserId);
+                if(impact.Any())
+                    profile.DateRegistered = impact.First().Day;
+            }
+            await _dbContext.SaveChangesAsync();
+            return CreateResponse(HttpStatusCode.OK, "Update Registration Dates", "Database was successfully updated");
+        }
+
         protected async Task Seed()
         {
 

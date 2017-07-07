@@ -119,12 +119,12 @@
         <div class="android-icon icon">
             <span class="sr-only">Android Icon</span>
         </div>
-        <p>You have an Android Gift Balance of @ViewBag.AndroidGiftBalance and <strong>You have @(ViewBag.UnpurchasedAndroidRequests.Count - ViewBag.AndroidGiftBalance) to purchase.</strong></p>
+        <p>You have an Android Gift Balance of @ViewBag.AndroidGiftBalance and <strong>You have @Math.Max(ViewBag.UnpurchasedAndroidRequests.Count - ViewBag.AndroidGiftBalance,0) to purchase.</strong></p>
     </div>
     
     @if (ViewBag.UnpurchasedAndroidRequests.Count - ViewBag.AndroidGiftBalance > 0)
     {
-        <div class="purchase-cta-title">Purchase @(ViewBag.UnpurchasedAndroidRequests.Count - ViewBag.AndroidGiftBalance) Android Phone Gifts</div>
+        <div class="purchase-cta-title">Purchase @(ViewBag.UnpurchasedAndroidRequests.Count - ViewBag.AndroidGiftBalance) Android Phone Gifts for $@(ViewBag.OutstandingAndroidBalance)</div>
         <div id="purchase-android-gifts-button">
 
         </div>
@@ -203,7 +203,7 @@
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" data-parent="#android-emails"
                        href="#android-purchased" aria-expanded="false" aria-controls="collapseTwo">
-                        Android Users You've Gifted
+                        Android Users that Have Accepted Your Gift
                         <span class="accordion-icon plus"></span>
                     </a>
                 </h4>
@@ -383,7 +383,7 @@
 <script>
         paypal.Button.render({
 
-            env: 'sandbox',//'production', // Or 'sandbox',
+            env: 'production',//'production', // Or 'sandbox',
 
             client: {
                 sandbox: 'ARyw-UImuy-Gi2ZMfY67iAGcUPlNKla7DwRZeIC4pLQNdtyavxGJEQSoV04ne0dZt5EdhWRwXuX7GIFO',

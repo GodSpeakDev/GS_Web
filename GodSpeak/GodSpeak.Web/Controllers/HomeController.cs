@@ -64,7 +64,7 @@ namespace GodSpeak.Web.Controllers
                 
                 await _palTransactionRepository.SaveTransactions(transaction);
                 var profile = await _profileRepository.GetByCode(transaction.InviteCode);
-                var numberOfInvitesToCredit = (await _inviteRepository.UnBoughtGifts(transaction.InviteCode, PhonePlatforms.Android)).Count;
+                var numberOfInvitesToCredit = (await _inviteRepository.UnBoughtGifts(transaction.InviteCode, PhonePlatforms.Android)).Count - profile.InviteBalance;
                 profile.InviteBalance +=
                     numberOfInvitesToCredit;
 
@@ -92,8 +92,8 @@ namespace GodSpeak.Web.Controllers
             var bundles = await _inviteRepository.Bundles();
             var matchingBundle = bundles.First(b => b.NumberOfInvites >= unpurchasedAndroidRequests.Count);
             ViewBag.OutstandingAndroidBalance =
-                $"{Math.Round(((float) matchingBundle.Cost / (float) matchingBundle.NumberOfInvites) * unpurchasedAndroidRequests.Count, 2):#.00}";
-
+                $"{Math.Round(((float) matchingBundle.Cost / (float) matchingBundle.NumberOfInvites) * (unpurchasedAndroidRequests.Count - profile.InviteBalance), 2):#.00}";
+             
             var impactDays = (await _impactRepository.GetImpactForUserId(profile.UserId));
             List<string> points = new List<string>();
             if (impactDays.Any())
