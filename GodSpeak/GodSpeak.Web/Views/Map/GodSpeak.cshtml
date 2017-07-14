@@ -33,15 +33,15 @@
     </div>
 </header>
     
-    <section class="notice" style="position: absolute; top: 45px; width: 100%; z-index: 99; padding: 10px; text-align: center; font-size: 18px;">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12">
-                    Help @ViewBag.FirsName increase their impact by asking them to give you the gift of GodSpeak! @Html.ActionLink("Let's do it!", "Index", "SignUp", new {ViewBag.InviteCode}, new {})
-                </div>
-            </div>
-        </div>
-    </section>
+@*    <section class="notice" style="position: absolute; top: 45px; width: 100%; z-index: 99; padding: 10px; text-align: center; font-size: 18px;">*@
+@*        <div class="container">*@
+@*            <div class="row">*@
+@*                <div class="col-xs-12">*@
+@*            *@
+@*                </div>*@
+@*            </div>*@
+@*        </div>*@
+@*    </section>*@
     
 
 <div style="height: 100%; width: 100%; min-height: 600px;">
@@ -65,10 +65,12 @@
 <script>
 
     var points = @Html.Raw(ViewBag.PointsJS);
-    var userPoint = @Html.Raw(ViewBag.UserPoint);
+    var userPoint ={'lat':39.8283, 'lng':98.5795};
 
     function initMarkers(map, image) {
-
+        var big_image = {
+            url: '/Content/Images/oval@2x.png'
+        };
         // Markers
 
         for (var i = 0; i < points.length; i++) {
@@ -80,15 +82,16 @@
                     color: 'white',
                     fontSize: '20px'
                 },
-                icon: image
+                icon: points[i].label === '0'?image:big_image
             });
         }
 
-
+        map.setZoom(4);
     }
 
     function getCenter() {
-        return userPoint.point;
+        
+        return { lat :35.09024, lng:-95.712891 };
     }
 </script>
 <!-- jQuery CDN -->

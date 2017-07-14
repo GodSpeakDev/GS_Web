@@ -20,6 +20,11 @@ namespace GodSpeak.Web
             );
 
             routes.MapRoute(
+                name: "GodSpeakMap",
+                url: "Map/GodSpeak",
+                defaults: new { controller = "Map", action = "GodSpeak" }
+            );
+            routes.MapRoute(
                 name: "Map",
                 url: "Map/{inviteCode}",
                 defaults: new { controller = "Map", action = "Index", inviteCode = UrlParameter.Optional }

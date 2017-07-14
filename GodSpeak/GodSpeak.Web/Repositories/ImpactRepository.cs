@@ -19,6 +19,8 @@ namespace GodSpeak.Web.Repositories
         Task<List<ImpactDay>> GetImpactForUserId(string userId);
 
         Task<List<ImpactDay>> All();
+
+        Task<ImpactDay> GetGodSpeakImpact();
     }
     public class ImpactRepository:IImpactRepository
     {
@@ -96,6 +98,45 @@ namespace GodSpeak.Web.Repositories
         protected string GetDateKey(DateTime date)
         {
             return date.ToString("MMMM dd yyyy");
+        }
+
+        public async Task<ImpactDay> GetGodSpeakImpact()
+        {
+            var profilesInNetwork = await _profileRepository.All();
+            var impactDay = new ImpactDay();
+            impactDay.Points = new List<ImpactDayGeoPoint>();
+            impactDay.DeliveredMessages = new List<ImpactDeliveredMessage>();
+            var scriptureCount = 0;
+            foreach (var profile in profilesInNetwork)
+            {
+                var point =
+                            _memoryDataRepository.PostalCodeGeoCache[
+                                $"{profile.CountryCode}-{profile.PostalCode}"];
+                var numOfDaysForProfile = (DateTime.Now.Date - profile.DateRegistered.Date).TotalDays;
+                scriptureCount += profile.MessageDayOfWeekSettings.First().NumOfMessages * (int)numOfDaysForProfile;
+
+                if(!impactDay.Points.Any(p => p.Latitude == point.Latitude && p.Longitude == point.Longitude))
+                {
+                    impactDay.Points.Add(new ImpactDayGeoPoint()
+                    {
+                        Latitude = point.Latitude,
+                        Longitude = point.Longitude,
+                        Count = 1
+                    });
+                }
+                else
+                {
+                    impactDay.Points.First(p => p.Latitude == point.Latitude && p.Longitude == point.Longitude).Count +=
+                        1;
+                }
+                
+                
+            }
+            for (int i = 0; i <= scriptureCount; i++)
+            {
+                impactDay.DeliveredMessages.Add(new ImpactDeliveredMessage());
+            }
+            return impactDay;
         }
 
         public async Task<List<ImpactDay>> GetImpactForUserId(string userId)

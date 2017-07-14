@@ -461,6 +461,7 @@
     <Content Include="Views\GiftiTunes\Index.Mobile.cshtml" />
     <Content Include="Views\Map\Index.cshtml" />
     <Content Include="Views\Home\ShareAndroidGift.cshtml" />
+    <Content Include="Views\Map\GodSpeak.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

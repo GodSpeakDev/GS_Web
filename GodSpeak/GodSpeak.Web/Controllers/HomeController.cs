@@ -108,7 +108,7 @@ namespace GodSpeak.Web.Controllers
                 }
             }
             var geoPoint = _inMemoryDataRepository.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
-            var usersPoint = $"{{ \"point\":{{ \"lat\" :{geoPoint.Latitude}, \"lng\":{geoPoint.Longitude} }}, \"label\" : \"1\" }}";
+            var usersPoint = $"{{ \"point\":{{ \"lat\" :{geoPoint.Latitude}, \"lng\":{geoPoint.Longitude} }}, \"label\" : \"0\" }}";
             points.Add(usersPoint);
             
             ViewBag.PointsJS = $"[{String.Join(",", points)}]";
