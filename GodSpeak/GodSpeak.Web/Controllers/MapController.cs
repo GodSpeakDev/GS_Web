@@ -65,10 +65,11 @@ namespace GodSpeak.Web.Controllers
             ViewBag.Title = $"GodSpeak's Impact Map";
 
             var impactDay = await _impactRepository.GetGodSpeakImpact();
+            var profiles = await _profileRepository.All();
             var points = new List<string>();
             points.AddRange(impactDay.Points.Select(point => $"{{ \"point\":{{ \"lat\" :{point.Latitude}, \"lng\":{point.Longitude} }}, \"label\" : \"{point.Count}\" }}"));
             ViewBag.ImpactText =
-                    $"GodSpeak's Impact: {impactDay.Points.Sum(p => p.Count + 1)} Apps Gift/Shared {impactDay.DeliveredMessages.Count} Scriptures Delivered";
+                    $"{profiles.Count} Apps Gifted {impactDay.DeliveredMessages.Count} Scriptures Delivered";
             
 
             ViewBag.PointsJS = $"[{string.Join(",", points)}]";

@@ -194,6 +194,7 @@
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\SeedController.cs" />
     <Compile Include="Controllers\SignUpController.cs" />
+    <Compile Include="Controllers\TermsConditionsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Extensions\DbContextExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
@@ -462,6 +463,7 @@
     <Content Include="Views\Map\Index.cshtml" />
     <Content Include="Views\Home\ShareAndroidGift.cshtml" />
     <Content Include="Views\Map\GodSpeak.cshtml" />
+    <Content Include="Views\TermsConditions\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

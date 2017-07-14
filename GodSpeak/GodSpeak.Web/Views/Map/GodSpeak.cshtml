@@ -17,14 +17,14 @@
 <header class="header site-header" style="position: absolute; top: 0; width: 100%; z-index: 100;">
     <div class="container">
         <div class="row">
-            <div class="col-xs-6 col-md-offset-1 col-md-12">
+            <div class="col-md-12">
                 <div class="navbar-left">
-                    <a class="brand" href="/">
-                        <span class="sr-only">GodSpeak App</span>
-                    </a>
+@*                    <a class="brand" href="/">*@
+@*                        <span class="sr-only">GodSpeak App</span>*@
+@*                    </a>*@
 
                 </div>
-                <div class="navbar-left hidden-xs">
+                <div class="navbar-left">
                     <p class="greeting">@ViewBag.ImpactText</p>
                 </div>
             </div>
@@ -78,11 +78,11 @@
                 position: points[i].point,
                 map: map,
                 label: {
-                    text: points[i].label === '0'?' ':points[i].label,
+                    text: ' ',
                     color: 'white',
                     fontSize: '20px'
                 },
-                icon: points[i].label === '0'?image:big_image
+                icon: image
             });
         }
 
