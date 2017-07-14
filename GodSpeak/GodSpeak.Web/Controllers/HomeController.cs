@@ -84,6 +84,7 @@ namespace GodSpeak.Web.Controllers
                 PhonePlatforms.Android);
             ViewBag.UnpurchasedAndroidRequests = unpurchasedAndroidRequests;
             ViewBag.PurchasedAndroidRequests = await _inviteRepository.BoughtGifts(profile.Code, PhonePlatforms.Android);
+            ViewBag.TotalPurchasedAndroidRequests = profile.InviteBalance + ViewBag.PurchasedAndroidRequests.Count;
 
             ViewBag.UnpurchasediOSRequests = await _inviteRepository.UnBoughtGifts(profile.Code, PhonePlatforms.iPhone);
             ViewBag.PurchasediOSRequests = await _inviteRepository.BoughtGifts(profile.Code, PhonePlatforms.iPhone);
@@ -98,9 +99,13 @@ namespace GodSpeak.Web.Controllers
             List<string> points = new List<string>();
             if (impactDays.Any())
             {
-                var latestImpactDay = impactDays.Last();
-
-                points.AddRange(latestImpactDay.Points.Select(point => $"{{ \"point\":{{ \"lat\" :{point.Latitude}, \"lng\":{point.Longitude} }}, \"label\" : \"{point.Count}\" }}"));
+                foreach (var impactDay in impactDays)
+                {
+                    points.AddRange(
+                        impactDay.Points.Select(
+                            point =>
+                                $"{{ \"point\":{{ \"lat\" :{point.Latitude}, \"lng\":{point.Longitude} }}, \"label\" : \"{point.Count}\" }}"));
+                }
             }
             var geoPoint = _inMemoryDataRepository.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
             var usersPoint = $"{{ \"point\":{{ \"lat\" :{geoPoint.Latitude}, \"lng\":{geoPoint.Longitude} }}, \"label\" : \"1\" }}";

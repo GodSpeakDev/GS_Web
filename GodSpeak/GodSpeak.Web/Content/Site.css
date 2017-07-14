@@ -447,6 +447,10 @@ body {
       right: 50%;
       background: url("Images/iphone-screenshot.png") 50% 100% no-repeat;
       background-size: contain; } }
+
+.gift-status {
+    font-size: 20px;
+}
 /* Medium Devices, Desktops */
 @media only screen and (min-width: 992px) {
   .login-logo {

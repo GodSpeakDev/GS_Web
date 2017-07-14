@@ -101,6 +101,7 @@ namespace GodSpeak.Web.Repositories
         public async Task<List<ImpactDay>> GetImpactForUserId(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
+            var userProfile = await _profileRepository.GetByUserId(userId);
 
             
             var profilesInNetwork = new List<ApplicationUserProfile>();
@@ -108,43 +109,75 @@ namespace GodSpeak.Web.Repositories
 
             var days = new List<ImpactDay>();
 
-            foreach (var profile in profilesInNetwork)
+            
+
+            var startDate = userProfile.DateRegistered.Date;
+            var endDate = DateTime.Now;
+            var currentDate = startDate;
+            var impactDay = new ImpactDay();
+            while (currentDate <= endDate.Date)
             {
-                if (!days.Any(d => d.Day.Date == profile.DateRegistered.Date))
-                {
-                    days.Add(new ImpactDay()
-                    {
-                        Day = profile.DateRegistered.Date,
-                        Points = new List<ImpactDayGeoPoint>(),
-                        DeliveredMessages = new List<ImpactDeliveredMessage>()
-                    });
-                }
-                var day = days.First(d => d.Day.Date == profile.DateRegistered.Date);
-                var point = _memoryDataRepository.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
+                var deliveredMessages = new List<ImpactDeliveredMessage>();
+
+//                if (impactDay.DeliveredMessages != null)
+//                    deliveredMessages = impactDay.DeliveredMessages.ToList();
+
+                impactDay = new ImpactDay();
+                impactDay.Day = currentDate;
+                impactDay.DeliveredMessages = deliveredMessages;
+                impactDay.Points = new List<ImpactDayGeoPoint>();
+                days.Add(impactDay);
+                //add user's delivered messages to day
+                for (var i = 0; i < userProfile.MessageDayOfWeekSettings.First().NumOfMessages; i++)
+                    impactDay.DeliveredMessages.Add(new ImpactDeliveredMessage());
 
                 
-                day.Points.Add(new ImpactDayGeoPoint()
+                var userInNetworkForDate = profilesInNetwork.Where(p => p.DateRegistered.Date <= currentDate).ToList();
+                //add users in network's delivered messages to impact day
+                foreach (var networkUser in userInNetworkForDate)
                 {
-                    Latitude = point.Latitude,
-                    Longitude = point.Longitude
-                });
+                    var numOfMessagesToAdd = networkUser.MessageDayOfWeekSettings.First().NumOfMessages;
 
-                
-            }
-
-            foreach (var profile in profilesInNetwork)
-            {
-                var previousDays = days.Where(d => d.Day.Date <= profile.DateRegistered.Date).ToList();
-                foreach (var day in previousDays)
-                {
-                    for (var i = 0; i < profile.MessageDayOfWeekSettings.First().NumOfMessages; i++)
+                    if (currentDate.Date == endDate.Date)
                     {
-                        day.DeliveredMessages.Add(new ImpactDeliveredMessage());
+                        var timeInActiveSpan =
+                            DateTime.Now.TimeOfDay.Subtract(networkUser.MessageDayOfWeekSettings.First().StartTime);
+                        if (timeInActiveSpan.TotalSeconds > 0)
+                        {
+                            var totalSpan = networkUser.MessageDayOfWeekSettings.First().EndTime -
+                                            networkUser.MessageDayOfWeekSettings.First().StartTime;
+
+                            var percentOfMessagesDelivered = (float) timeInActiveSpan.TotalSeconds / (float) totalSpan.TotalSeconds;
+
+                            numOfMessagesToAdd =
+                                (int)Math.Round(percentOfMessagesDelivered *
+                                           networkUser.MessageDayOfWeekSettings.First().NumOfMessages);
+                        }
+                    }
+
+                    for (var i = 0; i < numOfMessagesToAdd; i++)
+                        impactDay.DeliveredMessages.Add(new ImpactDeliveredMessage());
+
+                    //check if network user's point needs to be added
+                    if (networkUser.DateRegistered.Date == currentDate.Date)
+                    {
+                        var point =
+                            _memoryDataRepository.PostalCodeGeoCache[
+                                $"{networkUser.CountryCode}-{networkUser.PostalCode}"];
+                        impactDay.Points.Add(new ImpactDayGeoPoint()
+                            {
+                                Latitude = point.Latitude,
+                                Longitude = point.Longitude
+                            }
+                        );
+
                     }
                 }
-                
+
+                currentDate = currentDate.AddDays(1);
             }
-                
+
+           
 
             return days;
         }

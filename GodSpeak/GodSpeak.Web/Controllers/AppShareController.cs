@@ -87,7 +87,7 @@ namespace GodSpeak.Web.Controllers
                     GiftsGiven = sharedCount,
                     ButtonTitle = sharedCount > 0?"Congratulate Them":"Encourage Them",
                     SubTitle = $"Has shared GodSpeak {sharedCount} times",
-                    Message = sharedCount > 0? "Awesome work on spreading the word of Christ.":"Don't be shy! Reach out and tell your friends about GodSpeak",
+                    Message = sharedCount > 0? "Awesome work on spreading the word of Christ.": "\"Blessed by your GodSpeak Gift? \r\rPAY-IT-FORWARD!\r\r Bless your friends and family! Your gift will bear good fruit, it cannot fail!\r\r\"So will My word be which goes forth from My mouth; It will not return to Me empty, without accomplishing what I desire, and without succeeding in the matter for which I sent it.\" \r- GOD",
                     Subject = "GodSpeak"
                     
                 });
