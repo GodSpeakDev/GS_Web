@@ -411,7 +411,7 @@ namespace GodSpeak.Web.Controllers
             catch (Exception ex)
             {
                 return CreateResponse(HttpStatusCode.InternalServerError, "User Profile",
-                    "Something went wrong trying to uplaod photo", ex);
+                    "Something went wrong trying to upload photo", ex);
             }
         }
 
@@ -435,11 +435,35 @@ namespace GodSpeak.Web.Controllers
                 return CreateResponse(HttpStatusCode.BadRequest, "User Update Failure",
                                    "Request is missing current password for changing password");
 
+            
+
             var userId = await _authRepository.GetUserIdForToken(GetAuthToken(Request));
             var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
-            
+
+            if (!string.IsNullOrEmpty(updateRequestObj.ReferringEmailAddress))
+            {
+                //making sure they haven't specified their own email as the referring email address
+                if(String.Equals(updateRequestObj.ReferringEmailAddress, user.Email, StringComparison.CurrentCultureIgnoreCase))
+                    return CreateResponse(HttpStatusCode.BadRequest, "User Update Failure",
+                                   "Referring email address cannot be the same as user's email address.");
+
+                //making sure there's a user record for referring email address
+                var referringUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == updateRequestObj.ReferringEmailAddress);
+                if (referringUser == null)
+                    return CreateResponse(HttpStatusCode.BadRequest, "User Update Failure",
+                                   "Referring email address does not match any existing users.");
+
+                //making sure the two users haven't referenced each other
+                var referringUserProfile = await _profileRepo.GetByUserId(referringUser.Id);
+                if (String.Equals(referringUserProfile.ReferringEmailAddress, user.Email, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return CreateResponse(HttpStatusCode.BadRequest, "User Update Failure",
+                                   "Referring email address has you listed as their referring email address.");
+                }
+            }
+
             //update password if needed
-            if(!string.IsNullOrEmpty(updateRequestObj.CurrentPassword) && await _authRepository.FindUser(user.UserName, updateRequestObj.CurrentPassword) == null)
+            if (!string.IsNullOrEmpty(updateRequestObj.CurrentPassword) && await _authRepository.FindUser(user.UserName, updateRequestObj.CurrentPassword) == null)
                 return CreateResponse(HttpStatusCode.BadRequest, "User Update Failure",
                                    "Submitted current password was incorrect");
 
@@ -516,6 +540,7 @@ namespace GodSpeak.Web.Controllers
             profile.LastName = updateUserObject.LastName;
             profile.CountryCode = updateUserObject.CountryCode;
             profile.PostalCode = updateUserObject.PostalCode;
+            profile.ReferringEmailAddress = updateUserObject.ReferringEmailAddress;
         }
     }
 

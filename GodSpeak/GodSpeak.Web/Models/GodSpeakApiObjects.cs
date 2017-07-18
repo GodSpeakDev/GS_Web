@@ -62,6 +62,9 @@ namespace GodSpeak.Web.Models
         public string NewPassword { get; set; }
 
         public string PasswordConfirm { get; set; }
+
+        [EmailAddress]
+        public string ReferringEmailAddress { get; set; }
         
 
         [Required]
