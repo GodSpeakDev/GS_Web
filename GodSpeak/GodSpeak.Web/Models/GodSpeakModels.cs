@@ -22,6 +22,8 @@ namespace GodSpeak.Web.Models
         [Required]
         public string InviteCode { get; set; }
 
+        public int InviteCount { get; set; }
+
         public DateTime DateTimePurchased { get; set; }
     }
     public class InviteBundle

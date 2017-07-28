@@ -262,6 +262,10 @@
     <Compile Include="Migrations\201707051936187_ProfileHasDateRegistered.Designer.cs">
       <DependentUpon>201707051936187_ProfileHasDateRegistered.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201707281913226_PayPalTransactionHasInviteCount.cs" />
+    <Compile Include="Migrations\201707281913226_PayPalTransactionHasInviteCount.Designer.cs">
+      <DependentUpon>201707281913226_PayPalTransactionHasInviteCount.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -522,6 +526,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707051936187_ProfileHasDateRegistered.resx">
       <DependentUpon>201707051936187_ProfileHasDateRegistered.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707281913226_PayPalTransactionHasInviteCount.resx">
+      <DependentUpon>201707281913226_PayPalTransactionHasInviteCount.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

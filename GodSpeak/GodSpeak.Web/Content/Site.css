@@ -451,7 +451,22 @@ body {
 .gift-android-invite-code {
     font-size: 48px;
     font-weight: bold;
-    margin-bottom: 30px;
+    
+    background-color: transparent;
+    color: #fff;
+    border-style: none;
+    padding: 20px;
+    text-align: right;
+    
+}
+.gift-android-copy-btn {
+    background-image: url('/Content/Images/copy-invite-code-icon.png');
+    background-size: 60%;
+    width: 50px;
+    height: 50px;
+}
+.gift-android-input-group {
+    margin: 30px 0;
 }
 .gift-android-btn-primary,.gift-android-btn-secondary {
     font-size: 18px;
@@ -462,7 +477,7 @@ body {
     border-radius: 10px;
 }
 .gift-android-form {
-    margin: 20px 0;
+    margin: 30px 0;
 }
 .gift-android-paypal-button {
     margin: 20px 0 100px 0;

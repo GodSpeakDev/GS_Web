@@ -3,16 +3,18 @@
     Layout = "~/Views/Shared/_PlainLayout.cshtml";
 }
 
+@if (!String.IsNullOrEmpty(ViewBag.NotificationMessage)){ 
 
 <section class="notice">
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
-                <p>You have successfully purchased 2 gifts</p>
+                <p>@ViewBag.NotificationMessage</p>
             </div>
         </div>
     </div>
 </section>
+}
 
 <section>
     <div class="container gift-android-container">
@@ -22,10 +24,30 @@
             <div class="clearfix">
                 <div class="col-xs-12">
                     <h2 class="gift-android-title">
-                        You have purchased 2 GodSpeak gifts for Android that remain unclaimed.
+                        You have purchased @ViewBag.GiftsUnclaimedCount GodSpeak gifts for Android that remain unclaimed.
                     </h2>
                     <p class="gift-android-paragraph">After dowloading GodSpeak from the PlayStore your friends can use this Gift Code to use GodSpeak:</p>
-                    <h1 class="gift-android-invite-code">iM0J9z8r <img width="34" src="/Content/Images/copy-invite-code-icon.png"/></h1>
+                    
+                        <div class="input-group gift-android-input-group">
+
+                            <input type="text"
+                                   class="form-control gift-android-invite-code"
+                                   id="share-link"
+                                   aria-describedby="basic-addon3"
+                                   
+                                   value="@ViewBag.InviteCode">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default btn-copy gift-android-copy-btn"
+                                        data-clipboard-target="#share-link"
+                                        data-toggle="popover"
+                                        data-placement="bottom"
+                                        data-content="Copied!"
+                                        type="button">
+                                    <span class="sr-only">Copy to Clipboard</span>
+                                </button>
+                            </span>
+                        </div>
+                    
                 </div>
                 
 
@@ -34,12 +56,12 @@
         <div class="row">
             <div class="clearfix">
                 <div class="col-xs-12">
-                    <a href="/SignUp/@ViewBag.InviteCode" class="btn btn-lg btn-primary gift-android-btn-primary">
+                    <a href="/GiftAndroid/Purchase" class="btn btn-lg btn-primary gift-android-btn-primary">
                         Purchase More Android Gifts
                     </a>
                     
                     
-                    <a class="btn btn-secondary gift-android-btn-secondary">
+                    <a class="btn btn-secondary gift-android-btn-secondary" href="mailto:?body=@ViewBag.EmailBody">
                         Share Gift Code via Email
                     </a>
                     
