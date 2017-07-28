@@ -68,6 +68,8 @@ namespace GodSpeak.Web.Controllers
             var profiles = await _profileRepository.All();
             var points = new List<string>();
             points.AddRange(impactDay.Points.Select(point => $"{{ \"point\":{{ \"lat\" :{point.Latitude}, \"lng\":{point.Longitude} }}, \"label\" : \"{point.Count}\" }}"));
+            ViewBag.DeliveredMessagesCount = impactDay.DeliveredMessages.Count;
+            ViewBag.GiftsCount = profiles.Count;
             ViewBag.ImpactText =
                     $"{profiles.Count} Apps Gifted {impactDay.DeliveredMessages.Count} Scriptures Delivered";
             

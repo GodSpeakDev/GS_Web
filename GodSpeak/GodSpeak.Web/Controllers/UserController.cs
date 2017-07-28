@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Http;
 using System.Web.Http.Description;
 using GodSpeak.Web.Models;
@@ -326,7 +327,7 @@ namespace GodSpeak.Web.Controllers
                 return CreateMissingTokenResponse();
 
             var userId = await _authRepository.GetUserIdForToken(GetAuthToken(Request));
-
+            
             var days = (await _impactRepository.GetImpactForUserId(userId)).ToList().Select(ImpactApiObject.FromModel).ToList();
 
           

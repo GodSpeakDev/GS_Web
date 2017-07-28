@@ -56,6 +56,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -185,6 +186,7 @@
     <Compile Include="Controllers\ApiControllerBase.cs" />
     <Compile Include="Controllers\AppShareController.cs" />
     <Compile Include="Controllers\GeoController.cs" />
+    <Compile Include="Controllers\GiftAndroidController.cs" />
     <Compile Include="Controllers\GiftiTunesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImpactController.cs" />
@@ -306,12 +308,14 @@
     <Content Include="Content\Images\copy-icon%403x.png" />
     <Content Include="Content\Images\copy-icon.png" />
     <Content Include="Content\Images\copy.svg" />
+    <Content Include="Content\Images\gift_icon.png" />
     <Content Include="Content\Images\group%402x.png" />
     <Content Include="Content\Images\group%403x.png" />
-    <Content Include="Content\Images\group-3%402x.png" />
+    <Content Include="Content\Images\invite-copy-icon.png" />
     <Content Include="Content\Images\group-3%403x.png" />
     <Content Include="Content\Images\group-3.png" />
     <Content Include="Content\Images\group.png" />
+    <Content Include="Content\Images\group3%402x.png" />
     <Content Include="Content\Images\gs-logo%402x.png" />
     <Content Include="Content\Images\gs-logo%403x.png" />
     <Content Include="Content\Images\gs-logo-new.svg" />
@@ -324,6 +328,7 @@
     <Content Include="Content\Images\oval%403x.png" />
     <Content Include="Content\Images\oval.png" />
     <Content Include="Content\Images\playstore_badge.png" />
+    <Content Include="Content\Images\scripture_icon.png" />
     <Content Include="Content\Images\sign-up-hero%402x.png" />
     <Content Include="Content\Images\sign-up-hero%403x.png" />
     <Content Include="Content\Images\sign-up-hero.png" />
@@ -464,6 +469,7 @@
     <Content Include="Views\Home\ShareAndroidGift.cshtml" />
     <Content Include="Views\Map\GodSpeak.cshtml" />
     <Content Include="Views\TermsConditions\Index.cshtml" />
+    <Content Include="Views\GiftAndroid\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

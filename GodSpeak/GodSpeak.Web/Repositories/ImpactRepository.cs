@@ -200,7 +200,23 @@ namespace GodSpeak.Web.Repositories
                         impactDay.DeliveredMessages.Add(new ImpactDeliveredMessage());
 
                     //check if network user's point needs to be added
-                    if (networkUser.DateRegistered.Date == currentDate.Date)
+                    if (networkUser.DateRegistered.Date < userProfile.DateRegistered.Date)
+                    {
+                        var firstDay = days.First();
+                        var point =
+                            _memoryDataRepository.PostalCodeGeoCache[
+                                $"{networkUser.CountryCode}-{networkUser.PostalCode}"];
+
+                        if(firstDay.Points.All(p => p.ProfileId != networkUser.ApplicationUserProfileId))
+                            firstDay.Points.Add(new ImpactDayGeoPoint()
+                            {
+                                Latitude = point.Latitude,
+                                Longitude = point.Longitude,
+                                ProfileId = networkUser.ApplicationUserProfileId
+                            }
+                       );
+                    }
+                    if (networkUser.DateRegistered.Date == currentDate.Date  )
                     {
                         var point =
                             _memoryDataRepository.PostalCodeGeoCache[
@@ -208,7 +224,8 @@ namespace GodSpeak.Web.Repositories
                         impactDay.Points.Add(new ImpactDayGeoPoint()
                             {
                                 Latitude = point.Latitude,
-                                Longitude = point.Longitude
+                                Longitude = point.Longitude,
+                                ProfileId = networkUser.ApplicationUserProfileId
                             }
                         );
 

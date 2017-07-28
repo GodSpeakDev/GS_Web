@@ -242,6 +242,9 @@ namespace GodSpeak.Web.Models
 
         [Required]
         public double Longitude { get; set; }
+
+        [NotMapped]
+        public Guid ProfileId { get; set; }
     }
 
     public class PostalCodeGeoLocation

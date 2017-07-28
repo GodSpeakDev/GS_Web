@@ -114,7 +114,7 @@ namespace GodSpeak.Web.Controllers
                 Message = hasGifted
                     ? "Congrats on spreading the good word of Christ!"
                     : "Don't forget to pay it forward!",
-                DateClaimed = DateTime.Now.AddDays(-2)
+                DateClaimed = profile.DateRegistered
 
             };
         }

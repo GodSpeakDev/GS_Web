@@ -22,7 +22,7 @@ namespace GodSpeak.Web.Infrastructure
             Bind<IApplicationUserProfileRepository>().To<ApplicationUserProfileRepository>();
             Bind<IInviteRepository>().To<InviteRepository>();
             Bind<IAuthRepository>().To<AuthRepository>();
-            Bind<IInMemoryDataRepository>().To<InMemoryDataRepository>();
+            Bind<IInMemoryDataRepository>().To<InMemoryDataRepository>().InSingletonScope();
             Bind<IImpactRepository>().To<ImpactRepository>();
             Bind<IAppShareRepository>().To<AppShareRepository>();
             Bind<IPayPalTransactionRepository>().To<PayPalTransactionRepository>();

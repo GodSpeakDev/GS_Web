@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Security.Cryptography.X509Certificates;
+using System.Web.Helpers;
 using GodSpeak.Web.Models;
 using GodSpeak.Web.Util;
+using Microsoft.Owin.Security.Provider;
 
 namespace GodSpeak.Web.Repositories
 {
@@ -18,18 +21,23 @@ namespace GodSpeak.Web.Repositories
 
     public class InMemoryDataRepository : IInMemoryDataRepository
     {
-        private static readonly Dictionary<string,BibleVerse> _verseCache = new Dictionary<string, BibleVerse>();
+//        private static readonly Dictionary<string,BibleVerse> _verseCache = new Dictionary<string, BibleVerse>();
 
-        private static readonly Dictionary<string, PostalCodeGeoLocation> _postalCodeGeoCache = new Dictionary<string, PostalCodeGeoLocation>();
+//        private static readonly Dictionary<string, PostalCodeGeoLocation> _postalCodeGeoCache = new Dictionary<string, PostalCodeGeoLocation>();
 
+        private const string VerseCacheKey = "verse_cache";
+
+        private const string ZipGeoCacheKey = "zip_geo_cache";
 
         public Dictionary<string, BibleVerse> VerseCache
         {
             get
             {
-                if(!_verseCache.Any())
+                ObjectCache cache = MemoryCache.Default;
+                
+                if (!cache.Contains(VerseCacheKey))
                     LoadBibleVerses();
-                return _verseCache;
+                return cache[VerseCacheKey] as Dictionary<string, BibleVerse>;
             }
         }
 
@@ -37,9 +45,10 @@ namespace GodSpeak.Web.Repositories
         {
             get
             {
-                if(!_postalCodeGeoCache.Any())
+                ObjectCache cache = MemoryCache.Default;
+                if (!cache.Contains(ZipGeoCacheKey))
                     LoadPostalCodeGeoLocations();
-                return _postalCodeGeoCache;   
+                return cache[ZipGeoCacheKey] as Dictionary<string, PostalCodeGeoLocation>;   
             }
         }
         private readonly Dictionary<string, string> _countryCodeNameMap = new Dictionary<string, string>();
@@ -72,25 +81,34 @@ namespace GodSpeak.Web.Repositories
 
         public void LoadBibleVerses()
         {
+            ObjectCache cache = MemoryCache.Default;
             var parser = new SeedTextFileParser();
-            
+            var verseCache = new Dictionary<string, BibleVerse>();
 
-            foreach (var line in File.ReadLines(AppDataPath + "NASBNAME.TXT"))
+            var fileLines = cache.Contains("verses_line") ? (IEnumerable<string>)cache["verses_line"] : File.ReadLines(AppDataPath + "NASBNAME.TXT");
+
+            cache.Set("verses_line", fileLines, new CacheItemPolicy()
             {
-                if (string.IsNullOrEmpty(line))
+                Priority = CacheItemPriority.NotRemovable
+            });
+
+            foreach (var line in fileLines)
+            {
+                if (string.IsNullOrEmpty(line) || line.Trim() == "")
                     continue;
 
                 try
                 {
                     var verse = parser.ParseBibleVerse(line);
-                    if (!_verseCache.ContainsKey(verse.ShortCode))
-                        _verseCache[verse.ShortCode] = verse;
+                    if (!verseCache.ContainsKey(verse.ShortCode))
+                        verseCache[verse.ShortCode] = verse;
                 }
-                catch
+                catch(Exception ex)
                 {
                     throw new Exception("Error debugging line:\r" + line);
                 }
             }
+            cache[VerseCacheKey] = verseCache;
         }
 
         private void LoadCountryCodeNames()
@@ -112,9 +130,19 @@ namespace GodSpeak.Web.Repositories
         public void LoadPostalCodeGeoLocations()
         {
             var parser = new SeedTextFileParser();
+            ObjectCache cache = MemoryCache.Default;
+            var _postalCodeGeoCache = new Dictionary<string, PostalCodeGeoLocation>();
 
 
-            foreach (var line in File.ReadLines(AppDataPath + "allCountries.txt"))
+
+            var fileLines = cache.Contains("zip_lines")?(IEnumerable<string>)cache["zip_lines"] : File.ReadLines(AppDataPath + "allCountries.txt");
+
+            cache.Set("zip_lines", fileLines, new CacheItemPolicy()
+            {
+                Priority = CacheItemPriority.NotRemovable
+            });
+
+            foreach (var line in fileLines)
             {
                 if (string.IsNullOrEmpty(line))
                     continue;
@@ -132,6 +160,13 @@ namespace GodSpeak.Web.Repositories
 
                 }
             }
+
+            
+            var policy = new CacheItemPolicy();
+            policy.Priority = CacheItemPriority.NotRemovable;
+            
+
+            cache.Set(ZipGeoCacheKey, _postalCodeGeoCache, policy);
         }
 
     }
