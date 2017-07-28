@@ -470,6 +470,7 @@
     <Content Include="Views\Map\GodSpeak.cshtml" />
     <Content Include="Views\TermsConditions\Index.cshtml" />
     <Content Include="Views\GiftAndroid\Index.cshtml" />
+    <Content Include="Views\GiftAndroid\Purchase.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

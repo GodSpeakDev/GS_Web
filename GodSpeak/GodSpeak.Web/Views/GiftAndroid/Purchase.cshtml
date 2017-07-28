@@ -1,0 +1,117 @@
+﻿@{
+
+    Layout = "~/Views/Shared/_PlainLayout.cshtml";
+}
+
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+<section>
+    <div class="container gift-android-container">
+
+
+        <div class="row">
+            <div class="clearfix">
+                <div class="col-xs-12">
+                    <h2 class="gift-android-title">
+                        How many GodSpeak gifts for Android would you like to purchase?
+                    </h2>
+                    
+                        @using (Html.BeginForm("Index", "GiftAndroid", new { }, FormMethod.Post, new { role = "form", id = "purchased_android_form", @class = "gift-android-form" }))
+                        {
+                            <input class="gift-android-input"/><label class="gift-android-input-label">gifts for $3.00</label>
+                            <input data-val="true" data-val-required="InviteCode field is required." id="InviteCode" name="InviteCode" type="hidden" value="@ViewBag.InviteCode" />
+                            <input data-val="true" data-val-required="PayPalPaymentId field is required." id="PayPalPaymentId" name="PayPalPaymentId" type="hidden" />
+                            <input data-val="true" data-val-required="PayPalTransactionAmount field is required." id="PayPalTransactionAmount" name="PayPalTransactionAmount" type="hidden" />
+                        }
+                    
+                </div>
+
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="clearfix">
+                <div class="col-xs-12">
+                    <div id="purchase-android-gifts-button" class="gift-android-paypal-button">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+
+<footer class="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="hidden-xs col-sm-6 col-md-offset-1 col-md-5">
+                <ul class="list-inline footer-links">
+                    <li>
+                        <div class="brand"></div>
+                    </li>
+                    <li><a href="#">About</a></li>
+                    <li>
+                        <span>|</span>
+                    </li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-5 text-right">
+                <p class="copyright">© GodSpeak 2017 All Rights Reserved</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+        paypal.Button.render({
+
+            env: 'production',//'production', // Or 'sandbox',
+
+            client: {
+                sandbox: 'ARyw-UImuy-Gi2ZMfY67iAGcUPlNKla7DwRZeIC4pLQNdtyavxGJEQSoV04ne0dZt5EdhWRwXuX7GIFO',
+                production: 'AfkdoKBHLTlg3uLS7q1B0tnqlyTyAdqS4lwAiBkfEKrSjQumRZV2zZ22VlbXAC0y5O5WiB4nlevU9pdy'
+            },
+
+            style: {
+                size: 'responsive',
+                color: 'blue'
+            },
+
+
+            commit: false, // Show a 'Pay Now' button
+
+            payment: function (data, actions) {
+                return actions.payment.create({
+                    payment: {
+                        transactions: [
+                            {
+                                amount: { total: '@ViewBag.OutstandingAndroidBalance', currency: 'USD' }
+                            }
+                        ]
+                    }
+                });
+            },
+
+            onAuthorize: function(data, actions) {
+                return actions.payment.execute().then(function (payment) {
+                    console.log(payment);
+                    if (payment.state === "approved") {
+                        var paymentId = payment.id;
+                        var transactionAmount = payment.transactions[0].amount.total;
+
+                        $("#PayPalPaymentId").val(paymentId);
+                        $("#PayPalTransactionAmount").val(transactionAmount);
+                        $("#purchased_android_form").submit();
+                    } else {
+                        alert('Sorry, something went wrong trying to process your payment.');
+                    }
+                    // The payment is complete!
+                    // You can now show a confirmation message to the customer
+                });
+           }
+
+        }, '#purchase-android-gifts-button');
+    
+</script>

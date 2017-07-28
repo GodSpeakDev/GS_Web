@@ -13,5 +13,10 @@ namespace GodSpeak.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult Purchase()
+        {
+            return View();
+        }
     }
 }

@@ -461,7 +461,24 @@ body {
     padding: 16px 0;
     border-radius: 10px;
 }
-
+.gift-android-form {
+    margin: 20px 0;
+}
+.gift-android-paypal-button {
+    margin: 20px 0 100px 0;
+}
+.gift-android-input-label {
+    font-size: 24px;
+    margin-left: 20px;
+}
+.gift-android-input {
+    width: 100px;
+    height: 48px;
+    color: black;
+    text-align: center;
+    font-size: 36px;
+    font-weight: bold;
+}
 /* Extra Small Devices, Phones */
 @media only screen and (min-width: 480px) {
   .panel-share {
