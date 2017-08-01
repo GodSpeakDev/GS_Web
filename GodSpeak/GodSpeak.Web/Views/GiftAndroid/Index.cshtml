@@ -23,18 +23,31 @@
         <div class="row">
             <div class="clearfix">
                 <div class="col-xs-12">
-                    <h2 class="gift-android-title">
-                        You have purchased @ViewBag.GiftsUnclaimedCount GodSpeak gifts for Android that remain unclaimed.
-                    </h2>
-                    <p class="gift-android-paragraph">After dowloading GodSpeak from the PlayStore your friends can use this Gift Code to use GodSpeak:</p>
-                    
+                    @if (ViewBag.GiftsUnclaimedCount > 0)
+                    {
+                        <h2 class="gift-android-title">
+                            You have purchased @ViewBag.GiftsUnclaimedCount GodSpeak gifts for Android that remain unclaimed.
+                        </h2>
+                    }
+                    else
+                    {
+                        <br />
+                        <h2 class="gift-android-title">
+                            You have not purchased any GodSpeak gifts for Android.
+                        </h2>
+                        <br/><br /><br/>
+                    }
+                    @if (ViewBag.GiftsUnclaimedCount > 0)
+                    {
+                        <p class="gift-android-paragraph">After dowloading GodSpeak from the PlayStore your friends can use this Gift Code to use GodSpeak:</p>
+
                         <div class="input-group gift-android-input-group">
 
                             <input type="text"
                                    class="form-control gift-android-invite-code"
                                    id="share-link"
                                    aria-describedby="basic-addon3"
-                                   
+                                   disabled
                                    value="@ViewBag.InviteCode">
                             <span class="input-group-btn">
                                 <button class="btn btn-default btn-copy gift-android-copy-btn"
@@ -47,7 +60,7 @@
                                 </button>
                             </span>
                         </div>
-                    
+                    }
                 </div>
                 
 
@@ -56,15 +69,27 @@
         <div class="row">
             <div class="clearfix">
                 <div class="col-xs-12">
-                    <a href="/GiftAndroid/Purchase" class="btn btn-lg btn-primary gift-android-btn-primary">
-                        Purchase More Android Gifts
-                    </a>
-                    
-                    
-                    <a class="btn btn-secondary gift-android-btn-secondary" href="mailto:?body=@ViewBag.EmailBody">
-                        Share Gift Code via Email
-                    </a>
-                    
+                    @if (ViewBag.GiftsUnclaimedCount > 0)
+                    {
+                        <a href="/GiftAndroid/Purchase" class="btn btn-lg btn-primary gift-android-btn-primary">
+                            Purchase More Android Gifts
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="/GiftAndroid/Purchase" class="btn btn-lg btn-primary gift-android-btn-primary">
+                            Purchase Android Gifts
+                        </a>
+                        <br /><br /><br />
+                    }
+
+                    @if (ViewBag.GiftsUnclaimedCount > 0)
+                    {
+                        <a class="btn btn-secondary gift-android-btn-secondary" href="mailto:?body=@ViewBag.EmailBody">
+                            Share Gift Code via Email
+                        </a>
+                    }
+
                 </div>
             </div>
         </div>

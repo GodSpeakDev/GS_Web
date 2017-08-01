@@ -315,7 +315,6 @@
     <Content Include="Content\Images\gift_icon.png" />
     <Content Include="Content\Images\group%402x.png" />
     <Content Include="Content\Images\group%403x.png" />
-    <Content Include="Content\Images\invite-copy-icon.png" />
     <Content Include="Content\Images\group-3%403x.png" />
     <Content Include="Content\Images\group-3.png" />
     <Content Include="Content\Images\group.png" />
@@ -475,6 +474,7 @@
     <Content Include="Views\TermsConditions\Index.cshtml" />
     <Content Include="Views\GiftAndroid\Index.cshtml" />
     <Content Include="Views\GiftAndroid\Purchase.cshtml" />
+    <Content Include="Views\GiftiTunes\Desktop.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

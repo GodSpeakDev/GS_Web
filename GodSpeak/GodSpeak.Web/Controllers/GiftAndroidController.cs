@@ -30,19 +30,9 @@ namespace GodSpeak.Web.Controllers
             var userId = User.Identity.GetUserId();
             var profile = await _profileRepository.GetByUserId(userId); ViewBag.InviteCode = profile.Code;
             ViewBag.GiftsUnclaimedCount = profile.InviteBalance;
+//            ViewBag.GiftsUnclaimedCount = 0;
             ViewBag.InviteCode = profile.Code;
-            ViewBag.EmailBody = $@"Hi there,
-                    I want to give you this gift of GodSpeak for Android. To claim this gift please do the following:
-
-                    1) Download GodSpeak from the Google Playstore:
-
-                    https://play.google.com/store/apps/details?id=com.givegodspeak.android
-
-                    2) After installing and running the app, when prompted, enter this Gift Code:
-
-                    {profile.Code}
-
-                    - {profile.FirstName}";
+            ViewBag.EmailBody = $@"Hi there,\nI want to give you this gift of GodSpeak for Android. To claim this gift please do the following:\n\n1) Download GodSpeak from the Google Playstore:\n\nhttps://play.google.com/store/apps/details?id=com.givegodspeak.android\n\n2) After installing and running the app, when prompted, enter this Gift Code:\n\n{profile.Code}\n\n- {profile.FirstName}";
             ViewBag.NotificationMessage = message;
             return View();
         }

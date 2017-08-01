@@ -435,8 +435,12 @@ namespace GodSpeak.Web.Controllers
             if(string.IsNullOrEmpty(updateRequestObj.CurrentPassword) && !string.IsNullOrEmpty(updateRequestObj.NewPassword))
                 return CreateResponse(HttpStatusCode.BadRequest, "User Update Failure",
                                    "Request is missing current password for changing password");
+            if (
+                !_inMemoryDataRepo.PostalCodeGeoCache.ContainsKey(
+                    $"{updateRequestObj.CountryCode}-{updateRequestObj.PostalCode}"))
+                return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
+                    "Country and/or Postal code is invalid.");
 
-            
 
             var userId = await _authRepository.GetUserIdForToken(GetAuthToken(Request));
             var user = await _userManager.Users.FirstAsync(u => u.Id == userId);

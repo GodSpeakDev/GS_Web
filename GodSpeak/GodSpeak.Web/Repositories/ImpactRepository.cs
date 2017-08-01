@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using GodSpeak.Web.Extensions;
@@ -179,6 +180,7 @@ namespace GodSpeak.Web.Repositories
                 {
                     var numOfMessagesToAdd = networkUser.MessageDayOfWeekSettings.First().NumOfMessages;
 
+                    
                     if (currentDate.Date == endDate.Date)
                     {
                         var timeInActiveSpan =
@@ -200,12 +202,17 @@ namespace GodSpeak.Web.Repositories
                         impactDay.DeliveredMessages.Add(new ImpactDeliveredMessage());
 
                     //check if network user's point needs to be added
-                    if (networkUser.DateRegistered.Date < userProfile.DateRegistered.Date)
+                    var pointKey = $"{networkUser.CountryCode}-{networkUser.PostalCode}";
+                    if (!_memoryDataRepository.PostalCodeGeoCache.ContainsKey(pointKey))
+                    {
+                        Debug.WriteLine($"Bad Country/Postal Code combo{pointKey}");
+                    }
+                    if (networkUser.DateRegistered.Date < userProfile.DateRegistered.Date && _memoryDataRepository.PostalCodeGeoCache.ContainsKey(pointKey))
                     {
                         var firstDay = days.First();
                         var point =
                             _memoryDataRepository.PostalCodeGeoCache[
-                                $"{networkUser.CountryCode}-{networkUser.PostalCode}"];
+                                pointKey];
 
                         if(firstDay.Points.All(p => p.ProfileId != networkUser.ApplicationUserProfileId))
                             firstDay.Points.Add(new ImpactDayGeoPoint()
@@ -216,11 +223,11 @@ namespace GodSpeak.Web.Repositories
                             }
                        );
                     }
-                    if (networkUser.DateRegistered.Date == currentDate.Date  )
+                    if (networkUser.DateRegistered.Date == currentDate.Date && _memoryDataRepository.PostalCodeGeoCache.ContainsKey(pointKey) )
                     {
                         var point =
                             _memoryDataRepository.PostalCodeGeoCache[
-                                $"{networkUser.CountryCode}-{networkUser.PostalCode}"];
+                                pointKey];
                         impactDay.Points.Add(new ImpactDayGeoPoint()
                             {
                                 Latitude = point.Latitude,

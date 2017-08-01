@@ -448,7 +448,7 @@ body {
     font-size: 16px;
     text-align: center;
 } 
-.gift-android-invite-code {
+.gift-android-invite-code, .gift-android-invite-code:disabled {
     font-size: 48px;
     font-weight: bold;
     
@@ -457,6 +457,7 @@ body {
     border-style: none;
     padding: 20px;
     text-align: right;
+    height: 80px;
     
 }
 .gift-android-copy-btn {
@@ -466,7 +467,8 @@ body {
     height: 50px;
 }
 .gift-android-input-group {
-    margin: 30px 0;
+    margin: 30px auto;
+    max-width: 300px;
 }
 .gift-android-btn-primary,.gift-android-btn-secondary {
     font-size: 18px;
