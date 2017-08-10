@@ -87,6 +87,7 @@ namespace GodSpeak.Web.Controllers
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
+                    ViewBag.BadSignInMessage = "Sorry, the submitted email and password are incorrect.";
                     return View(model);
             }
         }
