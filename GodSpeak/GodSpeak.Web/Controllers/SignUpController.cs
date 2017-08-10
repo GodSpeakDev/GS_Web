@@ -42,7 +42,7 @@ namespace GodSpeak.Web.Controllers
 
             var profile = await _profileRepository.GetByCode(model.InviteCode);
             ViewBag.Name = $"{profile.FirstName} {profile.LastName}";
-
+            ViewBag.InviteCode = model.InviteCode;
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -51,13 +51,13 @@ namespace GodSpeak.Web.Controllers
             if (await _inviteRepository.HasUserAlreadyRequestedGift(model.Email))
             {
                 ViewBag.ResultMessage = "Sorry, that email has already registered for a gift.";
-                return View();
+                return View(model);
             }
 
             await _inviteRepository.RegisterGiftRequest(model.Email, model.Platform, model.InviteCode);
-
+            
             ViewBag.ResultMessage = "Congrats! You have successfully registered for a gift.";
-            return View();
+            return View(model);
 
         }
     }
