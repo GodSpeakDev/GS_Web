@@ -132,12 +132,17 @@
         var priceLevels = Object.keys(bundles);
         var price = 0;
         for (var i = 0; i < priceLevels.length; i++) {
-            if (numOfGifts <= priceLevels[i]) {
+//            console.log('test:' + (numOfGifts <= priceLevels[i]));
+            if (Number(numOfGifts) <= Number(priceLevels[i])) {
                 price = bundles[priceLevels[i]] / priceLevels[i];
                 
                 break;
             }
         }
+        if (price === 0) {
+            price = bundles[bundles.length - 1] / priceLevels[priceLevels.length - 1];
+        }
+        console.log(price);
         paymentAmount = Math.round(price * numOfGifts * 100) / 100;
         $('#gift-price-label').text('gifts for $' + paymentAmount);
     });
