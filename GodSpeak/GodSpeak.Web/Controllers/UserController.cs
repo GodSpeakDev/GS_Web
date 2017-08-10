@@ -107,10 +107,16 @@ namespace GodSpeak.Web.Controllers
         [ActionName("RecoverPassword")]
         public async Task<HttpResponseMessage> RecoverPassword(string emailAddress)
         {
+
+            
+
+            
             var id = (await _userManager.Users.FirstAsync(u => u.Email == emailAddress)).Id;
-            var token = await _userManager.GeneratePasswordResetTokenAsync(id);
+            
             var newPassword = _regUtil.GenerateInviteCode();
-            await _userManager.ResetPasswordAsync(id, token, newPassword);
+            _userManager.RemovePassword(id);
+            _userManager.AddPassword(id, newPassword);
+//            await _userManager.ResetPasswordAsync(id, token, newPassword);
             await _messageService.SendAsync(new IdentityMessage()
             {
                 Destination = emailAddress,

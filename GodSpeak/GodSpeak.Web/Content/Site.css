@@ -490,7 +490,7 @@ body {
 }
 .gift-android-input {
     width: 100px;
-    height: 48px;
+/*    height: 48px;*/
     color: black;
     text-align: center;
     font-size: 36px;
