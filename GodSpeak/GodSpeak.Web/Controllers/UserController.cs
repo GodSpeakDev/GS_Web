@@ -108,8 +108,12 @@ namespace GodSpeak.Web.Controllers
         public async Task<HttpResponseMessage> RecoverPassword(string emailAddress)
         {
 
-            
 
+            if (await _userManager.FindByEmailAsync(emailAddress) == null)
+            {
+                return CreateResponse(HttpStatusCode.OK, "Recover Password Failed",
+                "We do not have any records of that email address");
+            }
             
             var id = (await _userManager.Users.FirstAsync(u => u.Email == emailAddress)).Id;
             
