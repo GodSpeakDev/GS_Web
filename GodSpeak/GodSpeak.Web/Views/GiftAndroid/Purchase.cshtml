@@ -1,9 +1,23 @@
 ﻿@{
 
-    Layout = "~/Views/Shared/_PlainLayout.cshtml";
+    Layout = "~/Views/Shared/_NoHeaderLayout.cshtml";
 }
 
 <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+@if (ViewBag.UnclaimedCount > 0)
+{
+    <section class="notice">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <p>
+                        You have @ViewBag.UnclaimedCount Unclaimed Android Gifts <a style="text-decoration: none; font-weight: bold; background-color: #fff; border-radius: 5px; color: #F5a623; padding: 6px 15px; margin-left: 10px;" href="/GiftAndroid">Share</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+}
 <section>
     <div class="container gift-android-container">
 
@@ -14,16 +28,18 @@
                     <h2 class="gift-android-title">
                         How many GodSpeak gifts for Android would you like to purchase?
                     </h2>
-                    
-                        @using (Html.BeginForm("Purchase", "GiftAndroid", new { }, FormMethod.Post, new { role = "form", id = "purchased_android_form", @class = "gift-android-form" }))
-                        {
-                            <input id="gift-android-input" class="gift-android-input"/><label id="gift-price-label" class="gift-android-input-label">gifts for $0</label>
-                            <input data-val="true" data-val-required="InviteCode field is required." id="InviteCode" name="InviteCode" type="hidden" value="@ViewBag.InviteCode" />
-                            <input data-val="true" data-val-required="PayPalPaymentId field is required." id="PayPalPaymentId" name="PayPalPaymentId" type="hidden" />
-                            <input data-val="true" data-val-required="PayPalTransactionAmount field is required." id="PayPalTransactionAmount" name="PayPalTransactionAmount" type="hidden" />
-                            <input data-val="true" id="InviteCount" name="InviteCount" type="hidden" />
-                        }
-                    
+
+                    @using (Html.BeginForm("Purchase", "GiftAndroid", new {}, FormMethod.Post, new {role = "form", id = "purchased_android_form", @class = "gift-android-form"}))
+                    {
+                        <input id="gift-android-input" class="gift-android-input"/>
+                        <label style="font-size: 21px; font-weight: bold; margin-left: 10px;">gifts at $1.99</label>
+                        <input data-val="true" data-val-required="InviteCode field is required." id="InviteCode" name="InviteCode" type="hidden" value="@ViewBag.InviteCode"/>
+                        <input data-val="true" data-val-required="PayPalPaymentId field is required." id="PayPalPaymentId" name="PayPalPaymentId" type="hidden"/>
+                        <input data-val="true" data-val-required="PayPalTransactionAmount field is required." id="PayPalTransactionAmount" name="PayPalTransactionAmount" type="hidden"/>
+                        <input data-val="true" id="InviteCount" name="InviteCount" type="hidden"/>
+                    }
+                    <h3 id="gift-price-label" style="font-weight: bold; font-size: 30px;" class="gift-android-input-label">Your total is $0</h3>
+
                 </div>
 
 
@@ -32,119 +48,89 @@
         <div class="row">
             <div class="clearfix">
                 <div class="col-xs-12">
-                    <div id="purchase-android-gifts-button" class="gift-android-paypal-button">
+                    <div id="purchase-android-gifts-button" class="gift-android-paypal-button" style="margin-bottom: 20px">
 
                     </div>
+                    
+                    <p>Once purchased you will be able to share via email, text, or via copy and paste.</p>
                 </div>
             </div>
         </div>
 
-
+        
     </div>
 </section>
 
-<footer class="site-footer">
-    <div class="container">
-        <div class="row">
-            <div class="hidden-xs col-sm-6 col-md-offset-1 col-md-5">
-                <ul class="list-inline footer-links">
-                    <li>
-                        <div class="brand"></div>
-                    </li>
-                    <li><a href="#">About</a></li>
-                    <li>
-                        <span>|</span>
-                    </li>
-                    <li><a href="#">Blog</a></li>
-                </ul>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-5 text-right">
-                <p class="copyright">© GodSpeak 2017 All Rights Reserved</p>
-            </div>
-        </div>
-    </div>
-</footer>
 
 <script>
     var paymentAmount = 0;
     paypal.Button.render({
+            env: 'sandbox', //'production', // Or 'sandbox',
 
-        env: 'production',//'production', // Or 'sandbox',
+            client: {
+                sandbox: 'ARyw-UImuy-Gi2ZMfY67iAGcUPlNKla7DwRZeIC4pLQNdtyavxGJEQSoV04ne0dZt5EdhWRwXuX7GIFO',
+                production: 'AfkdoKBHLTlg3uLS7q1B0tnqlyTyAdqS4lwAiBkfEKrSjQumRZV2zZ22VlbXAC0y5O5WiB4nlevU9pdy'
+            },
 
-        client: {
-            sandbox: 'ARyw-UImuy-Gi2ZMfY67iAGcUPlNKla7DwRZeIC4pLQNdtyavxGJEQSoV04ne0dZt5EdhWRwXuX7GIFO',
-            production: 'AfkdoKBHLTlg3uLS7q1B0tnqlyTyAdqS4lwAiBkfEKrSjQumRZV2zZ22VlbXAC0y5O5WiB4nlevU9pdy'
+            style: {
+                size: 'responsive',
+                color: 'blue'
+            },
+
+
+            commit: false, // Show a 'Pay Now' button
+
+            payment: function(data, actions) {
+                return actions.payment.create({
+                    payment: {
+                        transactions: [
+                            {
+                                amount: { total: paymentAmount, currency: 'USD' }
+                            }
+                        ]
+                    }
+                });
+            },
+
+            onAuthorize: function(data, actions) {
+                return actions.payment.execute().then(function(payment) {
+                    console.log(payment);
+                    if (payment.state === "approved") {
+                        var paymentId = payment.id;
+                        var transactionAmount = payment.transactions[0].amount.total;
+
+                        $("#PayPalPaymentId").val(paymentId);
+                        $("#PayPalTransactionAmount").val(transactionAmount);
+                        $("#purchased_android_form").submit();
+                    } else {
+                        alert('Sorry, something went wrong trying to process your payment.');
+                    }
+                    // The payment is complete!
+                    // You can now show a confirmation message to the customer
+                });
+            }
+
         },
-
-        style: {
-            size: 'responsive',
-            color: 'blue'
-        },
+        '#purchase-android-gifts-button');
 
 
-        commit: false, // Show a 'Pay Now' button
-
-        payment: function (data, actions) {
-            return actions.payment.create({
-                    
-                payment: {
-                    transactions: [
-                        {
-                            amount: { total: paymentAmount, currency: 'USD' }
-                        }
-                    ]
-                }
-            });
-        },
-
-        onAuthorize: function(data, actions) {
-            return actions.payment.execute().then(function (payment) {
-                console.log(payment);
-                if (payment.state === "approved") {
-                    var paymentId = payment.id;
-                    var transactionAmount = payment.transactions[0].amount.total;
-
-                    $("#PayPalPaymentId").val(paymentId);
-                    $("#PayPalTransactionAmount").val(transactionAmount);
-                    $("#purchased_android_form").submit();
-                } else {
-                    alert('Sorry, something went wrong trying to process your payment.');
-                }
-                // The payment is complete!
-                // You can now show a confirmation message to the customer
-            });
-        }
-
-    }, '#purchase-android-gifts-button');
-
-        
-    $('#gift-android-input').keyup(function () {
+    $('#gift-android-input').keyup(function() {
         var numOfGifts = $('#gift-android-input').val();
         $('#InviteCount').val(numOfGifts);
 
-        var bundles = [];
-        @foreach (var bundle in ViewBag.Bundles)
-        {
-            @Html.Raw($"bundles[{bundle.NumberOfInvites}] = {bundle.Cost};\n")
-            
-        }
+        var price = 1.99;
 
-        var priceLevels = Object.keys(bundles);
-        var price = 0;
-        for (var i = 0; i < priceLevels.length; i++) {
-//            console.log('test:' + (numOfGifts <= priceLevels[i]));
-            if (Number(numOfGifts) <= Number(priceLevels[i])) {
-                price = bundles[priceLevels[i]] / priceLevels[i];
-                
-                break;
-            }
-        }
-        if (price === 0) {
-            price = bundles[bundles.length - 1] / priceLevels[priceLevels.length - 1];
-        }
+
         console.log(price);
         paymentAmount = Math.round(price * numOfGifts * 100) / 100;
-        $('#gift-price-label').text('gifts for $' + paymentAmount);
+
+        var amountStr = paymentAmount.toString();
+        if (amountStr.indexOf('.') === -1)
+            amountStr += '.00';
+        else if (amountStr.split('.')[1].length === 1)
+            amountStr += '0';
+
+        $('#gift-price-label').text('Your total is $' + amountStr);
     });
 
 

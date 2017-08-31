@@ -1,6 +1,6 @@
 ﻿@{
 
-    Layout = "~/Views/Shared/_PlainLayout.cshtml";
+    Layout = "~/Views/Shared/_NoHeaderLayout.cshtml";
 }
 
 @if (!String.IsNullOrEmpty(ViewBag.NotificationMessage)){ 
@@ -9,7 +9,7 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
-                <p>@ViewBag.NotificationMessage</p>
+                <p>You have @ViewBag.GiftsUnclaimedCount Unclaimed Android Gifts</p>
             </div>
         </div>
     </div>
@@ -23,44 +23,18 @@
         <div class="row">
             <div class="clearfix">
                 <div class="col-xs-12">
-                    @if (ViewBag.GiftsUnclaimedCount > 0)
-                    {
-                        <h2 class="gift-android-title">
-                            You have purchased @ViewBag.GiftsUnclaimedCount GodSpeak gifts for Android that remain unclaimed.
-                        </h2>
-                    }
-                    else
-                    {
-                        <br />
-                        <h2 class="gift-android-title">
-                            You have not purchased any GodSpeak gifts for Android.
-                        </h2>
-                        <br/><br /><br/>
-                    }
-                    @if (ViewBag.GiftsUnclaimedCount > 0)
-                    {
-                        <p class="gift-android-paragraph">After dowloading GodSpeak from the PlayStore your friends can use this Gift Code to use GodSpeak:</p>
+                    
+                    <h2 class="gift-android-title">
+                        Thank you for your purchase!
+                    </h2>
+                    
+                   
+                    <p class="gift-android-paragraph">
+                        Android users will be able to use your Gift Code to claim their gift from you. You can share your Android Gift Code to multiple users in the following ways:
+                    </p>
 
-                        <div class="input-group gift-android-input-group">
-
-                            <input type="text"
-                                   class="form-control gift-android-invite-code"
-                                   id="share-link"
-                                   aria-describedby="basic-addon3"
-                                   disabled
-                                   value="@ViewBag.InviteCode">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default btn-copy gift-android-copy-btn"
-                                        data-clipboard-target="#share-link"
-                                        data-toggle="popover"
-                                        data-placement="bottom"
-                                        data-content="Copied!"
-                                        type="button">
-                                    <span class="sr-only">Copy to Clipboard</span>
-                                </button>
-                            </span>
-                        </div>
-                    }
+                       
+                    
                 </div>
                 
 
@@ -69,26 +43,30 @@
         <div class="row">
             <div class="clearfix">
                 <div class="col-xs-12">
-                    @if (ViewBag.GiftsUnclaimedCount > 0)
-                    {
-                        <a href="/GiftAndroid/Purchase" class="btn btn-lg btn-primary gift-android-btn-primary">
-                            Purchase More Android Gifts
-                        </a>
-                    }
-                    else
-                    {
-                        <a href="/GiftAndroid/Purchase" class="btn btn-lg btn-primary gift-android-btn-primary">
-                            Purchase Android Gifts
-                        </a>
-                        <br /><br /><br />
-                    }
-
-                    @if (ViewBag.GiftsUnclaimedCount > 0)
-                    {
-                        <a class="btn btn-secondary gift-android-btn-secondary" href="mailto:?body=@ViewBag.EmailBody">
-                            Share Gift Code via Email
-                        </a>
-                    }
+                   
+                        
+                    
+                    <a id="TextMessageButton" class="btn btn-secondary gift-android-btn-secondary" href="sms:?body=@ViewBag.EmailBody">
+                        Share Gift Code via Text
+                    </a>
+                   
+                    <a class="btn btn-secondary gift-android-btn-secondary" href="mailto:?body=@ViewBag.EmailBody">
+                        Share Gift Code via Email
+                    </a>
+                    <span class="input-group-btn">
+                        <button class="btn btn-secondary gift-android-btn-secondary"
+                                data-clipboard-target="#share-link"
+                                data-toggle="popover"
+                                data-placement="bottom"
+                                data-content="Copied!"
+                                type="button">Copy and Paste Gift Code
+                            <span class="sr-only">Copy to Clipboard</span>
+                        </button>
+                    </span>
+                    <a href="/GiftAndroid/Purchase" class="btn btn-lg btn-primary gift-android-btn-primary">
+                        Purchase More Android Gifts
+                    </a>
+                    
 
                 </div>
             </div>
@@ -97,26 +75,15 @@
 
     </div>
 </section>
+<script language="javascript">
+    $(document).ready(function() {
+        var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        
+        if (iOS) {
+            var origHref = $("#TextMessageButton").attr('href');
+            $("#TextMessageButton").attr('href', origHref.split('?').join('&'));
+        }
 
-<footer class="site-footer">
-    <div class="container">
-        <div class="row">
-            <div class="hidden-xs col-sm-6 col-md-offset-1 col-md-5">
-                <ul class="list-inline footer-links">
-                    <li>
-                        <div class="brand"></div>
-                    </li>
-                    <li><a href="#">About</a></li>
-                    <li>
-                        <span>|</span>
-                    </li>
-                    <li><a href="#">Blog</a></li>
-                </ul>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-5 text-right">
-                <p class="copyright">© GodSpeak 2017 All Rights Reserved</p>
-            </div>
-        </div>
-    </div>
-</footer>
+    });
+</script>
 

@@ -73,6 +73,7 @@ namespace GodSpeak.Web.Controllers
             var userId = User.Identity.GetUserId();
             var profile = await _profileRepository.GetByUserId(userId); ViewBag.InviteCode = profile.Code;
             ViewBag.InviteCode = profile.Code;
+            ViewBag.UnclaimedCount = profile.InviteBalance;
             ViewBag.Bundles = (await _inviteRepository.Bundles()).OrderBy(b => b.NumberOfInvites);
             return View();
         }
