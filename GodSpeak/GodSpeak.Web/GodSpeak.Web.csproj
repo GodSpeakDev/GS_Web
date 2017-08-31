@@ -308,6 +308,7 @@
     <Content Include="Content\Images\app-store%403x.png" />
     <Content Include="Content\Images\app-store.png" />
     <Content Include="Content\Images\appstore_badge.png" />
+    <Content Include="Content\Images\appstore_steps.png" />
     <Content Include="Content\Images\copy-icon%402x.png" />
     <Content Include="Content\Images\copy-icon%403x.png" />
     <Content Include="Content\Images\copy-icon.png" />
@@ -329,6 +330,8 @@
     <Content Include="Content\Images\iphone-screenshot.png" />
     <Content Include="Content\Images\iTunes_drop_down1.png" />
     <Content Include="Content\Images\iTunes_drop_down2.png" />
+    <Content Include="Content\Images\itunes_gift_small.png" />
+    <Content Include="Content\Images\itunes_share_small.png" />
     <Content Include="Content\Images\oval%402x.png" />
     <Content Include="Content\Images\oval%403x.png" />
     <Content Include="Content\Images\oval.png" />
