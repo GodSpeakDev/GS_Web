@@ -57,8 +57,14 @@ namespace GodSpeak.Web.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            var vm = new LoginViewModel();
+            if (returnUrl.Contains("?"))
+            {
+                string emailAddress = HttpUtility.ParseQueryString(returnUrl.Split('?')[1]).Get("emailAddress");
+                vm.Email = emailAddress;
+            }
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return View(vm);
         }
 
         //
