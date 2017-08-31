@@ -327,6 +327,8 @@
     <Content Include="Content\Images\iphone-screenshot%402x.png" />
     <Content Include="Content\Images\iphone-screenshot%403x.png" />
     <Content Include="Content\Images\iphone-screenshot.png" />
+    <Content Include="Content\Images\iTunes_drop_down1.png" />
+    <Content Include="Content\Images\iTunes_drop_down2.png" />
     <Content Include="Content\Images\oval%402x.png" />
     <Content Include="Content\Images\oval%403x.png" />
     <Content Include="Content\Images\oval.png" />
