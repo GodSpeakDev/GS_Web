@@ -477,6 +477,8 @@
     <Content Include="Views\GiftAndroid\Index.cshtml" />
     <Content Include="Views\GiftAndroid\Purchase.cshtml" />
     <Content Include="Views\GiftiTunes\Desktop.cshtml" />
+    <Content Include="Views\GiftiTunes\FromAndroid.cshtml" />
+    <Content Include="Views\Shared\_NoHeaderLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
