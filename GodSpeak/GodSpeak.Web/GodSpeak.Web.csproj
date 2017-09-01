@@ -411,6 +411,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="App_Data\country-codes.csv" />
+    <Content Include="App_Data\no_postal_code_countries.json" />
     <None Include="Properties\PublishProfiles\givegodspeak - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\givegodspeak - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\godspeak-staging - FTP.pubxml" />

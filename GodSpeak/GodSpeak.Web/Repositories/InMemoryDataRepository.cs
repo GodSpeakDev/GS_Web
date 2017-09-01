@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Caching;
@@ -8,6 +9,7 @@ using System.Web.Helpers;
 using GodSpeak.Web.Models;
 using GodSpeak.Web.Util;
 using Microsoft.Owin.Security.Provider;
+using Newtonsoft.Json;
 
 namespace GodSpeak.Web.Repositories
 {
@@ -15,6 +17,8 @@ namespace GodSpeak.Web.Repositories
     {
         Dictionary<string, BibleVerse> VerseCache { get; }
         Dictionary<string, PostalCodeGeoLocation> PostalCodeGeoCache { get; }
+
+        Dictionary<string, NoPostalCodeGeoLocation> NoPostalCodeGeoCache { get; }
 
         Dictionary<string, string> CountryCodeNameMap { get; }
     }
@@ -28,6 +32,8 @@ namespace GodSpeak.Web.Repositories
         private const string VerseCacheKey = "verse_cache";
 
         private const string ZipGeoCacheKey = "zip_geo_cache";
+
+        private const string NoPostalGeoCacheKey = "no_postal_code_geo_cache";
 
         public Dictionary<string, BibleVerse> VerseCache
         {
@@ -49,6 +55,17 @@ namespace GodSpeak.Web.Repositories
                 if (!cache.Contains(ZipGeoCacheKey))
                     LoadPostalCodeGeoLocations();
                 return cache[ZipGeoCacheKey] as Dictionary<string, PostalCodeGeoLocation>;   
+            }
+        }
+
+        public Dictionary<string, NoPostalCodeGeoLocation> NoPostalCodeGeoCache
+        {
+            get
+            {
+                ObjectCache cache = MemoryCache.Default;
+                if (!cache.Contains(NoPostalGeoCacheKey))
+                    LoadNoPostalCodeGeoLocations();
+                return cache[NoPostalGeoCacheKey] as Dictionary<string, NoPostalCodeGeoLocation>;
             }
         }
         private readonly Dictionary<string, string> _countryCodeNameMap = new Dictionary<string, string>();
@@ -125,6 +142,33 @@ namespace GodSpeak.Web.Repositories
                     throw new Exception($"Error parsing code/name line: {line}");
                 }
             }
+        }
+
+        public void LoadNoPostalCodeGeoLocations()
+        {
+            ObjectCache cache = MemoryCache.Default;
+            var _noPostalCodeGeoCache = new Dictionary<string, NoPostalCodeGeoLocation>();
+
+            var policy = new CacheItemPolicy();
+            policy.Priority = CacheItemPriority.NotRemovable;
+
+            var jsonText = File.ReadAllText(AppDataPath + "no_postal_code_countries.json");
+
+            var entries = JsonConvert.DeserializeObject<List<NoPostalCodeGeoLocation>>(jsonText);
+            foreach (var loc in entries)
+            {
+                var key = CountryCodeNameMap.Keys.FirstOrDefault(k => CountryCodeNameMap[k] == loc.Country);
+                if (key != null)
+                {
+                    _noPostalCodeGeoCache[key] = loc;
+                }
+                else
+                {
+                    Debug.WriteLine("Can't find:" + loc.Country);
+                }
+            }
+
+            cache.Set(NoPostalGeoCacheKey, _noPostalCodeGeoCache, policy);
         }
 
         public void LoadPostalCodeGeoLocations()

@@ -29,6 +29,7 @@ namespace GodSpeak.Web.Controllers
         public HttpResponseMessage Countries()
         {
             if (_countryCodes == null)
+            {
                 _countryCodes =
                     _inMemoryDataRepository.PostalCodeGeoCache.Values.Select(pc => pc.CountryCode)
                         .Distinct()
@@ -37,9 +38,19 @@ namespace GodSpeak.Web.Controllers
                             Code = c,
                             Title = _inMemoryDataRepository.CountryCodeNameMap[c]
                         }).ToList();
+                var noPostalCodes = _inMemoryDataRepository.NoPostalCodeGeoCache.Keys;
+                foreach (var entry in noPostalCodes)
+                {
+                    _countryCodes.Add(new CountryCodeApiObject()
+                    {
+                        Code = entry,
+                        Title = _inMemoryDataRepository.NoPostalCodeGeoCache[entry].Country
+                    });
+                }
+            }
 
 
-            return CreateResponse(HttpStatusCode.OK, "Success", "Country Codes Retrieved", _countryCodes);
+            return CreateResponse(HttpStatusCode.OK, "Success", "Country Codes Retrieved", _countryCodes.OrderBy(c => c.Title));
         }
 
         [HttpGet]
