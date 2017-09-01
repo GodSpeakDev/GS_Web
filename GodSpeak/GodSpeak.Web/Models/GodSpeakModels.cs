@@ -63,7 +63,7 @@ namespace GodSpeak.Web.Models
         [Required]
         public string CountryCode { get; set; }
 
-        [Required]
+        
         public string PostalCode { get; set; }
 
         public string Token { get; set; }

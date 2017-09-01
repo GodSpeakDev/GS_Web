@@ -266,6 +266,10 @@
     <Compile Include="Migrations\201707281913226_PayPalTransactionHasInviteCount.Designer.cs">
       <DependentUpon>201707281913226_PayPalTransactionHasInviteCount.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709011711555_PostalCodeNotRequired.cs" />
+    <Compile Include="Migrations\201709011711555_PostalCodeNotRequired.Designer.cs">
+      <DependentUpon>201709011711555_PostalCodeNotRequired.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -537,6 +541,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707281913226_PayPalTransactionHasInviteCount.resx">
       <DependentUpon>201707281913226_PayPalTransactionHasInviteCount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709011711555_PostalCodeNotRequired.resx">
+      <DependentUpon>201709011711555_PostalCodeNotRequired.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

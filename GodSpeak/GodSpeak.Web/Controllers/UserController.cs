@@ -141,7 +141,7 @@ namespace GodSpeak.Web.Controllers
             if (!ModelState.IsValid)
                 return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
                     $"The request was missing valid data:\n {string.Join("\n", GetModelErrors())}");
-
+            
             if (registerUserObject.Platform == "android" && string.IsNullOrEmpty(registerUserObject.InviteCode))
                 return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
                     "Request is missing ReferringInviteCode");
@@ -166,7 +166,8 @@ namespace GodSpeak.Web.Controllers
 
             if (
                 !_inMemoryDataRepo.PostalCodeGeoCache.ContainsKey(
-                    $"{registerUserObject.CountryCode}-{registerUserObject.PostalCode}"))
+                    $"{registerUserObject.CountryCode}-{registerUserObject.PostalCode}")
+                    && !_inMemoryDataRepo.NoPostalCodeGeoCache.ContainsKey(registerUserObject.CountryCode))
                 return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
                     "Country and/or Postal code is invalid.");
 
@@ -276,7 +277,14 @@ namespace GodSpeak.Web.Controllers
 
 
 
-            var geoPoint = _inMemoryDataRepo.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
+            var geoPoint =
+                (_inMemoryDataRepo.PostalCodeGeoCache.ContainsKey($"{profile.CountryCode}-{profile.PostalCode}"))
+                    ? _inMemoryDataRepo.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"]
+                    : new PostalCodeGeoLocation()
+                    {
+                        Latitude = _inMemoryDataRepo.NoPostalCodeGeoCache[profile.CountryCode].Latitude,
+                        Longitude = _inMemoryDataRepo.NoPostalCodeGeoCache[profile.CountryCode].Longitude,
+                    };
             return CreateResponse(HttpStatusCode.OK, "Registration Success", "User was successfully registered",
                 UserApiObject.FromModel(user, profile, geoPoint));
         }
@@ -359,7 +367,14 @@ namespace GodSpeak.Web.Controllers
             var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
 
             var profile = await _profileRepo.GetByUserId(user.Id);
-            var geoPoint = _inMemoryDataRepo.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
+            var geoPoint =
+                (_inMemoryDataRepo.PostalCodeGeoCache.ContainsKey($"{profile.CountryCode}-{profile.PostalCode}"))
+                    ? _inMemoryDataRepo.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"]
+                    : new PostalCodeGeoLocation()
+                    {
+                        Latitude = _inMemoryDataRepo.NoPostalCodeGeoCache[profile.CountryCode].Latitude,
+                        Longitude = _inMemoryDataRepo.NoPostalCodeGeoCache[profile.CountryCode].Longitude,
+                    };
             return CreateResponse(HttpStatusCode.OK, "User Profile", "User Profile Retrieved Successfully",
                 UserApiObject.FromModel(user, profile, geoPoint));
         }
@@ -413,7 +428,14 @@ namespace GodSpeak.Web.Controllers
 
 
 
-                var geoPoint = _inMemoryDataRepo.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
+                var geoPoint =
+                (_inMemoryDataRepo.PostalCodeGeoCache.ContainsKey($"{profile.CountryCode}-{profile.PostalCode}"))
+                    ? _inMemoryDataRepo.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"]
+                    : new PostalCodeGeoLocation()
+                    {
+                        Latitude = _inMemoryDataRepo.NoPostalCodeGeoCache[profile.CountryCode].Latitude,
+                        Longitude = _inMemoryDataRepo.NoPostalCodeGeoCache[profile.CountryCode].Longitude,
+                    };
 
 
                 return CreateResponse(HttpStatusCode.OK, "User Profile", "User photo upload successfully",
@@ -447,7 +469,8 @@ namespace GodSpeak.Web.Controllers
                                    "Request is missing current password for changing password");
             if (
                 !_inMemoryDataRepo.PostalCodeGeoCache.ContainsKey(
-                    $"{updateRequestObj.CountryCode}-{updateRequestObj.PostalCode}"))
+                    $"{updateRequestObj.CountryCode}-{updateRequestObj.PostalCode}")
+                    && !_inMemoryDataRepo.NoPostalCodeGeoCache.ContainsKey(updateRequestObj.CountryCode))
                 return CreateResponse(HttpStatusCode.BadRequest, "Registration Failure",
                     "Country and/or Postal code is invalid.");
 
@@ -520,7 +543,14 @@ namespace GodSpeak.Web.Controllers
                 CreateResponse(HttpStatusCode.InternalServerError, "User Update Failure",
                     "Something went wrong trying to update the user in the database", ex);
             }
-            var geoPoint = _inMemoryDataRepo.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"];
+            var geoPoint =
+                (_inMemoryDataRepo.PostalCodeGeoCache.ContainsKey($"{profile.CountryCode}-{profile.PostalCode}"))
+                    ? _inMemoryDataRepo.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"]
+                    : new PostalCodeGeoLocation()
+                    {
+                        Latitude = _inMemoryDataRepo.NoPostalCodeGeoCache[profile.CountryCode].Latitude,
+                        Longitude = _inMemoryDataRepo.NoPostalCodeGeoCache[profile.CountryCode].Longitude,
+                    };
             return CreateResponse(HttpStatusCode.OK, "User Update Success", "User was successfully updated",
                 UserApiObject.FromModel(user, profile, geoPoint));
         }

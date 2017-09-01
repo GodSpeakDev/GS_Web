@@ -74,10 +74,17 @@ namespace GodSpeak.Web.Repositories
 
         private void UpdateImpactDayPoints(string postalCode, string countryCode, ImpactDay impactDay)
         {
-            var geoPoint = _memoryDataRepository.PostalCodeGeoCache[$"{countryCode}-{postalCode}"];
+            var point =
+                (_memoryDataRepository.PostalCodeGeoCache.ContainsKey($"{countryCode}-{postalCode}"))
+                    ? _memoryDataRepository.PostalCodeGeoCache[$"{countryCode}-{postalCode}"]
+                    : new PostalCodeGeoLocation()
+                    {
+                        Latitude = _memoryDataRepository.NoPostalCodeGeoCache[countryCode].Latitude,
+                        Longitude = _memoryDataRepository.NoPostalCodeGeoCache[countryCode].Longitude,
+                    };
             if (impactDay.Points == null)
                 impactDay.Points = new List<ImpactDayGeoPoint>();
-            impactDay.Points.Add(new ImpactDayGeoPoint() {Latitude = geoPoint.Latitude, Longitude = geoPoint.Longitude});
+            impactDay.Points.Add(new ImpactDayGeoPoint() {Latitude = point.Latitude, Longitude = point.Longitude});
            
         }
 
@@ -111,8 +118,13 @@ namespace GodSpeak.Web.Repositories
             foreach (var profile in profilesInNetwork)
             {
                 var point =
-                            _memoryDataRepository.PostalCodeGeoCache[
-                                $"{profile.CountryCode}-{profile.PostalCode}"];
+                (_memoryDataRepository.PostalCodeGeoCache.ContainsKey($"{profile.CountryCode}-{profile.PostalCode}"))
+                    ? _memoryDataRepository.PostalCodeGeoCache[$"{profile.CountryCode}-{profile.PostalCode}"]
+                    : new PostalCodeGeoLocation()
+                    {
+                        Latitude = _memoryDataRepository.NoPostalCodeGeoCache[profile.CountryCode].Latitude,
+                        Longitude = _memoryDataRepository.NoPostalCodeGeoCache[profile.CountryCode].Longitude,
+                    };
                 var numOfDaysForProfile = (DateTime.Now.Date - profile.DateRegistered.Date).TotalDays;
                 scriptureCount += profile.MessageDayOfWeekSettings.First().NumOfMessages * (int)numOfDaysForProfile;
 
@@ -207,12 +219,18 @@ namespace GodSpeak.Web.Repositories
                     {
                         Debug.WriteLine($"Bad Country/Postal Code combo{pointKey}");
                     }
-                    if (networkUser.DateRegistered.Date < userProfile.DateRegistered.Date && _memoryDataRepository.PostalCodeGeoCache.ContainsKey(pointKey))
+                    if (networkUser.DateRegistered.Date < userProfile.DateRegistered.Date && (_memoryDataRepository.PostalCodeGeoCache.ContainsKey(pointKey) || _memoryDataRepository.NoPostalCodeGeoCache.ContainsKey(networkUser.CountryCode)) )
                     {
                         var firstDay = days.First();
-                        var point =
-                            _memoryDataRepository.PostalCodeGeoCache[
-                                pointKey];
+
+                        var point =  (_memoryDataRepository.PostalCodeGeoCache.ContainsKey(pointKey))
+                           ? _memoryDataRepository.PostalCodeGeoCache[pointKey]
+                           : new PostalCodeGeoLocation()
+                           {
+                               Latitude = _memoryDataRepository.NoPostalCodeGeoCache[networkUser.CountryCode].Latitude,
+                               Longitude = _memoryDataRepository.NoPostalCodeGeoCache[networkUser.CountryCode].Longitude,
+                           };
+                        
 
                         if(firstDay.Points.All(p => p.ProfileId != networkUser.ApplicationUserProfileId))
                             firstDay.Points.Add(new ImpactDayGeoPoint()
@@ -223,11 +241,15 @@ namespace GodSpeak.Web.Repositories
                             }
                        );
                     }
-                    if (networkUser.DateRegistered.Date == currentDate.Date && _memoryDataRepository.PostalCodeGeoCache.ContainsKey(pointKey) )
+                    if (networkUser.DateRegistered.Date == currentDate.Date && (_memoryDataRepository.PostalCodeGeoCache.ContainsKey(pointKey) || _memoryDataRepository.NoPostalCodeGeoCache.ContainsKey(networkUser.CountryCode)))
                     {
-                        var point =
-                            _memoryDataRepository.PostalCodeGeoCache[
-                                pointKey];
+                        var point = (_memoryDataRepository.PostalCodeGeoCache.ContainsKey(pointKey))
+                           ? _memoryDataRepository.PostalCodeGeoCache[pointKey]
+                           : new PostalCodeGeoLocation()
+                           {
+                               Latitude = _memoryDataRepository.NoPostalCodeGeoCache[networkUser.CountryCode].Latitude,
+                               Longitude = _memoryDataRepository.NoPostalCodeGeoCache[networkUser.CountryCode].Longitude,
+                           };
                         impactDay.Points.Add(new ImpactDayGeoPoint()
                             {
                                 Latitude = point.Latitude,
