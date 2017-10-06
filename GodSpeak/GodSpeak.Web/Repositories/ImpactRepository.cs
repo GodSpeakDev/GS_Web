@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using GodSpeak.Web.Extensions;
 using GodSpeak.Web.Models;
 using GodSpeak.Web.Util;
+using Microsoft.Owin.Logging;
 using WebGrease.Css.Extensions;
 
 namespace GodSpeak.Web.Repositories
@@ -154,6 +155,7 @@ namespace GodSpeak.Web.Repositories
 
         public async Task<List<ImpactDay>> GetImpactForUserId(string userId)
         {
+            
             var user = await _userManager.FindByIdAsync(userId);
             var userProfile = await _profileRepository.GetByUserId(userId);
 
@@ -269,6 +271,7 @@ namespace GodSpeak.Web.Repositories
             return days;
         }
 
+       
         private async Task addChildProfiles(List<ApplicationUserProfile> profilesInNetwork, ApplicationUser applicationUser)
         {
             if (applicationUser == null)
@@ -276,9 +279,11 @@ namespace GodSpeak.Web.Repositories
             var childProfiles = GetChildProfiles(applicationUser.Email);
             foreach (var childProfile in childProfiles)
             {
-                if(profilesInNetwork.All(p => p != childProfile))
+                if (profilesInNetwork.All(p => p.ApplicationUserProfileId != childProfile.ApplicationUserProfileId))
+                {
                     profilesInNetwork.Add(childProfile);
-                await addChildProfiles(profilesInNetwork, (await _userManager.FindByIdAsync(childProfile.UserId)));
+                    await addChildProfiles(profilesInNetwork, (await _userManager.FindByIdAsync(childProfile.UserId)));
+                }
             }
         }
 

@@ -46,19 +46,20 @@
                    
                         
                     
-                    <a id="TextMessageButton" class="btn btn-secondary gift-android-btn-secondary" href="sms:?body=@ViewBag.EmailBody">
+                    <a id="TextMessageButton" class="btn btn-secondary gift-android-btn-secondary" href="sms:?body=@ViewBag.TextBody">
                         Share Gift Code via Text
                     </a>
                    
-                    <a class="btn btn-secondary gift-android-btn-secondary" href="mailto:?body=@ViewBag.EmailBody">
+                    <a id="EmailMessageButton" class="btn btn-secondary gift-android-btn-secondary" href="mailto:?body=@ViewBag.EmailBody">
                         Share Gift Code via Email
                     </a>
+                    
                     <span class="input-group-btn">
-                        <button class="btn btn-secondary gift-android-btn-secondary"
-                                data-clipboard-target="#share-link"
-                                data-toggle="popover"
-                                data-placement="bottom"
-                                data-content="Copied!"
+                        <button class="btn btn-secondary gift-android-btn-secondary btn-cut-paste"
+                               data-clipboard-target="#share-link"
+                                    data-toggle="popover"
+                                    data-placement="bottom"
+                                    data-content="Copied!"
                                 type="button">Copy and Paste Gift Code
                             <span class="sr-only">Copy to Clipboard</span>
                         </button>
@@ -67,6 +68,12 @@
                         Purchase More Android Gifts
                     </a>
                     
+                    <input type="text"
+                           style="opacity: 0;"
+                           class="form-control"
+                           id="share-link"
+                           aria-describedby="basic-addon3"
+                           value=@ViewBag.InviteCode>
 
                 </div>
             </div>
@@ -78,11 +85,33 @@
 <script language="javascript">
     $(document).ready(function() {
         var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        
+        var origHref = $("#TextMessageButton").attr('href');
         if (iOS) {
-            var origHref = $("#TextMessageButton").attr('href');
+            
             $("#TextMessageButton").attr('href', origHref.split('?').join('&'));
+            
+        } else {
+            
+            
+
+            var origEmailHref = $('#EmailMessageButton').attr('href');
+            $("#EmailMessageButton").attr('href', origEmailHref.split('\\n').join('%0D%0A'));
         }
+
+        // CLIPBOARD
+        var clipboard = new Clipboard('.btn-cut-paste');
+        
+        clipboard.on('success', function (e) {
+            e.clearSelection();
+        });
+
+        $(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+
+        $('.input-group-btn').mouseout(function () {
+            $(this).find(".popover").remove();
+        });
 
     });
 </script>
