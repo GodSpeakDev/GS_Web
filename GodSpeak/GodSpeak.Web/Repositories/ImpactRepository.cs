@@ -129,21 +129,21 @@ namespace GodSpeak.Web.Repositories
                 var numOfDaysForProfile = (DateTime.Now.Date - profile.DateRegistered.Date).TotalDays;
                 scriptureCount += profile.MessageDayOfWeekSettings.First().NumOfMessages * (int)numOfDaysForProfile;
 
-                if(!impactDay.Points.Any(p => p.Latitude == point.Latitude && p.Longitude == point.Longitude))
-                {
+//                if(!impactDay.Points.Any(p => p.Latitude == point.Latitude && p.Longitude == point.Longitude))
+//                {
                     impactDay.Points.Add(new ImpactDayGeoPoint()
                     {
                         Latitude = point.Latitude,
                         Longitude = point.Longitude,
                         Count = 1
                     });
-                }
-                else
-                {
-                    impactDay.Points.First(p => p.Latitude == point.Latitude && p.Longitude == point.Longitude).Count +=
-                        1;
-                }
-                
+//                }
+//                else
+//                {
+//                    impactDay.Points.First(p => p.Latitude == point.Latitude && p.Longitude == point.Longitude).Count +=
+//                        1;
+//                }
+//                
                 
             }
             for (int i = 0; i <= scriptureCount; i++)

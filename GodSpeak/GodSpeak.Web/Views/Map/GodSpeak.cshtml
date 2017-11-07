@@ -25,7 +25,7 @@
 
                 </div>
                 <div class="navbar-left">
-                    <img src="/Content/Images/gift_icon.png" class="impact_icon" /><div class="impact_count">@ViewBag.GiftsCount</div><div class="impact_label gift_count">Gifts</div> <img class="impact_icon scripture_count" src="/Content/Images/scripture_icon.png" /><div class="impact_count">@ViewBag.DeliveredMessagesCount</div><div class="impact_label">Scriptures Delivered</div>
+                    <img src="/Content/Images/gift_icon.png" class="impact_icon" /><div class="impact_count">@ViewBag.GiftsCount</div><div class="impact_label gift_count">Gifts Given</div> <img class="impact_icon scripture_count" src="/Content/Images/scripture_icon.png" /><div class="impact_count">@ViewBag.DeliveredMessagesCount</div><div class="impact_label">Scriptures Delivered</div>
                 </div>
             </div>
 
@@ -68,8 +68,9 @@
     var userPoint ={'lat':39.8283, 'lng':98.5795};
 
     function initMarkers(map, image) {
+        var markers = [];
         var big_image = {
-            url: '/Content/Images/oval@2x.png'
+            url: '/Content/Images/oval.png'
         };
         // Markers
 
@@ -82,11 +83,17 @@
                     color: 'white',
                     fontSize: '20px'
                 },
-                icon: image
-            });
+                icon: image,
+                
+        });
+            markers.push(marker);
+            
         }
-
-        map.setZoom(5);
+        var markerCluster = new MarkerClusterer(map, markers,
+                { textColor:'white', styles:[{textColor:'#ffffff', textSize:16, height:40, width:40, url:'/Content/Images/oval@2x.png' }]}
+            );
+        
+        map.setZoom(3);
     }
 
     function getCenter() {
@@ -100,7 +107,7 @@
 <!-- Bootstrap CDN -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-
+<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhaJp3YK3XVbWGbZ41ojJPQaiAHLkIRVM&callback=initMap" async
         defer></script>
 @Scripts.Render("~/bundles/godspeak_portal")

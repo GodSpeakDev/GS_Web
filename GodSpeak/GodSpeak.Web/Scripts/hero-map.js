@@ -15,22 +15,24 @@ function initMap() {
 
 
     var image = {
-        url: '/Content/Images/oval.png'
+        url: '/Content/Images/oval.png',
+        
+
     };
 
     initMarkers(map, image);
 
 }
-
-var colorGeometry = '#D7D3C4';
-var colorTextFill = '#999999';
-var colorTextStroke = '#f5f5f5';
-var colorRoads = '#B99882';
-var colorParks = '#A8AC96';
-var colorSmallRoads = '#999999';
-var colorPOI = '#D2B48C';
-var colorWater = '#B9DBFF';
-
+//
+//var colorGeometry = '#D7D3C4';
+//var colorTextFill = '#999999';
+//var colorTextStroke = '#f5f5f5';
+//var colorRoads = '#B99882';
+//var colorParks = '#A8AC96';
+//var colorSmallRoads = '#999999';
+//var colorPOI = '#D2B48C';
+//var colorWater = '#B9DBFF';
+//
 var styles = [
     {
         elementType: 'geometry',

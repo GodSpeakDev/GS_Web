@@ -432,6 +432,11 @@
         var points = @Html.Raw(ViewBag.PointsJS);
     var userPoint = @Html.Raw(ViewBag.UserPoint);
     function initMarkers(map, image) {
+        var markers = [];
+        var big_image = {
+            url: '/Content/Images/oval.png'
+        };
+        
         // Markers
 
         for (var i = 0; i < points.length; i++) {
@@ -439,13 +444,21 @@
                 position: points[i].point,
                 map: map,
                 label: {
-                    text: points[i].label === '0'?' ':points[i].label,
+                    text: ' ',
                     color: 'white',
                     fontSize: '20px'
                 },
-                icon: image
+                icon: image,
+                
             });
+            markers.push(marker);
+            
         }
+        var markerCluster = new MarkerClusterer(map, markers,
+                { textColor:'white', styles:[{textColor:'#ffffff', textSize:16, height:40, width:40, url:'/Content/Images/oval@2x.png' }]}
+            );
+
+        map.setZoom(5);
 
         
     }

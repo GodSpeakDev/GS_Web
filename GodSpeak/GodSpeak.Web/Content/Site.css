@@ -433,7 +433,7 @@ body {
     margin-top: 8px;
 }
 .impact_label.gift_count {
-    margin-top: 16px;
+/*    margin-top: 16px;*/
 }
 .gift-android-container {
     text-align: center;
@@ -497,12 +497,20 @@ body {
     font-weight: bold;
 }
 /* Extra Small Devices, Phones */
-@media only screen and (min-width: 480px) {
+@media only screen and (min-width: 300px) {
   .panel-share {
     right: 8.33333333%;
-    margin-right: 15px; } }
+    margin-right: 15px; } 
+
+  .impact_icon {
+      display: none;
+  }
+}
 /* Small Devices, Tablets */
 @media only screen and (min-width: 768px) {
+    .impact_icon {
+      display: block;
+  }
   .copyright {
     text-align: right;
     width: 100%;
