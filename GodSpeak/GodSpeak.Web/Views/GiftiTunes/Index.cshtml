@@ -1,9 +1,19 @@
 ﻿
 @{
 
-    Layout = "~/Views/Shared/_NoHeaderLayout.cshtml";
+    Layout = "~/Views/Shared/_PlainLayout.cshtml";
 }
 
+
+<section class="notice">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <p>You must have iTunes downloaded and installed on your laptop or desktop. <a style="text-decoration: none; font-weight: bold" href="https://www.apple.com/itunes/download/">Click here to Get iTunes</a></p>
+            </div>
+        </div>
+    </div>
+</section>
 
 <section class="purchase-steps">
     <div class="container">
@@ -11,31 +21,217 @@
         <!-- Step #1 -->
         <div class="row">
             <div class="purchase-step clearfix">
-                <div class="col-xs-12 col-sm-12 clearfix">
+                <div class="col-xs-12 col-sm-6 clearfix">
                     <p>
-                        The blue button below will take you to GodSpeak in the Apple App Store.
-                    </p>
-                    <p>
-                        Once there, you only have to tap two buttons before entering the email(s) of the people you want to gift!
-                    </p>
-                    <img src="/Content/Images/appstore_steps.png" width="100%" style="max-width: 326px;" />
-                    <p>
-                        <br />1) Tap the blue button below
-                        <br />2) After being taken to GodSpeak in the App Store, tap<img src="/Content/Images/itunes_share_small.png" style="vertical-align: bottom; margin: 0 10px;" />in the upper right
-                        <br />3) On the next screen,Tap<img src="/Content/Images/itunes_gift_small.png" style="vertical-align: bottom; margin: 0 10px;" />in middle-bottom
-                        <br />4) Enter as many email addresses as you’d like, and follow iTunes instructions to complete your gift.
-                    </p>
-                    <p>
-                        <br />
-                        <a href="https://itunes.apple.com/us/app/godspeak/id1228338515?mt=8" target="_blank" class="btn btn-lg btn-primary" style="text-align: center; width: 100%; font-size: 18px; letter-spacing: 0;">Go to GodSpeak in App Store</a>
+                        After launching iTunes, make sure you have selected “Apps” in the drop down on the <strong>upper left</strong> side of the window. Also select “Appstore” in the <strong>upper right</strong> and “iPhone” below that.
                     </p>
                 </div>
+                <div class="col-sm-8 col-md-6">
+                    <div class="step-image-wrapper">
+                        <img src="/Content/Images/step-1-desktop.png">
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <!-- Step #1 b -->
+        <div class="row">
+            <div class="purchase-step clearfix">
+                <div class="col-xs-12 col-sm-6 clearfix">
+                    <p>
+                        <strong>NOTE:</strong> If you don’t see “Apps” in the drop down menu, select “Edit Menu.” In the next menu, make sure “Apps” is selected.
+                    </p>
+                </div>
+                <div class="col-sm-8 col-md-6">
+                    <div class="step-image-wrapper">
+                        <img src="/Content/Images/iTunes_drop_down1.png">
+                        <img style="margin-left: 50px;" src="/Content/Images/iTunes_drop_down2.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step #2 -->
+        <div class="row">
+            <div class="purchase-step clearfix">
+                <div class="col-xs-12 col-sm-6 clearfix">
+                    <p>
+                        In the <strong>upper right,</strong> type in “GodSpeak” in the search field. Make sure “Store” is selected. Press your Return Key or click “Search for ‘GodSpeak’ in iTunes Store”
+                    </p>
+                </div>
+                <div class="col-sm-8 col-md-6">
+                    <div class="step-image-wrapper">
+                        <img src="/Content/Images/step-2-desktop.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step #3 -->
+        <div class="row">
+            <div class="purchase-step clearfix">
+                <div class="col-xs-12 col-sm-6 clearfix">
+                    <p>In the results, click the GodSpeak icon.</p>
+                </div>
+                <div class="col-sm-8 col-md-6">
+                    <div class="step-image-wrapper">
+                        <img src="/Content/Images/step-3-desktop.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step #4 -->
+        <div class="row">
+            <div class="purchase-step clearfix">
+                <div class="col-xs-12 col-sm-6 clearfix">
+                    <p>
+                        On the <strong>left side</strong> of the product page, expand the “Buy” button by clicking on the down arrow and select “Gift This App”
+                    </p>
+                </div>
+                <div class="col-sm-8 col-md-6">
+                    <div class="step-image-wrapper">
+                        <img src="/Content/Images/step-4-desktop.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step #5 -->
+        <div class="row">
+            <div class="purchase-step clearfix">
+                <div class="col-xs-12 col-sm-6 clearfix">
+                    <p>Enter the email addresses you want to send the gift to.</p>
+                    <p style="margin-top: 125px">You can optionally edit the Sender and Message fields to personalize your gift.</p>
+                    <p>Click “Next.”</p>
+                    @if (!string.IsNullOrEmpty(ViewBag.EmailAddresses))
+                    {
+                        <div id="share-panel" style="position: inherit; margin-left: 40px; margin-top: 50px;" class="panel panel-default panel-share">
+                            <div class="panel-heading">
+                                <h2 class="panel-title">We've made it easy!</h2>
+                            </div>
+                            <div class="panel-body">
+                                <label for="share-link">Click the copy icon to fill your clipboard with you iPhone user emails:</label>
+                                <form>
+                                    <div class="input-group">
+
+                                        <input type="text"
+                                               class="form-control"
+                                               id="share-link"
+                                               aria-describedby="basic-addon3"
+                                               value="@ViewBag.EmailAddresses">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-copy"
+                                                    data-clipboard-target="#share-link"
+                                                    data-toggle="popover"
+                                                    data-placement="bottom"
+                                                    data-content="Copied!"
+                                                    type="button">
+                                                <span class="sr-only">Copy to Clipboard</span>
+                                            </button>
+                                        </span>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="col-sm-8 col-md-6">
+                    <div class="step-image-wrapper">
+                        <img src="/Content/Images/step-5-desktop.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step #6 -->
+        <div class="row">
+            <div class="purchase-step clearfix">
+                <div class="col-xs-12 col-sm-6 clearfix">
+                    <p>Select the theme of the notification email your gift recipient will receive.</p>
+
+                    <p>Click “Next.”</p>
+                </div>
+                <div class="col-sm-8 col-md-6">
+                    <div class="step-image-wrapper">
+                        <img src="/Content/Images/step-6-desktop.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step #7 -->
+        <div class="row">
+            <div class="purchase-step clearfix">
+                <div class="col-xs-12 col-sm-6 clearfix">
+                    <p>Confirm all of your order info is correct.</p>
+
+                    <p>Click “Buy Gift.”</p>
+                </div>
+                <div class="col-sm-8 col-md-6">
+                    <div class="step-image-wrapper">
+                        <img src="/Content/Images/step-7-desktop.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step #8 -->
+        <div class="row">
+            <div class="purchase-step clearfix">
+                <div class="col-xs-12 col-sm-6 clearfix">
+                    <p>If prompted, enter your Apple ID and Password.</p>
+
+                    <p>Click “Sign In”.</p>
+
+                    <p>If you do not have an Apple ID, click “Create Apple ID” and follow the instructions.</p>
+
+                    <p>Once you have created an Apple ID, you will be able to complete your transaction.</p>
+                </div>
+                <div class="col-sm-8 col-md-6">
+                    <div class="step-image-wrapper">
+                        <img src="/Content/Images/step-8-desktop.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step #9 -->
+        <div class="row">
+            <div class="purchase-step clearfix">
+                <div class="col-xs-12 col-sm-6 clearfix">
+                    <p>Congratulations! You have successuflly given the gift of GodSpeak!</p>
+                </div>
+                <div class="col-sm-8 col-md-6">
+                    <div class="step-image-wrapper">
+                        <img src="/Content/Images/step-9-desktop.png">
+                    </div>
+                </div>
             </div>
         </div>
 
     </div>
 </section>
 
-
-
+<footer class="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="hidden-xs col-sm-6 col-md-offset-1 col-md-5">
+                <ul class="list-inline footer-links">
+                    <li>
+                        <div class="brand"></div>
+                    </li>
+                    <li><a href="#">About</a></li>
+                    <li>
+                        <span>|</span>
+                    </li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-5 text-right">
+                <p class="copyright">© GodSpeak 2017 All Rights Reserved</p>
+            </div>
+        </div>
+    </div>
+</footer>

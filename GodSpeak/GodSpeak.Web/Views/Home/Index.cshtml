@@ -115,6 +115,7 @@
 </div>
 <div class="row">
 <div class="col-sm-6 col-md-5 col-md-offset-1">
+    <div style="height:200px">
     <div class="icon-text-wrapper">
         <div class="android-icon icon">
             <span class="sr-only">Android Icon</span>
@@ -133,6 +134,8 @@
     {
         <div class="purchase-cta-title" style="min-height: 95px;">Do you know some Android users?<br /> Enter their email below!</div>
     }
+
+        </div>
 
 
     @using (Html.BeginForm("Index", "Home", new { }, FormMethod.Post, new { role = "form", @class = "add-email-form" }))
@@ -234,123 +237,122 @@
     </div>
 </div>
 <div class="col-sm-6 col-md-5">
-    <div class="icon-text-wrapper">
-        <div class="app-store-icon icon">
-            <span class="sr-only">Apple App Store Icon</span>
-        </div>
-
-        <p class="gift-status">You have gifted GodSpeak to @ViewBag.PurchasediOSRequests.Count iOS Users and have <strong>@ViewBag.UnpurchasediOSRequests.Count to purchase.</strong></p>
-    </div>
-    @if (@ViewBag.UnpurchasediOSRequests.Count > 0)
-    {
-        <div class="purchase-cta-title">
-            Purchase @ViewBag.UnpurchasediOSRequests.Count iPhone Gifts
-        </div>
-        @Html.ActionLink($"Gift on iTunes", "Index", "GiftiTunes", new {}, new {@class = "btn btn-lg btn-primary btn-purchase"})
-    }
-    else
-    {
-        <div class="purchase-cta-title" style="min-height: 75px;">Do you know some iPhone users?<br /> Enter their email below!</div>
-    }
-        <div style="height: 20px;"></div>
-    @using (Html.BeginForm("Index", "Home", new { }, FormMethod.Post, new { role = "form", @class = "add-email-form" }))
-    {
-        <input data-val="true" data-val-required="The InviteCode field is required." id="InviteCode" name="InviteCode" type="hidden" value="@ViewBag.InviteCode" />
-        <input data-val="true" data-val-required="The Phone Type field is required." id="Platform" name="Platform" type="hidden" value="@PhonePlatforms.iPhone" />
-
-        <label for="iPhone-email">
-            <span class="sr-only">Enter iPhone User Email Address</span>
-        </label>
-
-        <div class="row">
-            <div class="col-xs-9">
-                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder="iPhone User Email Address" })
-                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger", placeholder = "Android User Email Address" })
+    <div style="height:200px">
+        <div class="icon-text-wrapper">
+            <div class="app-store-icon icon">
+                <span class="sr-only">Apple App Store Icon</span>
             </div>
-            <div class="col-xs-3">
-                <button class="btn btn-secondary" type="submit">
-                    Add
-                </button>
-            </div>
+
+            <p class="gift-status">You have gifted GodSpeak to @ViewBag.PurchasediOSRequests.Count iOS Users and have <strong>@ViewBag.UnpurchasediOSRequests.Count to purchase.</strong></p>
         </div>
-    }
-    <div class="panel-group" id="iphone-emails" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default panel-gifts">
-            <div class="panel-heading" role="tab" id="headingOne">
-                <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" data-parent="#iphone-emails"
-                       href="#iphone-to-purchase" aria-expanded="true" aria-controls="collapseOne">
-                        iPhone Gifts to Purchase
-                        <span class="accordion-icon plus"></span>
-                    </a>
-                </h4>
+        @if (@ViewBag.UnpurchasediOSRequests.Count > 0)
+        {
+            <div class="purchase-cta-title">
+                Purchase @ViewBag.UnpurchasediOSRequests.Count iPhone Gifts
             </div>
-            <div id="iphone-to-purchase" class="panel-collapse collapse" role="tabpanel"
-                 aria-labelledby="headingOne">
-                <div class="panel-body">
-                    <table class="table table-striped">
-                        @foreach (var req in ViewBag.UnpurchasediOSRequests)
-                        {
-                            <tr>
-                                <td>
-                                    <a href="#" data-toggle="modal" data-target="#confirm-delete" data-href="/Home/DeleteRequest?id=@req.GiftRequestId"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></a>
-                                                
-                                </td>
-                                <td>@req.Email</td>
-                                <td>Requested @req.DateTimeRequested.ToString("M/dd/yyyy")</td>
-                            </tr>
-                        }
-                        @if (ViewBag.UnpurchasediOSRequests.Count == 0)
-                        {
-                            <tr>
-                                <td>
-                                     
-                                </td>
-                                <td>You do not have any pending iPhone purchases.</td>
-                                <td></td>
-                            </tr>
-                        }
-                                    
-                    </table>
+            @Html.ActionLink($"Gift on iTunes", "Index", "GiftiTunes", new { }, new { @class = "btn btn-lg btn-primary btn-purchase" })
+        }
+        else
+        {
+            <div class="purchase-cta-title" style="min-height: 75px;">Do you know some iPhone users?<br /> Enter their email below!</div>
+        }
+        </div>
+        @using (Html.BeginForm("Index", "Home", new { }, FormMethod.Post, new { role = "form", @class = "add-email-form" }))
+        {
+            <input data-val="true" data-val-required="The InviteCode field is required." id="InviteCode" name="InviteCode" type="hidden" value="@ViewBag.InviteCode" />
+            <input data-val="true" data-val-required="The Phone Type field is required." id="Platform" name="Platform" type="hidden" value="@PhonePlatforms.iPhone" />
+
+            <label for="iPhone-email">
+                <span class="sr-only">Enter iPhone User Email Address</span>
+            </label>
+
+            <div class="row">
+                <div class="col-xs-9">
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "iPhone User Email Address" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger", placeholder = "Android User Email Address" })
+                </div>
+                <div class="col-xs-3">
+                    <button class="btn btn-secondary" type="submit">
+                        Add
+                    </button>
+                </div>
+            </div>
+        }
+        <div class="panel-group" id="iphone-emails" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default panel-gifts">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#iphone-emails"
+                           href="#iphone-to-purchase" aria-expanded="true" aria-controls="collapseOne">
+                            iPhone Gifts to Purchase
+                            <span class="accordion-icon plus"></span>
+                        </a>
+                    </h4>
+                </div>
+                <div id="iphone-to-purchase" class="panel-collapse collapse" role="tabpanel"
+                     aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <table class="table table-striped">
+                            @foreach (var req in ViewBag.UnpurchasediOSRequests)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="#" data-toggle="modal" data-target="#confirm-delete" data-href="/Home/DeleteRequest?id=@req.GiftRequestId"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></a>
+
+                                    </td>
+                                    <td>@req.Email</td>
+                                    <td>Requested @req.DateTimeRequested.ToString("M/dd/yyyy")</td>
+                                </tr>
+                            }
+                            @if (ViewBag.UnpurchasediOSRequests.Count == 0)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td>You do not have any pending iPhone purchases.</td>
+                                    <td></td>
+                                </tr>
+                            }
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default panel-gifts">
+                <div class="panel-heading" role="tab">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#iphone-emails"
+                           href="#iphone-purchased" aria-expanded="false" aria-controls="collapseTwo">
+                            Purchased iPhone Gifts
+                            <span class="accordion-icon plus"></span>
+                        </a>
+                    </h4>
+                </div>
+                <div id="iphone-purchased" class="panel-collapse collapse" role="tabpanel"
+                     aria-labelledby="headingTwo">
+                    <div class="panel-body">
+                        <table class="table table-striped">
+                            @foreach (var req in ViewBag.PurchasediOSRequests)
+                            {
+                                <tr>
+                                    <td>@req.Email</td>
+                                    <td>Requested @req.DateTimeRequested.ToString("M/dd/yyyy")</td>
+                                </tr>
+
+                            }
+                            @if (ViewBag.PurchasediOSRequests.Count == 0)
+                            {
+                                <tr>
+                                    <td>You have not purchased any iPhone gifts.</td>
+                                    <td></td>
+                                </tr>
+                            }
+
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="panel panel-default panel-gifts">
-            <div class="panel-heading" role="tab">
-                <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#iphone-emails"
-                       href="#iphone-purchased" aria-expanded="false" aria-controls="collapseTwo">
-                        Purchased iPhone Gifts
-                        <span class="accordion-icon plus"></span>
-                    </a>
-                </h4>
-            </div>
-            <div id="iphone-purchased" class="panel-collapse collapse" role="tabpanel"
-                 aria-labelledby="headingTwo">
-                <div class="panel-body">
-                    <table class="table table-striped">
-                        @foreach (var req in ViewBag.PurchasediOSRequests)
-                        {
-                            <tr>
-                                <td>@req.Email</td>
-                                <td>Requested @req.DateTimeRequested.ToString("M/dd/yyyy")</td>
-                            </tr>
-
-                        }
-                        @if (ViewBag.PurchasediOSRequests.Count == 0)
-                        {
-                            <tr>
-                                <td>You have not purchased any iPhone gifts.</td>
-                                <td></td>
-                            </tr>
-                        }
-                                    
-                    </table>
-                </div>
-            </div>
-        </div>
     </div>
-</div>
 </div>
 </div>
 </section>
@@ -458,7 +460,8 @@
                 { textColor:'white', styles:[{textColor:'#ffffff', textSize:16, height:40, width:40, url:'/Content/Images/oval@2x.png' }]}
             );
 
-        map.setZoom(5);
+        map.setZoom(5);
+
 
         
     }
