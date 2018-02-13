@@ -47,6 +47,14 @@ namespace GodSpeak.Web.Controllers
             return View();
         }
 
+        [HttpGet]
+        public async Task<ActionResult> EmailReport()
+        {
+            ViewBag.Emails = _userManager.Users.Select(u => u.Email).ToList();
+            return View();
+        }
+
+
         [Authorize]
         [HttpPost]
         public async Task<ActionResult> PurchasedAndroidInvites(PayPalTransaction transaction)

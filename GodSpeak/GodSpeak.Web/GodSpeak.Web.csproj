@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -487,6 +488,7 @@
     <Content Include="Views\GiftiTunes\Desktop.cshtml" />
     <Content Include="Views\GiftiTunes\FromAndroid.cshtml" />
     <Content Include="Views\Shared\_NoHeaderLayout.cshtml" />
+    <Content Include="Views\Home\EmailReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

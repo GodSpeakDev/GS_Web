@@ -1,0 +1,21 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EmailReport</title>
+</head>
+<body>
+    <div> 
+        @foreach(var emailAddress in ViewBag.Emails)
+        {
+            <div>@emailAddress</div>
+        }
+    </div>
+</body>
+</html>
